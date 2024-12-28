@@ -26,8 +26,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
   const [colorSettings, setColorSettings] = useState<ColorSettings>({
     numberOfShades: 5,
     numberOfColors: 5,
-    sampling: 10,
-    hueDifference: 30,
     lightMode: {
       lightestShade: 95,
       darkestShade: 5,
@@ -58,7 +56,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     if (imageFile || imageUrl) {
       extractColors();
     }
-  }, [imageFile, imageUrl, colorSettings.numberOfColors, colorSettings.sampling]);
+  }, [imageFile, imageUrl, colorSettings.numberOfColors]);
 
   const extractColors = async () => {
     setIsLoading(true);
@@ -81,6 +79,8 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
         throw new Error('No image source available');
       }
 
+      console.log('Image loaded:', imgElement.width, 'x', imgElement.height);
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       
@@ -93,15 +93,16 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
       ctx.drawImage(imgElement, 0, 0);
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      console.log('ImageData obtained:', imageData.length);
       
-      const extractedColors = await extractDominantColors(
+      const extractedColors = extractDominantColors(
         imageData,
         canvas.width,
         canvas.height,
-        colorSettings.numberOfColors,
-        colorSettings.sampling
+        colorSettings.numberOfColors
       );
       
+      console.log('Extracted colors:', extractedColors);
       setColors(extractedColors);
     } catch (err) {
       console.error('Error extracting colors:', err);
@@ -110,7 +111,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
       setIsLoading(false);
     }
   };
-
 
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {

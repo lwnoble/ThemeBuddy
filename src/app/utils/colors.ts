@@ -1,4 +1,3 @@
-
 import quantize from '@lokesh.dhakar/quantize';
 
 // Color Space Interfaces
@@ -16,8 +15,6 @@ export interface ShadeResult {
 export interface ColorSettings {
   numberOfShades: number;
   numberOfColors: number;
-  sampling: number;
-  hueDifference: number;
   lightMode: {
     lightestShade: number;
     darkestShade: number;
@@ -115,7 +112,6 @@ export const calculateContrastRatio = (color1: string, color2: string): number =
   return (lighter + 0.05) / (darker + 0.05);
 };
 
-
 export const calculateRelativeLuminance = (color: string): number => {
   const rgb = hexToRgb(color);
   if (!rgb) return 0;
@@ -130,14 +126,51 @@ export const calculateRelativeLuminance = (color: string): number => {
 };
 
 // Color Extraction Function
-function createPixelArray(imageData: Uint8ClampedArray, pixelCount: number, quality: number): [number, number, number][] {
+export const extractDominantColors = (
+  imageData: Uint8ClampedArray,
+  width: number,
+  height: number,
+  numberOfColors: number = 5
+): string[] => {
+  console.log('Extracting dominant colors...');
+  console.log('Image dimensions:', width, 'x', height);
+  console.log('Number of colors:', numberOfColors);
+
+  const pixelCount = width * height;
+  console.log('Pixel count:', pixelCount);
+
+  try {
+    const pixelArray = createPixelArray(imageData, pixelCount);
+    console.log('Pixel array created, length:', pixelArray.length);
+
+    if (!Array.isArray(pixelArray) || pixelArray.length === 0) {
+      console.error('Invalid pixel array:', pixelArray);
+      return [];
+    }
+
+    const cmap = quantize(pixelArray as [number, number, number][], numberOfColors);
+    const palette = cmap ? cmap.palette() : [];
+    console.log('Palette extracted:', palette);
+
+    return palette.map(rgb => rgbToHex({ r: rgb[0], g: rgb[1], b: rgb[2] }));
+  } catch (error) {
+    console.error('Error in color extraction:', error);
+    return [];
+  }
+};
+
+function createPixelArray(imageData: Uint8ClampedArray, pixelCount: number): [number, number, number][] {
+  console.log('Creating pixel array...');
+  console.log('ImageData length:', imageData.length);
+  console.log('Expected pixel count:', pixelCount);
+
   const pixels: [number, number, number][] = [];
-  for (let i = 0, offset, r, g, b, a; i < pixelCount; i = i + quality) {
-    offset = i * 4;
-    r = imageData[offset + 0];
-    g = imageData[offset + 1];
-    b = imageData[offset + 2];
-    a = imageData[offset + 3];
+  for (let i = 0; i < pixelCount; i++) {
+    const offset = i * 4;
+    const r = imageData[offset];
+    const g = imageData[offset + 1];
+    const b = imageData[offset + 2];
+    const a = imageData[offset + 3];
 
     // If pixel is mostly opaque and not white
     if (typeof a === 'undefined' || a >= 125) {
@@ -146,33 +179,10 @@ function createPixelArray(imageData: Uint8ClampedArray, pixelCount: number, qual
       }
     }
   }
+
+  console.log('Pixel array created, length:', pixels.length);
   return pixels;
 }
-
-export const extractDominantColors = async (
-  imageData: Uint8ClampedArray,
-  width: number,
-  height: number,
-  numberOfColors: number = 5,
-  quality: number = 10
-): Promise<string[]> => {
-  const pixelCount = width * height;
-  const pixelArray = createPixelArray(imageData, pixelCount, quality);
-
-  if (!Array.isArray(pixelArray) || pixelArray.length === 0) {
-    console.error('Invalid pixel array:', pixelArray);
-    return [];
-  }
-
-  try {
-    const cmap = quantize(pixelArray as [number, number, number][], numberOfColors);
-    const palette = cmap ? cmap.palette() : [];
-    return palette.map(rgb => rgbToHex({ r: rgb[0], g: rgb[1], b: rgb[2] }));
-  } catch (error) {
-    console.error('Error in quantize function:', error);
-    return [];
-  }
-};
 
 // Color Shade Generation Function
 export const generateShades = (
