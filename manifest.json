@@ -1,0 +1,11 @@
+{
+  "name": "Theme Buddy Old",
+  "id": "theme-buddy-plugin",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}

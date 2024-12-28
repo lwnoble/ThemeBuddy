@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "lib": ["es6", "dom", "es2017"],
+      "strict": true,
+      "typeRoots": ["./node_modules/@types", "./node_modules/@figma"],
+      "jsx": "react",
+      "module": "ESNext",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "allowJs": true,
+      "resolveJsonModule": true,
+      "isolatedModules": false,
+      "noEmit": false,
+      "outDir": "./dist",
+      "forceConsistentCasingInFileNames": true,
+      "baseUrl": "src",
+      "allowSyntheticDefaultImports": true,
+      "paths": {
+        "@/*": ["*"]
+      }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
+  }
