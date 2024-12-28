@@ -87,7 +87,9 @@ const ShadeSettings: React.FC<ShadeSettingsProps> = ({
     isLightText: boolean
   ) => {
     const enforceConstraint = (color: string) => {
-      const hsl = rgbToHsl(hexToRgb(color) || { r: 0, g: 0, b: 0 });
+      const rgb = hexToRgb(color);
+      if (!rgb) return color;
+      const hsl = rgbToHsl(rgb);
       if (isLightText && hsl.l < 90) {
         hsl.l = 90;
       } else if (!isLightText && hsl.l > 10) {
@@ -100,7 +102,6 @@ const ShadeSettings: React.FC<ShadeSettingsProps> = ({
       const constrainedColor = enforceConstraint(newColor);
       onChange(constrainedColor);
     };
-
     return (
       <div className="mb-2">
         <label className="block text-sm font-medium mb-1">{label}</label>
@@ -153,11 +154,9 @@ const ShadeSettings: React.FC<ShadeSettingsProps> = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Shade Settings</h2>
-      
+    <div className="settings bg-white p-6 rounded-lg shadow-md">
       <div className="mb-8">
-        <label className="block text-lg font-medium mb-2">Number of Shades per Color</label>
+        <label className="block text-sm font-small mb-2">Number of Shades per Color</label>
         <input
           type="range"
           min="4"
@@ -210,10 +209,10 @@ const ShadeSettings: React.FC<ShadeSettingsProps> = ({
       )}
 
       <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4">Text Color Settings</h3>
+        <h3 className="text-md font-semibold mb-4">Text Color Settings</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h4 className="text-md font-medium mb-2">Light Mode</h4>
+            <h4 className="text-sm font-regular mb-2">Light Mode</h4>
             {renderColorInput(
               "Light Text Color",
               lightModeTextColor.light,

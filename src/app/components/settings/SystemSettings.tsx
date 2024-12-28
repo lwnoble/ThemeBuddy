@@ -49,13 +49,6 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({
 
     return (
         <div className="space-y-6">
-          <div>
-            <h2 className="text-xl font-bold">System Settings</h2>
-            <p className="text-gray-600 mt-2">
-              Build beautiful, dynamic, and accessible design systems in minutes for free.
-            </p>
-          </div>
-    
           {/* Design System Name Input */}
           <div>
             <label className="block text-sm font-medium mb-2">

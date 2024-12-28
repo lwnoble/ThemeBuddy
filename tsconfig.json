@@ -16,7 +16,6 @@
       "outDir": "./dist",
       "forceConsistentCasingInFileNames": true,
       "baseUrl": "src",
-      "allowSyntheticDefaultImports": true,
       "paths": {
         "@/*": ["*"]
       }

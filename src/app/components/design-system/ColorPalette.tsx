@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Settings2 } from 'lucide-react';
 import ColorPaletteSettings from './ColorPaletteSettings';
 import ShadeSettings, { ShadeSettingsProps } from './ShadeSettings';
-import { extractDominantColors, generateShades, ColorSettings } from '../../utils/colors';
+import { extractDominantColors, generateAllColorModes, ColorSettings } from '../../utils/colors';
+import { ColorSwatch } from './ColorSwatch';
+import { generateUniqueColorNames } from '../../utils/color-namer';
 
 interface ColorPaletteProps {
   imageFile?: File;
@@ -19,6 +21,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [colors, setColors] = useState<string[]>([]);
+  const [colorNames, setColorNames] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showShadeSettings, setShowShadeSettings] = useState(false);
@@ -52,58 +55,44 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     minContrastRatio: 4.5
   });
 
-  useEffect(() => {
-    if (imageFile || imageUrl) {
-      extractColors();
-    }
-  }, [imageFile, imageUrl, colorSettings.numberOfColors]);
-
   const extractColors = async () => {
     setIsLoading(true);
     setError(null);
     
     try {
-      let imgElement: HTMLImageElement;
+      let imgFile;
       
       if (imageFile) {
-        const reader = new FileReader();
-        const imageDataUrl = await new Promise<string>((resolve, reject) => {
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(imageFile);
-        });
-        imgElement = await loadImage(imageDataUrl);
+        imgFile = imageFile;
       } else if (imageUrl) {
-        imgElement = await loadImage(imageUrl);
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        imgFile = new File([blob], 'image.png', { type: blob.type });
       } else {
         throw new Error('No image source available');
       }
 
-      console.log('Image loaded:', imgElement.width, 'x', imgElement.height);
+      // Read file contents
+      const reader = new FileReader();
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(imgFile);
+      });
 
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
-      if (!ctx) {
-        throw new Error('Could not get canvas context');
-      }
-
-      canvas.width = imgElement.width;
-      canvas.height = imgElement.height;
-      ctx.drawImage(imgElement, 0, 0);
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-      console.log('ImageData obtained:', imageData.length);
-      
-      const extractedColors = extractDominantColors(
-        imageData,
-        canvas.width,
-        canvas.height,
-        colorSettings.numberOfColors
+      console.log('Processing image...');
+      const extractedColors = await extractDominantColors(
+        dataUrl,
+        colorSettings.numberOfColors,
+        10  // Fixed quality value
       );
       
       console.log('Extracted colors:', extractedColors);
       setColors(extractedColors);
+      
+      // Generate unique color names
+      const uniqueColorNames = generateUniqueColorNames(extractedColors);
+      setColorNames(uniqueColorNames);
     } catch (err) {
       console.error('Error extracting colors:', err);
       setError('Failed to extract colors from image');
@@ -112,27 +101,11 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     }
   };
 
-  const loadImage = (src: string): Promise<HTMLImageElement> => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = src;
-    });
-  };
-
-  const sortShades = (shades: ReturnType<typeof generateShades>) => {
-    return [...shades].sort((a, b) => {
-      const getLightness = (color: string) => {
-        const rgb = parseInt(color.slice(1), 16);
-        const r = (rgb >> 16) & 0xff;
-        const g = (rgb >> 8) & 0xff;
-        const b = (rgb >> 0) & 0xff;
-        return (Math.max(r, g, b) + Math.min(r, g, b)) / 2;
-      };
-      return getLightness(b.color) - getLightness(a.color);
-    });
-  };
+  useEffect(() => {
+    if (imageFile || imageUrl) {
+      extractColors();
+    }
+  }, [imageFile, imageUrl, colorSettings]);
 
   const handleShadeSettingsChange = (newSettings: Partial<ShadeSettingsProps>) => {
     setColorSettings(prevSettings => ({
@@ -155,16 +128,23 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     }));
   };
 
-  const handleSettingsChange = (newSettings: Partial<ColorSettings>) => {
-    setColorSettings(prev => ({
-      ...prev,
-      ...newSettings
-    }));
+  const handleSettingsChange = (newSettings: Partial<typeof colorSettings>) => {
+    setColorSettings(prev => {
+      const updatedSettings = { ...prev };
+      
+      if (newSettings.numberOfColors !== undefined) {
+        updatedSettings.numberOfColors = newSettings.numberOfColors;
+      }
+      if (newSettings.numberOfShades !== undefined) {
+        updatedSettings.numberOfShades = newSettings.numberOfShades;
+      }
+      return updatedSettings;
+    });
   };
 
   const renderWCAGModeSelector = () => (
     <div className="flex space-x-4 border-b border-gray-200 mb-6">
-      {(['AA-light', 'AA-dark', 'AAA-light', 'AAA-dark'] as WCAGMode[]).map((mode) => (
+      {(['AA-light', 'AA-dark', 'AAA-light', 'AAA-dark'] as const).map((mode) => (
         <button
           key={mode}
           className={`pb-2 border-b-2 transition-colors ${
@@ -181,134 +161,132 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
   );
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8">
-        <button 
-          onClick={onBack} 
-          className="flex items-center text-purple-500 hover:text-purple-600"
-        >
+        <button onClick={onBack} className="flex items-center text-purple-500 hover:text-purple-600">
           <ChevronLeft className="w-5 h-5 mr-1" />
           <span>Back to Design System</span>
         </button>
-        <button 
-          onClick={() => setShowSettings(!showSettings)}
-          className={`p-2 rounded-lg transition-colors ${
-            showSettings
-              ? 'bg-purple-100 text-purple-600'
-              : 'text-gray-600 hover:bg-gray-100'
-          }`}
-        >
-          <Settings2 className="w-6 h-6" />
-        </button>
       </div>
 
-      <h1 className="text-3xl font-bold mb-8">Generated Color Palette</h1>
+      <h1 className="text-3xl font-bold mb-8">Colors</h1>
 
-      {showSettings && (
-        <ColorPaletteSettings
-          settings={colorSettings}
-          onSettingsChange={handleSettingsChange}
-        />
-      )}
-
-      {isLoading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto" />
-          <p className="mt-4 text-gray-600">Generating color palette...</p>
-        </div>
-      ) : error ? (
-        <div className="text-center py-12">
-          <p className="text-red-500">{error}</p>
-        </div>
-      ) : colors.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600">No colors could be extracted from the image.</p>
-        </div>
-      ) : (
-        <div className="space-y-12">
-          <section>
-            <h2 className="text-xl font-bold mb-4">Generated Palette</h2>
-            <div className="grid grid-cols-5 gap-4 mb-4">
-              {colors.map((color, index) => (
-                <div
-                  key={index}
-                  className="w-10 h-10 rounded cursor-pointer transition-transform hover:scale-105"
-                  style={{ backgroundColor: color }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(color);
-                  }}
-                />
-              ))}
-            </div>
-            <p className="text-sm text-gray-500">
-              Click to copy hex value
-            </p>
-          </section>
-
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">Shades</h2>
-              <button
-                onClick={() => setShowShadeSettings(!showShadeSettings)}
-                className={`p-2 rounded-lg transition-colors ${
-                  showShadeSettings
-                    ? 'bg-purple-100 text-purple-600'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <Settings2 className="w-6 h-6" />
-              </button>
-            </div>
-            {showShadeSettings && (
-              <ShadeSettings
-                numberOfShades={colorSettings.numberOfShades}
-                maxLightnessLight={colorSettings.lightMode.lightestShade}
-                maxLightnessDark={colorSettings.darkMode.lightestShade}
-                maxDarknessLight={colorSettings.lightMode.darkestShade}
-                maxDarknessDark={colorSettings.darkMode.darkestShade}
-                maxChromaLight={colorSettings.lightMode.maxChroma}
-                maxChromaDark={colorSettings.darkMode.maxChroma}
-                lightModeTextColor={colorSettings.lightMode.textColor}
-                darkModeTextColor={colorSettings.darkMode.textColor}
-                onSettingsChange={handleShadeSettingsChange}
-              />
-            )}
+      <div className="space-y-12">
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Palette</h2>
+            <button 
+              onClick={() => setShowSettings(!showSettings)}
+              className={`p-2 rounded-lg transition-colors ${
+                showSettings ? 'bg-purple-100 text-purple-600' : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Settings2 className="w-6 h-6" />
+            </button>
           </div>
+          
+          {showSettings && (
+            <ColorPaletteSettings
+              settings={colorSettings}
+              onSettingsChange={handleSettingsChange}
+            />
+          )}
 
-          <div className="space-y-6">
-            {renderWCAGModeSelector()}
-            {colors.map((color, colorIndex) => (
-              <div key={colorIndex} className="space-y-6">
-                <h3 className="text-lg font-semibold">Color {colorIndex + 1}</h3>
-                <div className="grid grid-cols-10 gap-2">
-                  {sortShades(generateShades(
-                    color, 
-                    colorSettings, 
-                    activeWCAGMode.includes('light') ? 'light' : 'dark', 
-                    activeWCAGMode.includes('AA') ? 'AA' : 'AAA'
-                  )).map((shade, shadeIndex) => (
-                    <div
-                      key={`${colorIndex}-${shadeIndex}`}
-                      className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                      style={{
-                        backgroundColor: shade.color,
-                      }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(shade.color);
-                      }}
-                    >
-                      <span style={{ color: shade.textColor }}>Aa</span>
-                      <span className="text-xs mt-1" style={{ color: shade.textColor }}>
-                        {shade.contrastRatio.toFixed(2)}:1
-                      </span>
-                    </div>
-                  ))}
-                </div>
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto" />
+              <p className="mt-4 text-gray-600">Generating color palette...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-500">{error}</p>
+            </div>
+          ) : colors.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No colors could be extracted from the image.</p>
+            </div>
+          
+          ) : (
+            <div>
+              <div className="grid grid-cols-5 gap-4 mb-4">
+                {colors.map((color, index) => (
+                  <div key={index} className="text-center">
+                    <ColorSwatch 
+                      color={color} 
+                      size="large" 
+                      onClick={() => navigator.clipboard.writeText(color)}
+                    />
+                    <p className="mt-2 text-sm font-medium">{colorNames[index]}</p>
+                    <p className="text-xs text-gray-500">{color}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+              <p className="text-sm text-gray-500 text-center">
+                Click color to copy hex value
+              </p>
+            </div>
+          )
+}
+        </section>
+
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Shades</h2>
+            <button
+              onClick={() => setShowShadeSettings(!showShadeSettings)}
+              className={`p-2 rounded-lg transition-colors ${
+                showShadeSettings ? 'bg-purple-100 text-purple-600' : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Settings2 className="w-6 h-6" />
+            </button>
           </div>
+          
+          {showShadeSettings && (
+            <ShadeSettings
+              numberOfShades={colorSettings.numberOfShades}
+              maxLightnessLight={colorSettings.lightMode.lightestShade}
+              maxLightnessDark={colorSettings.darkMode.lightestShade}
+              maxDarknessLight={colorSettings.lightMode.darkestShade}
+              maxDarknessDark={colorSettings.darkMode.darkestShade}
+              maxChromaLight={colorSettings.lightMode.maxChroma}
+              maxChromaDark={colorSettings.darkMode.maxChroma}
+              lightModeTextColor={colorSettings.lightMode.textColor}
+              darkModeTextColor={colorSettings.darkMode.textColor}
+              onSettingsChange={handleShadeSettingsChange}
+            />
+          )}
         </div>
-      )}
+
+        <div className="space-y-6">
+          {renderWCAGModeSelector()}
+          {colors.map((color, colorIndex) => (
+            <div key={colorIndex} className="space-y-6">
+              <h3 className="text-lg font-semibold">{colorNames[colorIndex] || `Color ${colorIndex + 1}`}</h3>
+              <div className="grid grid-cols-10 gap-2">
+                {generateAllColorModes(
+                  color,
+                  colorSettings
+                )[activeWCAGMode].map((shade, shadeIndex) => (
+                  <div
+                    key={`${colorIndex}-${shadeIndex}`}
+                    className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
+                    style={{ backgroundColor: shade.color }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(shade.color);
+                    }}
+                  >
+                    <span style={{ color: shade.textColor }}>Aa</span>
+                    <span className="text-xs mt-1" style={{ color: shade.textColor }}>
+                      {shade.contrastRatio.toFixed(2)}:1
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
