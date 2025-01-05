@@ -1,15 +1,37 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
+// ui.tsx
 
-console.log('UI script starting');
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
+import { setupUIHandler } from './app/utils/processCSV';
 
 const App: React.FC = () => {
+  // States for the landing page
   const [clickCount, setClickCount] = useState(0);
+  const [systemName, setSystemName] = useState('');
+  const [uploadedImage, setUploadedImage] = useState<File | null>(null);
 
-  const handleClick = () => {
-    const newClickCount = clickCount + 1;
-    setClickCount(newClickCount);
-    console.log(`Button clicked ${newClickCount} time(s)`);
+  useEffect(() => {
+    // Set up the handler for CSV processing
+    setupUIHandler();
+    
+    // Tell the plugin we're ready to process files
+    parent.postMessage({ 
+      pluginMessage: { type: 'ui-ready' } 
+    }, '*');
+  }, []);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setUploadedImage(event.target.files[0]);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (systemName && uploadedImage) {
+      // Handle design system creation
+      console.log('Creating design system:', systemName);
+    }
   };
 
   return (
@@ -22,11 +44,34 @@ const App: React.FC = () => {
       alignItems: 'center',
       gap: '10px'
     }}>
-      <h2>Theme Buddy Test</h2>
-      <button 
-        onClick={handleClick}
+      <h2>Theme Buddy</h2>
+      
+      {/* Design System Name Input */}
+      <input
+        type="text"
+        value={systemName}
+        onChange={(e) => setSystemName(e.target.value)}
+        placeholder="Enter Design System Name"
         style={{
-          marginTop: '10px',
+          padding: '8px',
+          marginBottom: '10px',
+          borderRadius: '4px',
+          border: '1px solid #ccc'
+        }}
+      />
+
+      {/* Image Upload */}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        style={{ marginBottom: '10px' }}
+      />
+
+      {/* Create Button */}
+      <button 
+        onClick={handleSubmit}
+        style={{
           padding: '8px 16px',
           backgroundColor: '#18A0FB',
           color: 'white',
@@ -35,11 +80,17 @@ const App: React.FC = () => {
           cursor: 'pointer',
           transition: 'background-color 0.3s ease'
         }}
+        disabled={!systemName || !uploadedImage}
       >
-        Click me
+        Create Design System
       </button>
-      {clickCount > 0 && (
-        <p>Button has been clicked {clickCount} time(s)</p>
+
+      {/* Preview Information */}
+      {systemName && uploadedImage && (
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <p>Design System Name: {systemName}</p>
+          <p>Image Selected: {uploadedImage.name}</p>
+        </div>
       )}
     </div>
   );
@@ -95,6 +146,10 @@ declare global {
 
 window.onUIRender = () => {
   const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    console.error('Root element not found');
+    return;
+  }
   if (rootElement) {
     try {
       renderApp(rootElement);
@@ -105,17 +160,6 @@ window.onUIRender = () => {
     }
   }
 };
-
-console.log('Attempting immediate render');
-const rootElement = document.getElementById('root');
-if (rootElement) {
-  try {
-    renderApp(rootElement);
-    console.log('Immediate render successful');
-  } catch (err) {
-    console.error('Immediate render error:', err);
-  }
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   const rootElement = document.getElementById('root') || document.getElementById('react-app');

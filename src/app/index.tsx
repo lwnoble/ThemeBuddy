@@ -12,10 +12,10 @@ try {
 
   root.render(
     <React.StrictMode>
-      <NavigationProvider>
-        <App />
-      </NavigationProvider>
-    </React.StrictMode>
+    <NavigationProvider>
+      <App />
+    </NavigationProvider>
+  </React.StrictMode>
   );
 } catch (err) {
   console.error('Failed to render the plugin:', err);

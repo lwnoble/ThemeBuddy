@@ -27,11 +27,11 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
   const [showShadeSettings, setShowShadeSettings] = useState(false);
   const [activeWCAGMode, setActiveWCAGMode] = useState<WCAGMode>('AA-light');
   const [colorSettings, setColorSettings] = useState<ColorSettings>({
-    numberOfShades: 5,
+    numberOfShades: 10,
     numberOfColors: 5,
     lightMode: {
       lightestShade: 95,
-      darkestShade: 5,
+      darkestShade: 10,
       maxChroma: 100,
       textColor: {
         light: '#FFFFFF',
@@ -72,7 +72,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
         throw new Error('No image source available');
       }
 
-      // Read file contents
       const reader = new FileReader();
       const dataUrl = await new Promise<string>((resolve, reject) => {
         reader.onload = () => resolve(reader.result as string);
@@ -84,13 +83,12 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
       const extractedColors = await extractDominantColors(
         dataUrl,
         colorSettings.numberOfColors,
-        10  // Fixed quality value
+        10
       );
       
       console.log('Extracted colors:', extractedColors);
       setColors(extractedColors);
       
-      // Generate unique color names
       const uniqueColorNames = generateUniqueColorNames(extractedColors);
       setColorNames(uniqueColorNames);
     } catch (err) {
@@ -105,7 +103,13 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     if (imageFile || imageUrl) {
       extractColors();
     }
-  }, [imageFile, imageUrl, colorSettings]);
+  }, [
+    imageFile,
+    imageUrl,
+    colorSettings,
+    colorSettings.lightMode.textColor,
+    colorSettings.darkMode.textColor
+  ]);
 
   const handleShadeSettingsChange = (newSettings: Partial<ShadeSettingsProps>) => {
     setColorSettings(prevSettings => ({
@@ -205,7 +209,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
             <div className="text-center py-12">
               <p className="text-gray-600">No colors could be extracted from the image.</p>
             </div>
-          
           ) : (
             <div>
               <div className="grid grid-cols-5 gap-4 mb-4">
@@ -225,8 +228,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
                 Click color to copy hex value
               </p>
             </div>
-          )
-}
+          )}
         </section>
 
         <div>

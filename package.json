@@ -7,15 +7,18 @@
     "start": "webpack serve --mode=development",
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
-    "prettier:format": "prettier --write '**/*.{js,jsx,ts,tsx,css,json}' "
+    "prettier:format": "prettier --write '**/*.{js,jsx,ts,tsx,css,json}' ",
+    "build:db": "ts-node src/app/scripts/buildFontDatabase.ts"
   },
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
     "@figma/plugin-typings": "^1.82.0",
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.17.10",
+    "@types/papaparse": "^5.3.15",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@types/webfontloader": "^1.6.38",
     "autoprefixer": "^10.4.16",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
@@ -34,13 +37,19 @@
   "dependencies": {
     "@lokesh.dhakar/quantize": "^1.4.0",
     "@radix-ui/colors": "^3.0.0",
+    "@tensorflow-models/mobilenet": "^2.1.1",
+    "@tensorflow/tfjs": "^4.22.0",
+    "axios": "^1.7.9",
     "chroma-js": "^3.1.2",
     "colorthief": "^2.6.0",
     "culori": "^4.0.1",
     "lucide-react": "^0.263.1",
+    "papaparse": "^5.4.1",
+    "puppeteer": "^23.11.1",
     "rc-slider": "^11.1.7",
     "react": "^18.2.0",
     "react-dev-utils": "^12.0.1",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "webfontloader": "^1.6.28"
   }
 }
