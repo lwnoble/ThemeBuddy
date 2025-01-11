@@ -9,11 +9,11 @@ import { GoogleFont } from './utils/googleFontsManager';
 import { DESIGN_SYSTEM_ROUTES } from './constants/routes';
 import { useNavigation } from '../context/NavigationContext';
 import type { DesignSystemSettings } from './types';
-import { initializeFontDatabase } from './data/initFontDatabase';
-import { processCSV } from './utils/processCSV';
+import { ColorProvider } from '../context/ColorContext';
+
 
 // Import all page components
-import { ThemePage } from './components/design-system/ThemePage';
+import ThemePage from './components/design-system/ThemePage';
 import { LogosPage } from './components/design-system/LogosPage';
 import { BackgroundsPage } from './components/design-system/BackgroundsPage';
 import { ElevationsPage } from './components/design-system/ElevationsPage';
@@ -36,38 +36,6 @@ const App = () => {
     name: '',
     generationMethod: 'Generate from photo/image',
   });
-
-  // Initialize font database when app starts
-  useEffect(() => {
-    console.log('Starting font database initialization...');
-    const initializeApp = async () => {
-      console.log('Starting font database initialization...');
-      try {
-        // First process the CSV files
-        await processCSV();
-        
-        // Then initialize the database
-        const db = initializeFontDatabase();
-        console.log('Font database initialized:', {
-          totalFonts: db.fonts.length,
-          moodsAvailable: [...new Set(db.fonts.flatMap(f => f.styles[0].mood))],
-          fontsPerMood: Object.fromEntries(
-            [...new Set(db.fonts.flatMap(f => f.styles[0].mood))]
-              .map(mood => [
-                mood,
-                db.fonts.filter(f => f.styles[0].mood.includes(mood)).length
-              ])
-          )
-        });
-      } catch (error) {
-        console.error('Error initializing font database:', error);
-      }
-    };
-
-    initializeApp();
-  }, []);
-  
-  
 
   const renderContent = () => {
     console.log('Current route:', currentRoute.path);
@@ -95,7 +63,7 @@ const App = () => {
       case '/fonts':
         return (
           <FontPairings
-            imageFile={settings.imageFile}
+            imageFile={settings.imageFile || null}
             onBack={() => setCurrentRoute({
               id: 'home',
               title: 'Design System',
@@ -179,7 +147,7 @@ const App = () => {
                   {isSettingsExpanded && isSystemGenerated ? (
                     <ChevronDown className="w-5 h-5" />
                   ) : (
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronDown className="w-5 h-5" />
                   )}
                   <span className="font-medium">System Settings</span>
                 </div>
@@ -270,12 +238,14 @@ const App = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <Header />
-      <main className="flex-1 p-4">
-        {renderContent()}
-      </main>
-    </div>
+    <ColorProvider>
+      <div className="flex flex-col min-h-screen bg-white">
+        <Header />
+        <main className="flex-1 p-4">
+          {renderContent()}
+        </main>
+      </div>
+    </ColorProvider>  
   );
 };
 

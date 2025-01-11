@@ -9,13 +9,13 @@ declare const require: any;
 const quantize: (pixels: number[][], colorCount: number) => QuantizeResult = require('@lokesh.dhakar/quantize').default;
 
 // Color Space Type Definitions
-interface RGB {
+export interface RGB {
   r: number;
   g: number;
   b: number;
 }
 
-interface HSL {
+export interface HSL {
   h: number;
   s: number;
   l: number;
@@ -541,10 +541,16 @@ const rescaleShades = (
   return result;
 };
 
+// Cache for storing pre-generated shades
+const shadesCache: Record<string, Record<WCAGMode, ShadeResult[]>> = {};
+
 export const generateAllColorModes = (
   baseColor: string,
   settings: ColorSettings
 ): Record<WCAGMode, ShadeResult[]> => {
+  if (shadesCache[baseColor]) {
+    return shadesCache[baseColor];
+  }
   const aaLight = generateShades(baseColor, settings, 'light', 4.5);
   const aaDark = generateShades(baseColor, settings, 'dark', 4.5);
   const aaaLight = generateShades(baseColor, settings, 'light', 7.1);
@@ -555,11 +561,54 @@ export const generateAllColorModes = (
   const aaaLightRescaled = rescaleShades(aaaLight, settings, 'light', 7.1);
   const aaaDarkRescaled = rescaleShades(aaaDark, settings, 'dark', 7.1);
 
-
-  return {
-    'AA-light': aaLightRescaled,
-    'AA-dark': aaDarkRescaled,
-    'AAA-light': aaaLightRescaled,
-    'AAA-dark': aaaDarkRescaled
-  };
+ // Create the result object
+ const result = {
+  'AA-light': aaLightRescaled,
+  'AA-dark': aaDarkRescaled,
+  'AAA-light': aaaLightRescaled,
+  'AAA-dark': aaaDarkRescaled
 };
+
+// Cache the result
+shadesCache[baseColor] = result;
+
+return result;
+};
+
+// Generate analogous colors
+function getAnalogousColor(color: string, count = 2) {
+  return chroma(color).set('hsl.h', '+=' + 30).scale().mode('lab').colors(count);
+}
+
+// Generate complementary colors
+function getComplementaryColor(color: string) {
+  return chroma(color).set('hsl.h', '+180').hex();
+}
+
+// Generate triadic colors
+function getTriadicColors(color: string) {
+  const base = chroma(color);
+  return [
+    base.set('hsl.h', '+120').hex(),
+    base.set('hsl.h', '-120').hex(),
+  ];
+}
+
+// Generate tetradic colors
+function getTetradicColors(color: string) {
+  const base = chroma(color);
+  return [
+    base.set('hsl.h', '+90').hex(),
+    base.set('hsl.h', '-90').hex(),
+    base.set('hsl.h', '+180').hex(),
+  ];
+}
+
+// Generate split-complementary colors
+function getSplitComplementaryColors(color: string) {
+  const base = chroma(color);
+  return [
+    base.set('hsl.h', '+150').hex(),
+    base.set('hsl.h', '-150').hex(),
+  ];
+}

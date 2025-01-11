@@ -110,6 +110,7 @@ export interface Route {
   export interface DesignSystemSettings {
     name: string;
     generationMethod: string;
+    mood?: string; // Add this line
     imageFile?: File;
     imageUrl?: string;
   }

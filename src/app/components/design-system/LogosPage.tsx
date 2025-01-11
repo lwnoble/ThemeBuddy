@@ -2,6 +2,10 @@
 import React from 'react';
 import PageLayout from './PageLayout';
 
+interface LogoPageProps {
+  onBack: () => void;
+}
+
 export const LogosPage = () => {
   return (
     <PageLayout title="Logos">

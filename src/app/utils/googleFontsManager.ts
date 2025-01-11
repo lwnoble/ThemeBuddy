@@ -1,4 +1,5 @@
-import { MoodType } from './moodDetection';
+import { MoodType } from '../types/fonts';
+import { MOOD_FONT_CHARACTERISTICS } from '../utils/mood-font-characteristics';
 
 // Types for Google Fonts
 export interface GoogleFont {
@@ -62,100 +63,6 @@ const STYLE_CLASSIFICATIONS = {
   }
 };
 
-// Map moods to font characteristics
-const MOOD_FONT_CHARACTERISTICS = {
-  business: {
-    categories: ['serif', 'sans-serif'],
-    styles: ['Transitional', 'Modern', 'Neo Grotesque'],
-    weights: ['400', '500', '700']
-  },
-  calm: {
-    categories: ['serif', 'sans-serif'],
-    styles: ['Humanist', 'Old Style'],
-    weights: ['300', '400', '500']
-  },
-  cute: {
-    categories: ['sans-serif', 'display'],
-    styles: ['Rounded', 'Script'],
-    weights: ['400', '500']
-  },
-  playful: {
-    categories: ['sans-serif', 'display'],
-    styles: ['Rounded', 'Handwritten'],
-    weights: ['400', '500', '700']
-  },
-  fancy: {
-    categories: ['serif', 'display'],
-    styles: ['Didone', 'Script'],
-    weights: ['400', '500', '600']
-  },
-  stiff: {
-    categories: ['serif', 'sans-serif'],
-    styles: ['Slab', 'Geometric'],
-    weights: ['400', '500', '700']
-  },
-  vintage: {
-    categories: ['serif', 'display'],
-    styles: ['Old Style', 'Scotch', 'Blackletter'],
-    weights: ['400', '500', '600']
-  },
-  happy: {
-    categories: ['sans-serif', 'display'],
-    styles: ['Rounded', 'Script'],
-    weights: ['400', '500', '700']
-  },
-  futuristic: {
-    categories: ['sans-serif'],
-    styles: ['Geometric', 'Modern'],
-    weights: ['300', '400', '700']
-  },
-  excited: {
-    categories: ['display', 'sans-serif'],
-    styles: ['Display', 'Geometric'],
-    weights: ['500', '700', '900']
-  },
-  rugged: {
-    categories: ['serif', 'sans-serif'],
-    styles: ['Slab', 'Geometric'],
-    weights: ['500', '600', '700']
-  },
-  childlike: {
-    categories: ['display', 'sans-serif'],
-    styles: ['Rounded', 'Handwritten'],
-    weights: ['400', '500']
-  },
-  loud: {
-    categories: ['display', 'sans-serif'],
-    styles: ['Display', 'Black'],
-    weights: ['700', '800', '900']
-  },
-  artistic: {
-    categories: ['serif', 'display'],
-    styles: ['Didone', 'Script'],
-    weights: ['400', '500', '600']
-  },
-  sophisticated: {
-    categories: ['serif'],
-    styles: ['Didone', 'Modern'],
-    weights: ['300', '400', '500']
-  },
-  awkward: {
-    categories: ['display', 'sans-serif'],
-    styles: ['Display', 'Geometric'],
-    weights: ['400', '500']
-  },
-  active: {
-    categories: ['sans-serif'],
-    styles: ['Geometric', 'Neo Grotesque'],
-    weights: ['500', '600', '700']
-  },
-  innovative: {
-    categories: ['sans-serif'],
-    styles: ['Geometric', 'Modern'],
-    weights: ['300', '400', '700']
-  }
-};
-
 // Updated URL generation function with semicolon-separated filters
 export function generateGoogleFontsUrl(
     mood: MoodType,
@@ -213,7 +120,7 @@ export function generateGoogleFontsUrl(
     // Test 1: Mood with Calligraphy
     console.log('Mood with Calligraphy URL:');
     console.log(generateGoogleFontsUrl(
-      'cute',
+      'Cute',
       { serif: [], sansSerif: [], calligraphy: ['Handwritten'] },
       { serif: [], sansSerif: [] }
     ));
@@ -221,7 +128,7 @@ export function generateGoogleFontsUrl(
     // Test 2: Multiple style filters
     console.log('\nMultiple style filters URL:');
     console.log(generateGoogleFontsUrl(
-      'sophisticated',
+      'Sophisticated',
       { 
         serif: ['Modern'], 
         sansSerif: ['Humanist'], 
@@ -233,7 +140,7 @@ export function generateGoogleFontsUrl(
     // Test 3: Slab with other styles
     console.log('\nSlab with other styles URL:');
     console.log(generateGoogleFontsUrl(
-      'sophisticated',
+      'Sophisticated',
       { 
         serif: ['Slab', 'Modern'], 
         sansSerif: ['Humanist'] 

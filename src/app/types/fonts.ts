@@ -14,28 +14,22 @@ export interface FontStyle {
     styles: FontStyle[];
   }
   
-  export interface FontDatabase {
-    version: string;
-    lastUpdated: string;
-    fonts: GoogleFont[];
-  }
-  
   export type MoodType = 
-    | 'business'
-    | 'calm'
-    | 'cute'
-    | 'playful'
-    | 'fancy'
-    | 'stiff'
-    | 'vintage'
-    | 'happy'
-    | 'futuristic'
-    | 'excited'
-    | 'rugged'
-    | 'childlike'
-    | 'loud'
-    | 'artistic'
-    | 'sophisticated'
-    | 'awkward'
-    | 'active'
-    | 'scary';
+  | 'Business'
+  | 'Calm'
+  | 'Cute'
+  | 'Playful'
+  | 'Fancy'
+  | 'Stiff'
+  | 'Vintage'
+  | 'Happy'
+  | 'Futuristic'
+  | 'Excited'
+  | 'Rugged'
+  | 'Childlike'
+  | 'Loud'
+  | 'Artistic'
+  | 'Sophisticated'
+  | 'Awkward'
+  | 'Active'
+  | 'Scary';

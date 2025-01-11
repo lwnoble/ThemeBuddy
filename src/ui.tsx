@@ -1,38 +1,88 @@
-// ui.tsx
-
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { setupUIHandler } from './app/utils/processCSV';
 
 const App: React.FC = () => {
   // States for the landing page
   const [clickCount, setClickCount] = useState(0);
   const [systemName, setSystemName] = useState('');
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
+  const [fontDatabase, setFontDatabase] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Set up the handler for CSV processing
-    setupUIHandler();
-    
-    // Tell the plugin we're ready to process files
-    parent.postMessage({ 
-      pluginMessage: { type: 'ui-ready' } 
-    }, '*');
+    // Check for font database data passed from the plugin
+    window.addEventListener('message', (event) => {
+      if (event.data.pluginMessage) {
+        const { type, fontDatabase } = event.data.pluginMessage;
+        if (type === 'ui-ready') {
+          setFontDatabase(fontDatabase);
+        }
+      }
+    });
   }, []);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setUploadedImage(event.target.files[0]);
+      const file = event.target.files[0];
+      setUploadedImage(file);
+      
+      // Preview the image
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          // You can add image preview logic here if needed
+          console.log('Image loaded successfully');
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = () => {
-    if (systemName && uploadedImage) {
-      // Handle design system creation
-      console.log('Creating design system:', systemName);
+  const handleSubmit = async () => {
+    if (systemName && uploadedImage && fontDatabase) {
+      setIsLoading(true);
+      try {
+        // Create the design system
+        parent.postMessage({
+          pluginMessage: {
+            type: 'create-design-system',
+            name: systemName,
+            image: uploadedImage,
+            fontDatabase: fontDatabase
+          }
+        }, '*');
+      } catch (error) {
+        console.error('Error creating design system:', error);
+        setError('Failed to create design system');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
+
+  if (error) {
+    return (
+      <div style={{ padding: '20px', color: 'red' }}>
+        Error: {error}
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ 
+        padding: '20px', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center' 
+      }}>
+        <div style={{ marginBottom: '10px' }}>Initializing...</div>
+        {/* Add a loading spinner here if desired */}
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -56,7 +106,9 @@ const App: React.FC = () => {
           padding: '8px',
           marginBottom: '10px',
           borderRadius: '4px',
-          border: '1px solid #ccc'
+          border: '1px solid #ccc',
+          width: '100%',
+          maxWidth: '300px'
         }}
       />
 
@@ -73,99 +125,35 @@ const App: React.FC = () => {
         onClick={handleSubmit}
         style={{
           padding: '8px 16px',
-          backgroundColor: '#18A0FB',
+          backgroundColor: systemName && uploadedImage ? '#18A0FB' : '#cccccc',
           color: 'white',
           border: 'none',
           borderRadius: '6px',
-          cursor: 'pointer',
-          transition: 'background-color 0.3s ease'
+          cursor: systemName && uploadedImage ? 'pointer' : 'not-allowed',
+          transition: 'background-color 0.3s ease',
+          width: '100%',
+          maxWidth: '300px'
         }}
-        disabled={!systemName || !uploadedImage}
+        disabled={!systemName || !uploadedImage || !fontDatabase}
       >
         Create Design System
       </button>
 
       {/* Preview Information */}
       {systemName && uploadedImage && (
-        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <div style={{ 
+          marginTop: '20px', 
+          textAlign: 'center',
+          width: '100%',
+          maxWidth: '300px'
+        }}>
           <p>Design System Name: {systemName}</p>
           <p>Image Selected: {uploadedImage.name}</p>
+          <p>Fonts Available: {fontDatabase?.fonts?.length || 0}</p>
         </div>
       )}
     </div>
   );
 };
 
-interface ErrorBoundaryProps {
-  children: React.ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
-
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(_: Error): ErrorBoundaryState {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error("Uncaught error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
-    }
-    return this.props.children;
-  }
-}
-
-const renderApp = (container: HTMLElement): void => {
-  const root = ReactDOM.createRoot(container);
-  root.render(
-    <React.StrictMode>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </React.StrictMode>
-  );
-};
-
-// Extend Window interface to avoid type errors
-declare global {
-  interface Window {
-    onUIRender?: () => void;
-  }
-}
-
-window.onUIRender = () => {
-  const rootElement = document.getElementById('root');
-  if (!rootElement) {
-    console.error('Root element not found');
-    return;
-  }
-  if (rootElement) {
-    try {
-      renderApp(rootElement);
-      console.log('React rendered successfully');
-    } catch (err) {
-      console.error('React render error:', err);
-      rootElement.textContent = 'Failed to initialize UI';
-    }
-  }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-  const rootElement = document.getElementById('root') || document.getElementById('react-app');
-  if (rootElement) {
-    renderApp(rootElement);
-  } else {
-    console.error('Root element not found');
-  }
-});
+export default App;

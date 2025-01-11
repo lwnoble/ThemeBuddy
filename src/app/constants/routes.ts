@@ -20,6 +20,7 @@ import {
     icon: string;
   }
   
+
   export const MENU_ITEMS: MenuItem[] = [
     { id: 'new', title: 'Create a New Theme', path: '/new', icon: 'star' },
     { id: 'duplicate', title: 'Duplicate Theme', path: '/duplicate', icon: 'copy' },

@@ -1,3 +1,4 @@
+import { MoodType } from '../types/fonts';
 // Types for color analysis
 export interface ColorCount {
   r: number;
@@ -14,154 +15,134 @@ export interface MoodCharacteristics {
   dominantHues: string[];
 }
 
-// Define all possible moods that match Google Fonts categories
-export type MoodType = 
-  | 'business'
-  | 'calm'
-  | 'cute'
-  | 'playful'
-  | 'fancy'
-  | 'stiff'
-  | 'vintage'
-  | 'happy'
-  | 'futuristic'
-  | 'excited'
-  | 'rugged'
-  | 'childlike'
-  | 'loud'
-  | 'artistic'
-  | 'sophisticated'
-  | 'awkward'
-  | 'active'
-  | 'innovative';
 
 // Mood characteristics mapping
 const MOOD_CHARACTERISTICS = {
-  business: {
+  Business: {
     brightness: { min: 0.4, max: 0.7 },
     saturation: { min: 0.2, max: 0.5 },
     warmth: { min: 0.3, max: 0.6 },
     contrast: { min: 0.4, max: 0.8 },
     preferredHues: ['blue', 'gray', 'black']
   },
-  calm: {
+  Calm: {
     brightness: { min: 0.5, max: 0.8 },
     saturation: { min: 0.2, max: 0.5 },
     warmth: { min: 0.3, max: 0.6 },
     contrast: { min: 0.2, max: 0.5 },
     preferredHues: ['blue', 'green', 'gray']
   },
-  cute: {
+  Cute: {
     brightness: { min: 0.6, max: 0.9 },
     saturation: { min: 0.5, max: 0.8 },
     warmth: { min: 0.5, max: 0.8 },
     contrast: { min: 0.3, max: 0.6 },
     preferredHues: ['pink', 'yellow', 'purple']
   },
-  playful: {
+  Playful: {
     brightness: { min: 0.6, max: 1.0 },
     saturation: { min: 0.6, max: 1.0 },
     warmth: { min: 0.5, max: 0.9 },
     contrast: { min: 0.4, max: 0.8 },
     preferredHues: ['yellow', 'orange', 'pink']
   },
-  fancy: {
+  Fancy: {
     brightness: { min: 0.3, max: 0.7 },
     saturation: { min: 0.3, max: 0.6 },
     warmth: { min: 0.4, max: 0.7 },
     contrast: { min: 0.5, max: 0.9 },
     preferredHues: ['purple', 'gold', 'red']
   },
-  stiff: {
+  Stiff: {
     brightness: { min: 0.3, max: 0.6 },
     saturation: { min: 0.1, max: 0.4 },
     warmth: { min: 0.2, max: 0.5 },
     contrast: { min: 0.6, max: 0.9 },
     preferredHues: ['gray', 'black', 'navy']
   },
-  vintage: {
+  Vintage: {
     brightness: { min: 0.3, max: 0.7 },
     saturation: { min: 0.2, max: 0.5 },
     warmth: { min: 0.4, max: 0.7 },
     contrast: { min: 0.3, max: 0.7 },
     preferredHues: ['brown', 'beige', 'cream']
   },
-  happy: {
+  Happy: {
     brightness: { min: 0.6, max: 1.0 },
     saturation: { min: 0.5, max: 0.9 },
     warmth: { min: 0.5, max: 0.9 },
     contrast: { min: 0.3, max: 0.7 },
     preferredHues: ['yellow', 'orange', 'pink']
   },
-  futuristic: {
+  Futuristic: {
     brightness: { min: 0.5, max: 0.9 },
     saturation: { min: 0.2, max: 0.6 },
     warmth: { min: 0.2, max: 0.5 },
     contrast: { min: 0.7, max: 1.0 },
     preferredHues: ['white', 'black', 'cyan']
   },
-  excited: {
+  Excited: {
     brightness: { min: 0.6, max: 1.0 },
     saturation: { min: 0.7, max: 1.0 },
     warmth: { min: 0.6, max: 1.0 },
     contrast: { min: 0.5, max: 0.9 },
     preferredHues: ['red', 'orange', 'yellow']
   },
-  rugged: {
+  Rugged: {
     brightness: { min: 0.2, max: 0.6 },
     saturation: { min: 0.3, max: 0.7 },
     warmth: { min: 0.4, max: 0.8 },
     contrast: { min: 0.4, max: 0.8 },
     preferredHues: ['brown', 'green', 'gray']
   },
-  childlike: {
+  Childlike: {
     brightness: { min: 0.6, max: 1.0 },
     saturation: { min: 0.6, max: 1.0 },
     warmth: { min: 0.5, max: 0.9 },
     contrast: { min: 0.3, max: 0.7 },
     preferredHues: ['red', 'blue', 'yellow']
   },
-  loud: {
+  Loud: {
     brightness: { min: 0.5, max: 0.9 },
     saturation: { min: 0.7, max: 1.0 },
     warmth: { min: 0.5, max: 0.9 },
     contrast: { min: 0.6, max: 1.0 },
     preferredHues: ['red', 'orange', 'pink']
   },
-  artistic: {
+  Artistic: {
     brightness: { min: 0.3, max: 0.8 },
     saturation: { min: 0.4, max: 0.8 },
     warmth: { min: 0.3, max: 0.7 },
     contrast: { min: 0.4, max: 0.9 },
     preferredHues: ['purple', 'blue', 'teal']
   },
-  sophisticated: {
+  Sophisticated: {
     brightness: { min: 0.3, max: 0.7 },
     saturation: { min: 0.1, max: 0.4 },
     warmth: { min: 0.3, max: 0.6 },
     contrast: { min: 0.5, max: 0.9 },
     preferredHues: ['black', 'gray', 'navy']
   },
-  awkward: {
+ Awkward: {
     brightness: { min: 0.4, max: 0.8 },
     saturation: { min: 0.3, max: 0.7 },
     warmth: { min: 0.3, max: 0.7 },
     contrast: { min: 0.2, max: 0.6 },
     preferredHues: ['green', 'yellow', 'pink']
   },
-  active: {
+  Active: {
     brightness: { min: 0.5, max: 0.9 },
     saturation: { min: 0.5, max: 0.9 },
     warmth: { min: 0.4, max: 0.8 },
     contrast: { min: 0.4, max: 0.8 },
     preferredHues: ['red', 'orange', 'blue']
   },
-  innovative: {
-    brightness: { min: 0.4, max: 0.8 },
+  Scary: {
+    brightness: { min: 0.1, max: 0.5 },
     saturation: { min: 0.3, max: 0.7 },
-    warmth: { min: 0.3, max: 0.6 },
-    contrast: { min: 0.5, max: 0.9 },
-    preferredHues: ['cyan', 'purple', 'green']
+    warmth: { min: 0.2, max: 0.5 },
+    contrast: { min: 0.6, max: 1.0 },
+    preferredHues: ['black', 'purple', 'red']
   }
 };
 
@@ -373,24 +354,25 @@ export const detectMoodFromImage = async (imageFile: File): Promise<MoodType> =>
 // Helper function to get mood description
 export const getMoodDescription = (mood: MoodType): string => {
   const descriptions = {
-    business: 'Professional and trustworthy',
-    calm: 'Peaceful and serene',
-    cute: 'Sweet and charming',
-    playful: 'Fun and lighthearted',
-    fancy: 'Elegant and sophisticated',
-    stiff: 'Formal and structured',
-    vintage: 'Classic and nostalgic',
-    happy: 'Cheerful and optimistic',
-    futuristic: 'Modern and innovative',
-    excited: 'Energetic and dynamic',
-    rugged: 'Strong and durable',
-    childlike: 'Innocent and playful',
-    loud: 'Bold and attention-grabbing',
-    artistic: 'Creative and expressive',
-    sophisticated: 'Refined and elegant',
-    awkward: 'Unique and unconventional',
-    active: 'Dynamic and energetic',
-    innovative: 'Forward-thinking and creative'
+    Business: 'Professional and trustworthy',
+    Calm: 'Peaceful and serene',
+    Cute: 'Sweet and charming',
+    Playful: 'Fun and lighthearted',
+    Fancy: 'Elegant and sophisticated',
+    Stiff: 'Formal and structured',
+    Vintage: 'Classic and nostalgic',
+    Happy: 'Cheerful and optimistic',
+    Futuristic: 'Modern and innovative',
+    Excited: 'Energetic and dynamic',
+    Rugged: 'Strong and durable',
+    Childlike: 'Innocent and playful',
+    Loud: 'Bold and attention-grabbing',
+    Artistic: 'Creative and expressive',
+    Sophisticated: 'Refined and elegant',
+    Awkward: 'Unique and unconventional',
+    Active: 'Dynamic and energetic',
+    Scary: 'Dark and intense'  // Added Scary mood
+
   };
 
   return descriptions[mood];
@@ -435,14 +417,3 @@ export const doesImageMatchMood = (
 
 // Export mood-related constants
 export const MOODS = Object.keys(MOOD_CHARACTERISTICS) as MoodType[];
-
-export const MOOD_CATEGORIES = {
-  PROFESSIONAL: ['business', 'sophisticated', 'stiff'] as MoodType[],
-  PLAYFUL: ['playful', 'cute', 'childlike', 'happy'] as MoodType[],
-  ENERGETIC: ['excited', 'active', 'loud'] as MoodType[],
-  CREATIVE: ['artistic', 'innovative', 'fancy'] as MoodType[],
-  TRADITIONAL: ['vintage', 'rugged'] as MoodType[],
-  MODERN: ['futuristic'] as MoodType[],
-  RELAXED: ['calm'] as MoodType[],
-  UNIQUE: ['awkward'] as MoodType[]
-};
