@@ -1,4 +1,5 @@
 import { MoodType } from '../types/fonts';
+
 // Types for color analysis
 export interface ColorCount {
   r: number;
@@ -14,7 +15,6 @@ export interface MoodCharacteristics {
   contrast: number;
   dominantHues: string[];
 }
-
 
 // Mood characteristics mapping
 const MOOD_CHARACTERISTICS = {
@@ -371,8 +371,7 @@ export const getMoodDescription = (mood: MoodType): string => {
     Sophisticated: 'Refined and elegant',
     Awkward: 'Unique and unconventional',
     Active: 'Dynamic and energetic',
-    Scary: 'Dark and intense'  // Added Scary mood
-
+    Scary: 'Dark and intense'
   };
 
   return descriptions[mood];

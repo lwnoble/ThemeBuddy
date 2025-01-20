@@ -1,42 +1,50 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronLeft, Settings2 } from 'lucide-react';
-import ColorPaletteSettings from './ColorPaletteSettings';
-import ShadeSettings, { ShadeSettingsProps } from './ShadeSettings';
-import { extractDominantColors, generateAllColorModes, ColorSettings } from '../../utils/colors';
 import { ColorSwatch } from './ColorSwatch';
-import { generateUniqueColorNames } from '../../utils/color-namer';
+import ShadeSettings from './ShadeSettings';
 import { useColors } from '../../../context/ColorContext';
-import { detectMoodsFromText, generateColorPalette } from '../../utils/color-palette-generator';
+import { generateUniqueColorNames } from '../../utils/color-namer';
+import { generateAllColorModes, ColorSettings, rgbToHex } from '../../utils/colors';
+
+
+const ColorThief = require('colorthief');
+const chroma = require('chroma-js');
+
+type WCAGMode = 'AA-light' | 'AA-dark' | 'AAA-light' | 'AAA-dark';
 
 interface ColorPaletteProps {
   imageFile?: File;
   imageUrl?: string;
-  mood?: string;
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-type WCAGMode = 'AA-light' | 'AA-dark' | 'AAA-light' | 'AAA-dark';
+const findClosestAccessibleShade = (baseColor: string, shades: Array<{color: string, contrastRatio: number}>): string => {
+  let minDeltaE = Infinity;
+  let closestShade = baseColor;
 
-const ColorPalette: React.FC<ColorPaletteProps> = ({
-  imageFile,
-  imageUrl,
-  mood: initialMood,
-  onBack
-}) => {
-  const [mood, setMood] = useState(initialMood || '');
+  shades.forEach(shade => {
+    const deltaE = chroma.deltaE(baseColor, shade.color);
+    if (deltaE < minDeltaE) {
+      minDeltaE = deltaE;
+      closestShade = shade.color;
+    }
+  });
+
+  return closestShade;
+};
+
+const ColorPalette: React.FC<ColorPaletteProps> = ({ imageFile, imageUrl, onBack }) => {
   const { setColors: setContextColors, setColorNames: setContextColorNames } = useColors();
-  const [isLoading, setIsLoading] = useState(false);
-  const [localColors, setLocalColors] = useState<string[]>([]);
-  const [localColorNames, setLocalColorNames] = useState<string[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
+  const [colorNames, setColorNames] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [showSettings, setShowSettings] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showShadeSettings, setShowShadeSettings] = useState(false);
   const [activeWCAGMode, setActiveWCAGMode] = useState<WCAGMode>('AA-light');
-  const [moodInput, setMoodInput] = useState<string>('');
-  const [moodColors, setMoodColors] = useState<string[]>([]);
   const [colorSettings, setColorSettings] = useState<ColorSettings>({
     numberOfShades: 10,
-    numberOfColors: 5,
+    numberOfColors: 10,
+    deltaE: 5,
     lightMode: {
       lightestShade: 95,
       darkestShade: 10,
@@ -63,123 +71,76 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     minContrastRatio: 4.5
   });
 
-  const extractColors = async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      let imgFile;
-      
-      if (imageFile) {
-        imgFile = imageFile;
-      } else if (imageUrl) {
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-        imgFile = new File([blob], 'image.png', { type: blob.type });
-      } else {
-        throw new Error('No image source available');
-      }
-
-      const reader = new FileReader();
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(imgFile);
-      });
-
-      console.log('Processing image...');
-      const extractedColors = await extractDominantColors(
-        dataUrl,
-        colorSettings.numberOfColors,
-        10
-      );
-      
-      console.log('Extracted colors:', extractedColors);
-      setLocalColors(extractedColors);
-      setContextColors(extractedColors); // Update context
-      
-      const uniqueColorNames = generateUniqueColorNames(extractedColors);
-      setLocalColorNames(uniqueColorNames);
-      setContextColorNames(uniqueColorNames); // Update context
-    } catch (err) {
-      console.error('Error extracting colors:', err);
-      setError('Failed to extract colors from image');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleShadeSettingsChange = (newSettings: Partial<ShadeSettingsProps>) => {
-    setColorSettings(prevSettings => ({
-      ...prevSettings,
-      numberOfShades: newSettings.numberOfShades ?? prevSettings.numberOfShades,
-      lightMode: {
-        ...prevSettings.lightMode,
-        lightestShade: newSettings.maxLightnessLight ?? prevSettings.lightMode.lightestShade,
-        darkestShade: newSettings.maxDarknessLight ?? prevSettings.lightMode.darkestShade,
-        maxChroma: newSettings.maxChromaLight ?? prevSettings.lightMode.maxChroma,
-        textColor: newSettings.lightModeTextColor ?? prevSettings.lightMode.textColor,
-      },
-      darkMode: {
-        ...prevSettings.darkMode,
-        lightestShade: newSettings.maxLightnessDark ?? prevSettings.darkMode.lightestShade,
-        darkestShade: newSettings.maxDarknessDark ?? prevSettings.darkMode.darkestShade,
-        maxChroma: newSettings.maxChromaDark ?? prevSettings.darkMode.maxChroma,
-        textColor: newSettings.darkModeTextColor ?? prevSettings.darkMode.textColor,
-      }
-    }));
-  };
-
-  const generateMoodColors = useCallback(() => {
-    if (!mood || mood.trim() === '') {
-      setError('Please enter a valid mood');
-      return;
-    }
-    const detectedMoods = detectMoodsFromText(mood);
-    if (detectedMoods.length === 0) {
-      setError('No matching moods found. Please try a different mood description.');
-      return;
-    }
-    const colorPalette = generateColorPalette(detectedMoods);
-    const colors = colorPalette.map(result => result.color);
-    setMoodColors(colors);
-    setLocalColors(colors);
-    setContextColors(colors);
-  
-    const uniqueColorNames = generateUniqueColorNames(colors);
-    setLocalColorNames(uniqueColorNames);
-    setContextColorNames(uniqueColorNames);
-  }, [mood, setContextColors, setContextColorNames]);
-
   useEffect(() => {
-    if (initialMood) {
-      setMood(initialMood);
-    }
-  }, [initialMood]);
-
-useEffect(() => {
-  if (mood) {
-    generateMoodColors();
-  } else if (imageFile || imageUrl) {
-    extractColors();
-  }
-}, [mood, imageFile, imageUrl, generateMoodColors]);
-
-  const handleSettingsChange = (newSettings: Partial<typeof colorSettings>) => {
-    setColorSettings(prev => {
-      const updatedSettings = { ...prev };
+    const extractColors = async () => {
+      setIsLoading(true);
+      setError(null);
       
-      if (newSettings.numberOfColors !== undefined) {
-        updatedSettings.numberOfColors = newSettings.numberOfColors;
-      }
-      if (newSettings.numberOfShades !== undefined) {
-        updatedSettings.numberOfShades = newSettings.numberOfShades;
-      }
-      return updatedSettings;
-    });
-  };
+      try {
+        let imgUrl: string;
+        if (imageFile) {
+          imgUrl = URL.createObjectURL(imageFile);
+        } else if (imageUrl) {
+          imgUrl = imageUrl;
+        } else {
+          throw new Error('No image source provided');
+        }
 
-  const renderWCAGModeSelector = () => (
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = imgUrl;
+        });
+
+        const colorThief = ColorThief.default ? new ColorThief.default() : new ColorThief();
+        const dominantColor = colorThief.getColor(img);
+        const palette = colorThief.getPalette(img, 9);
+        
+        const hexColors = [
+          rgbToHex({ r: dominantColor[0], g: dominantColor[1], b: dominantColor[2] }),
+          ...palette.map(([r, g, b]: number[]) => {
+            return rgbToHex({ r, g, b });
+          })
+        ];
+
+        // Generate accessible shades for all colors
+        const colorModesWithAccessibleShades = [
+          { originalColor: hexColors[0], accessibleShade: findClosestAccessibleShade(hexColors[0], generateAllColorModes(hexColors[0], colorSettings)['AA-light']) },
+          ...hexColors.slice(1).map((color) => ({
+            originalColor: color,
+            accessibleShade: findClosestAccessibleShade(color, generateAllColorModes(color, colorSettings)['AA-light'])
+          }))
+        ];
+
+        const updatedColors = colorModesWithAccessibleShades.map(({ accessibleShade }) => accessibleShade);
+        const updatedColorNames = generateUniqueColorNames(updatedColors);
+
+        setColors(updatedColors);
+        setColorNames(updatedColorNames);
+        setContextColors(updatedColors);
+        setContextColorNames(updatedColorNames);
+
+        if (imageFile) {
+          URL.revokeObjectURL(imgUrl);
+        }
+      } catch (err) {
+        console.error('Error extracting colors:', err);
+        setError('Failed to extract colors from image');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (imageFile || imageUrl) {
+      extractColors();
+    }
+  }, [imageFile, imageUrl, setContextColors, setContextColorNames]);
+
+
+  const WCAGModeSelector = () => (
     <div className="flex space-x-4 border-b border-gray-200 mb-6">
       {(['AA-light', 'AA-dark', 'AAA-light', 'AAA-dark'] as const).map((mode) => (
         <button
@@ -197,205 +158,168 @@ useEffect(() => {
     </div>
   );
 
+  const renderColorShades = (color: string) => {
+    try {
+      const modes = generateAllColorModes(color, colorSettings);
+      const shades = modes[activeWCAGMode];
+      
+      return shades.map((shade, index) => (
+        <div
+          key={index}
+          className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+          style={{ backgroundColor: shade.color }}
+          onClick={() => navigator.clipboard.writeText(shade.color)}
+        >
+          <span style={{ color: shade.textColor }}>Aa</span>
+          <span className="text-xs mt-1" style={{ color: shade.textColor }}>
+            {shade.contrastRatio.toFixed(2)}:1
+          </span>
+        </div>
+      ));
+    } catch (err) {
+      console.error('Error generating shades:', err);
+      return null;
+    }
+  };
+
   return (
-    
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <button onClick={onBack} className="flex items-center text-purple-500 hover:text-purple-600">
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="flex items-center mb-8">
+        <button 
+          onClick={onBack} 
+          className="flex items-center text-purple-500 hover:text-purple-600"
+        >
           <ChevronLeft className="w-5 h-5 mr-1" />
-          <span>Back to Design System</span>
+          <span>Back</span>
         </button>
       </div>
 
-      <h1 className="text-3xl font-bold mb-8">Colors</h1>
-
-      <div className="space-y-12">
-      <section className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Mood-based Colors</h2>
-        <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            value={mood}
-            onChange={(e) => setMood(e.target.value)}
-            placeholder="Enter mood"
-            className="flex-grow p-2 border rounded"
-          />
-          <button
-            onClick={generateMoodColors}
-            className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
-          >
-            Regenerate Colors
-          </button>
-        </div>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </section>
+      <div className="space-y-8">
+        {/* Main Color Display */}
         <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">Palette</h2>
-            <button 
-              onClick={() => setShowSettings(!showSettings)}
-              className={`p-2 rounded-lg transition-colors ${
-                showSettings ? 'bg-purple-100 text-purple-600' : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <Settings2 className="w-6 h-6" />
-            </button>
-          </div>
-          
-          {showSettings && (
-            <ColorPaletteSettings
-              settings={colorSettings}
-              onSettingsChange={handleSettingsChange}
-            />
-          )}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto" />
-            <p className="mt-4 text-gray-600">Generating color palette...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12">
-            <p className="text-red-500">{error}</p>
-          </div>
-        ) : localColors.length === 0 && moodColors.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">No colors available. Please set a mood in System Settings or generate colors from an image.</p>
-          </div>
-        ) : (
-        <div>
-          <div className="grid grid-cols-5 gap-4 mb-4">
-            {(moodColors.length > 0 ? moodColors : localColors).map((color, index) => (
-              <div key={index} className="text-center">
-                <ColorSwatch 
-                  color={color} 
-                  size="large" 
-                  onClick={() => navigator.clipboard.writeText(color)}
-                />
-                <p className="mt-2 text-sm font-medium">{localColorNames[index]}</p>
-                <p className="text-xs text-gray-500">{color}</p>
-              </div>
-            ))}
-          </div>
-          <p className="text-sm text-gray-500 text-center">
-            Click color to copy hex value
-          </p>
-        </div>
-      )}
-        </section>
-
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">Shades</h2>
-            <button
-              onClick={() => setShowShadeSettings(!showShadeSettings)}
-              className={`p-2 rounded-lg transition-colors ${
-                showShadeSettings ? 'bg-purple-100 text-purple-600' : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <Settings2 className="w-6 h-6" />
-            </button>
-          </div>
-          
-          {showShadeSettings && (
-            <ShadeSettings
-              numberOfShades={colorSettings.numberOfShades}
-              maxLightnessLight={colorSettings.lightMode.lightestShade}
-              maxLightnessDark={colorSettings.darkMode.lightestShade}
-              maxDarknessLight={colorSettings.lightMode.darkestShade}
-              maxDarknessDark={colorSettings.darkMode.darkestShade}
-              maxChromaLight={colorSettings.lightMode.maxChroma}
-              maxChromaDark={colorSettings.darkMode.maxChroma}
-              lightModeTextColor={colorSettings.lightMode.textColor}
-              darkModeTextColor={colorSettings.darkMode.textColor}
-              onSettingsChange={handleShadeSettingsChange}
-            />
-          )}
-        </div>
-
-        <div className="space-y-6">
-          {renderWCAGModeSelector()}
-          {localColors.map((color, colorIndex) => (
-            <div key={colorIndex} className="space-y-6">
-              <h3 className="text-lg font-semibold">{localColorNames[colorIndex] || `Color ${colorIndex + 1}`}</h3>
-              <div className="grid grid-cols-10 gap-2">
-                {generateAllColorModes(
-                  color,
-                  colorSettings
-                )[activeWCAGMode].map((shade, shadeIndex) => (
-                  <div
-                    key={`${colorIndex}-${shadeIndex}`}
-                    className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                    style={{ backgroundColor: shade.color }}
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto" />
+              <p className="mt-4 text-gray-600">Extracting colors...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-500">{error}</p>
+            </div>
+          ) : colors.length > 0 ? (
+            <div>
+              <div className="grid grid-cols-5 gap-4">
+                <div className="text-center flex flex-col items-center">
+                  <ColorSwatch
+                    color={colors[0]}
+                    size="small"
                     onClick={() => {
-                      navigator.clipboard.writeText(shade.color);
+                      navigator.clipboard.writeText(colors[0]);
                     }}
-                  >
-                    <span style={{ color: shade.textColor }}>Aa</span>
-                    <span className="text-xs mt-1" style={{ color: shade.textColor }}>
-                      {shade.contrastRatio.toFixed(2)}:1
-                    </span>
+                  />
+                  <p className="mt-2 text-xs font-medium">{colorNames[0]}</p>
+                  <p className="text-xs text-gray-500">{colors[0]}</p>
+                </div>
+                {colors.slice(1).map((color, index) => (
+                  <div key={index} className="text-center flex flex-col items-center">
+                    <ColorSwatch
+                      color={color}
+                      size="small"
+
+                      onClick={() => {
+                        navigator.clipboard.writeText(color);
+                      }}
+                    />
+                    <p className="mt-2 text-xs font-medium">{colorNames[index + 1]}</p>
+                    <p className="text-xs text-gray-500">{color}</p>
                   </div>
                 ))}
               </div>
+              <p className="text-sm text-gray-500 text-center mt-4">
+                Click any color to copy its hex value
+              </p>
             </div>
-          ))}
-        </div>
-        <div className="space-y-6">
-          
-          {/* Default System Shades (Neutral) */}
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold">Neutral</h3>
-            <div className="grid grid-cols-12 gap-2">
-              {/* Pure white */}
-              <div
-                className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                style={{ backgroundColor: '#FFFFFF', border: '1px solid #e5e7eb' }}
-                onClick={() => {
-                  navigator.clipboard.writeText('#FFFFFF');
-                }}
-              >
-                <span style={{ color: '#000000' }}>Aa</span>
-                <span className="text-xs mt-1" style={{ color: '#000000' }}>
-                  White
-                </span>
-              </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No colors available</p>
+            </div>
+          )}
+        </section>
 
-              {/* Generated neutral shades */}
-              {generateAllColorModes(
-                '#FFFFFF',
-                colorSettings
-              )[activeWCAGMode].map((shade, shadeIndex) => (
-                <div
-                  key={`neutral-${shadeIndex}`}
-                  className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                  style={{ backgroundColor: shade.color }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(shade.color);
-                  }}
-                >
-                  <span style={{ color: shade.textColor }}>Aa</span>
-                  <span className="text-xs mt-1" style={{ color: shade.textColor }}>
-                    {shade.contrastRatio.toFixed(2)}:1
-                  </span>
+        {/* Shade Settings and Display */}
+        {colors.length > 0 && (
+          <section className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold">Shade Settings</h2>
+              <button
+                onClick={() => setShowShadeSettings(!showShadeSettings)}
+                className={`p-2 rounded transition-colors ${
+                  showShadeSettings ? 'bg-purple-100 text-purple-600' : 'hover:bg-gray-100'
+                }`}
+              >
+                <Settings2 className="w-6 h-6" />
+              </button>
+            </div>
+
+            {showShadeSettings && (
+              <ShadeSettings
+                numberOfShades={colorSettings.numberOfShades}
+                maxLightnessLight={colorSettings.lightMode.lightestShade}
+                maxLightnessDark={colorSettings.darkMode.lightestShade}
+                maxDarknessLight={colorSettings.lightMode.darkestShade}
+                maxDarknessDark={colorSettings.darkMode.darkestShade}
+                maxChromaLight={colorSettings.lightMode.maxChroma}
+                maxChromaDark={colorSettings.darkMode.maxChroma}
+                lightModeTextColor={colorSettings.lightMode.textColor}
+                darkModeTextColor={colorSettings.darkMode.textColor}
+                onSettingsChange={settings => setColorSettings(prev => ({
+                  ...prev,
+                  ...settings
+                }))}
+              />
+            )}
+
+            <div className="space-y-8">
+              <WCAGModeSelector />
+              {colors.map((color, colorIndex) => (
+                <div key={colorIndex} className="space-y-4">
+                  <h3 className="text-lg font-semibold">
+                    {colorNames[colorIndex]}
+                  </h3>
+                  <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {renderColorShades(color)}
+                  </div>
                 </div>
               ))}
+            </div>
+          </section>
+        )}
 
-              {/* Pure black */}
+        {/* Neutral Colors */}
+        {colors.length > 0 && (
+          <section className="space-y-6">
+            <h2 className="text-xl font-bold">Neutral Colors</h2>
+            <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
               <div
-                className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                style={{ backgroundColor: '#000000' }}
-                onClick={() => {
-                  navigator.clipboard.writeText('#000000');
-                }}
+                className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+                style={{ backgroundColor: '#FFFFFF', border: '1px solid #e5e7eb' }}
+                onClick={() => navigator.clipboard.writeText('#FFFFFF')}
               >
-                <span style={{ color: '#FFFFFF' }}>Aa</span>
-                <span className="text-xs mt-1" style={{ color: '#FFFFFF' }}>
-                  Black
-                </span>
+                <span className="text-black">Aa</span>
+                <span className="text-xs mt-1 text-black">White</span>
+              </div>
+              {renderColorShades('#808080')}
+              <div
+                className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+                style={{ backgroundColor: '#000000' }}
+                onClick={() => navigator.clipboard.writeText('#000000')}
+              >
+                <span className="text-white">Aa</span>
+                <span className="text-xs mt-1 text-white">Black</span>
               </div>
             </div>
-          </div>
-        </div>
+          </section>
+        )}
       </div>
     </div>
   );

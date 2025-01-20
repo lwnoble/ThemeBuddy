@@ -1,54 +1,39 @@
+// ColorPaletteSettings.tsx
 import React from 'react';
 import { HelpCircle } from 'lucide-react';
-import Slider from 'rc-slider';
-import { rgbToHsl, hslToRgb, hexToRgb, rgbToHex } from '../../utils/colors';
-import 'rc-slider/assets/index.css';
-
-interface ColorSettings {
-  numberOfColors: number;
-}
 
 interface ColorPaletteSettingsProps {
-  settings: ColorSettings;
-  onSettingsChange: (settings: Partial<ColorSettings>) => void;
+  deltaE: number;
+  onSettingsChange: (settings: {
+    deltaE: number;
+  }) => void;
 }
 
 const ColorPaletteSettings: React.FC<ColorPaletteSettingsProps> = ({
-  settings,
+  deltaE,
   onSettingsChange
 }) => {
   return (
-    <div className="settings mb-8 bg-white rounded-lg shadow-md p-4">
-      <div className="space-y-6">
-        {/* Number of Colors */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-small flex items-center">
-              Number of Colors
-              <span 
-                className="ml-2 text-gray-500 cursor-help" 
-                title="Choose how many distinct colors are extracted from the image"
-              >
-                <HelpCircle className="w-4 h-4" />
-              </span>
-            </label>
-          </div>
-          <input
-            type="range"
-            min={3}
-            max={10}
-            value={settings.numberOfColors}
-            onChange={(e) => onSettingsChange({ 
-              numberOfColors: parseInt(e.target.value)
-            })}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-          />
-          <div className="flex justify-between text-sm text-gray-600 mt-1">
-            <span>3</span>
-            <span>{settings.numberOfColors}</span>
-            <span>10</span>
-          </div>
+    <div className="bg-white p-6 rounded-lg shadow-sm space-y-6">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium flex items-center gap-2">
+            Color Difference (ΔE)
+            <HelpCircle className="w-4 h-4 text-gray-400" />
+          </label>
+          <span className="text-sm text-gray-500">{deltaE}</span>
         </div>
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value={deltaE}
+          onChange={(e) => onSettingsChange({ deltaE: Number(e.target.value) })}
+          className="w-full"
+        />
+        <p className="text-xs text-gray-500">
+          Higher values will result in more distinct colors being selected
+        </p>
       </div>
     </div>
   );

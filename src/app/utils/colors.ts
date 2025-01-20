@@ -32,6 +32,7 @@ export interface ColorResult {
 export interface ColorSettings {
   numberOfShades: number;
   numberOfColors: number;
+  deltaE: number;
   lightMode: {
     lightestShade: number;
     darkestShade: number;
@@ -442,31 +443,35 @@ const getOptimizedDarkTextColor = (
 const rescaleShades = (
   shades: ShadeResult[],
   settings: ColorSettings,
-  mode: 'light' | 'dark',
+  mode: 'AA-light' | 'AA-dark' | 'AAA-light' | 'AAA-dark',
   minContrastRatio: number
 ): ShadeResult[] => {
   console.log('Starting rescale with:', { mode, minContrastRatio });
   console.log('Initial shades:', shades);
 
-  const modeSettings = mode === 'light' ? settings.lightMode : settings.darkMode;
+  const modeSettings = mode.startsWith('AA-light') ? settings.lightMode : settings.darkMode;
   const { textColor } = modeSettings;
 
   const shadesCopy = [...shades];
- // Create a reversed copy for finding transition points
- const reversedShades = [...shades].reverse();
-  
- const color1 = shades[0]; // Lightest shade
- 
- // Find color2 index and get color3 as next color
- const color2Index = reversedShades.findIndex(shade => shade.textColor === textColor.dark);
- if (color2Index === -1 || color2Index === reversedShades.length - 1) {
-   console.log('Could not find valid transition points');
-   return shades;
- }
+  // Create a reversed copy for finding transition points
+  const reversedShades = [...shades].reverse();
 
- const color2 = reversedShades[color2Index];
- const color3 = reversedShades[color2Index - 1];
- const color4 = shades[shades.length - 1]; // Darkest shade
+  const color1 = shades[0]; // Lightest shade
+  // Extract shades for conditional checks
+  const shade4 = shades[4].color;
+  const shade5 = shades[5].color;
+  const shade6 = shades[6].color;
+
+  // Find color2 index and get color3 as next color
+  const color2Index = reversedShades.findIndex(shade => shade.textColor === textColor.dark);
+  if (color2Index === -1 || color2Index === reversedShades.length - 1) {
+    console.log('Could not find valid transition points');
+    return shades;
+  }
+
+  const color2 = reversedShades[color2Index];
+  const color3 = reversedShades[color2Index - 1];
+  const color4 = shades[shades.length - 1]; // Darkest shade
 
   console.log('Found transition colors:', {
     color1: color1?.color,
@@ -476,7 +481,7 @@ const rescaleShades = (
   });
 
   if (!color2 || !color3) {
-    console.log('Could not find transition colors, returning original shades');
+    console.log('Could not find transition points, returning original shades');
     return shades;
   }
 
@@ -485,38 +490,213 @@ const rescaleShades = (
     color2.color,
     calculateEffectiveTextColor(
       color2.color,
-       textColor.dark,
-       textColor.darkOpacity
-     ),
+      textColor.dark,
+      textColor.darkOpacity
+    ),
     minContrastRatio
   );
   console.log('Optimized color2:', optimizedColor2);
 
   // Calculate number of shades
-  const darkTextShades = Math.ceil(settings.numberOfShades / 2);
-  const lightTextShades = settings.numberOfShades - darkTextShades;
+  const darkTextShades = 5;
+  const lightTextShades = 5;
   console.log('Shade counts:', { darkTextShades, lightTextShades });
 
-  const rescaledDarkShades = chroma.scale([
-    color1.color,
-    optimizedColor2
-  ])
-  .colors(darkTextShades)
-  .map((color: string) => ({
-    color,
-    textColor: calculateEffectiveTextColor(
-      color,
-       textColor.dark,
-       textColor.darkOpacity
-     ),
-    contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
-      color,
-       textColor.dark,
-       textColor.darkOpacity
-     ))
-  }));
 
-  const rescaledLightShades = chroma.scale([
+
+  let rescaledDarkShades: ShadeResult[];
+  let rescaledLightShades: ShadeResult[];
+
+  if (!mode.startsWith('AA-light') || (mode.startsWith('AA-light') && color2Index >= 5)) {
+    // Not AA light mode, or AA light mode with color2 in the first 5 shades
+    rescaledDarkShades = chroma.scale([
+      color1.color,
+      optimizedColor2
+    ])
+    .colors(darkTextShades)
+    .map((color: string) => ({
+      color,
+      textColor: calculateEffectiveTextColor(
+        color,
+        textColor.dark,
+        textColor.darkOpacity
+      ),
+      contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+        color,
+        textColor.dark,
+        textColor.darkOpacity
+      ))
+    }));
+  } else if(mode.startsWith('AA-light') && color2Index == 4){
+    // AA light mode with color2 after the first 5 shades
+    if (
+      Math.abs(chroma.deltaE(shade4, shade5)) > 8
+    ) {
+      // Shades 4, 5, and 6 are very similar
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(4)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+      rescaledDarkShades.push({
+        color: shade5,
+        textColor: calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade5, calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });
+    } else {
+      // Shade 4 is different, but 5 and 6 are very close
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(5)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+    } 
+  } else {
+    if (
+      Math.abs(chroma.deltaE(shade4, shade5)) > 8 &&
+      Math.abs(chroma.deltaE(shade5, shade6)) > 8
+    ) {
+      // All shades are very different
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(3)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+      rescaledDarkShades.push({
+        color: shade5,
+        textColor: calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade5, calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });
+      rescaledDarkShades.push({
+        color: shade6,
+        textColor: calculateEffectiveTextColor(
+          shade6,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade6, calculateEffectiveTextColor(
+          shade6,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });
+    } else if (
+        Math.abs(chroma.deltaE(shade4, shade5)) > 8 &&
+        Math.abs(chroma.deltaE(shade5, shade6)) < 8
+      ) {
+      // Shades 4, 5, and 6 are very similar
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(4)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+      rescaledDarkShades.push({
+        color: shade5,
+        textColor: calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade5, calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });  
+    }  else {
+      // Shade 4 is different, but 5 and 6 are very close
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(5)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+    }
+  }
+
+
+  // Rescale light shades
+  rescaledLightShades = chroma.scale([
     color3.color,
     color4.color
   ])
@@ -525,11 +705,11 @@ const rescaleShades = (
     color,
     textColor: calculateEffectiveTextColor(
       color,
-       textColor.light,
-       textColor.lightOpacity
-     ),
+      textColor.light,
+      textColor.lightOpacity
+    ),
     contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
-     color,
+      color,
       textColor.light,
       textColor.lightOpacity
     ))
@@ -556,10 +736,10 @@ export const generateAllColorModes = (
   const aaaLight = generateShades(baseColor, settings, 'light', 7.1);
   const aaaDark = generateShades(baseColor, settings, 'dark', 7.1);
 
-  const aaLightRescaled = rescaleShades(aaLight, settings, 'light', 4.5);
-  const aaDarkRescaled = rescaleShades(aaDark, settings, 'dark', 4.5);
-  const aaaLightRescaled = rescaleShades(aaaLight, settings, 'light', 7.1);
-  const aaaDarkRescaled = rescaleShades(aaaDark, settings, 'dark', 7.1);
+  const aaLightRescaled = rescaleShades(aaLight, settings, 'AA-light', 4.5);
+  const aaDarkRescaled = rescaleShades(aaDark, settings, 'AA-dark', 4.5);
+  const aaaLightRescaled = rescaleShades(aaaLight, settings, 'AAA-light', 7.1);
+  const aaaDarkRescaled = rescaleShades(aaaDark, settings, 'AAA-dark', 7.1);
 
  // Create the result object
  const result = {
@@ -575,40 +755,3 @@ shadesCache[baseColor] = result;
 return result;
 };
 
-// Generate analogous colors
-function getAnalogousColor(color: string, count = 2) {
-  return chroma(color).set('hsl.h', '+=' + 30).scale().mode('lab').colors(count);
-}
-
-// Generate complementary colors
-function getComplementaryColor(color: string) {
-  return chroma(color).set('hsl.h', '+180').hex();
-}
-
-// Generate triadic colors
-function getTriadicColors(color: string) {
-  const base = chroma(color);
-  return [
-    base.set('hsl.h', '+120').hex(),
-    base.set('hsl.h', '-120').hex(),
-  ];
-}
-
-// Generate tetradic colors
-function getTetradicColors(color: string) {
-  const base = chroma(color);
-  return [
-    base.set('hsl.h', '+90').hex(),
-    base.set('hsl.h', '-90').hex(),
-    base.set('hsl.h', '+180').hex(),
-  ];
-}
-
-// Generate split-complementary colors
-function getSplitComplementaryColors(color: string) {
-  const base = chroma(color);
-  return [
-    base.set('hsl.h', '+150').hex(),
-    base.set('hsl.h', '-150').hex(),
-  ];
-}

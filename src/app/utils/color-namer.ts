@@ -1,4 +1,5 @@
 import { hexToRgb, rgbToHsl } from './colors';
+import colorNames from '../data/color-names.json';
 
 // Base color definitions with more precise hue ranges
 const baseColors = [
@@ -92,11 +93,61 @@ const findBaseColor = (hue: number): string => {
   return matchedColor || 'Color';
 };
 
-/**
- * Name a color based on its HSL characteristics
- * @param hexColor Hex color code
- * @returns Descriptive color name
- */
+const getColorCategory = (baseColor: string): keyof typeof colorNames => {
+  switch (baseColor.toLowerCase()) {
+    case 'red':
+    case 'crimson':
+    case 'scarlet':
+    case 'vermilion':
+      return 'red_colors';
+    case 'orange':
+    case 'tangerine':
+    case 'coral':
+    case 'amber':
+      return 'orange_colors';
+    case 'yellow':
+    case 'lemon':
+    case 'gold':
+      return 'yellow_colors';
+    case 'green':
+    case 'lime':
+    case 'emerald':
+    case 'forest':
+    case 'sage':
+      return 'green_colors';
+    case 'blue':
+    case 'turquoise':
+    case 'sky':
+    case 'navy':
+    case 'azure':
+      return 'blue_colors';
+    case 'purple':
+    case 'lavender':
+    case 'plum':
+    case 'indigo':
+      return 'purple_colors';
+    case 'pink':
+      return 'pink_colors';
+    case 'brown':
+      return 'brown_colors';
+    case 'grey':
+    case 'gray':
+      return 'grey_colors';
+    case 'beige':
+      return 'beige_colors';
+    default:
+      return 'mood_colors'; // Default to moods if no match is found
+  }
+};
+
+const selectRandomColorName = (category: keyof typeof colorNames, usedNames: Set<string>): string => {
+  const availableNames = colorNames[category].filter(name => !usedNames.has(name));
+  if (availableNames.length === 0) {
+    return `${category.replace('_colors', '')} ${usedNames.size + 1}`;
+  }
+  return availableNames[Math.floor(Math.random() * availableNames.length)];
+};
+
 export const nameColor = (hexColor: string): string => {
   const rgb = hexToRgb(hexColor);
   if (!rgb) return 'Color';
@@ -123,27 +174,22 @@ export const nameColor = (hexColor: string): string => {
     hsl.s >= s.range[0] && hsl.s < s.range[1]
   )?.name || '';
 
-  // Prefer returning a single descriptor, prioritizing differently
-  return lightnessDesc || saturationDesc || baseColor || 'Color';
+  // Return the descriptive name (this will be used to determine the category)
+  return `${lightnessDesc} ${saturationDesc} ${baseColor}`.trim();
 };
 
-/**
- * Generates unique names for a set of colors
- * @param colors Array of hex color codes
- * @returns Array of unique color names
- */
 export const generateUniqueColorNames = (colors: string[]): string[] => {
   const usedNames = new Set<string>();
   
   return colors.map(color => {
-    let name = nameColor(color);
-    let uniqueName = name;
-    let counter = 1;
+    const descriptiveName = nameColor(color);
+    const baseColor = descriptiveName.split(' ').pop() || '';
+    const category = getColorCategory(baseColor);
+    let uniqueName = selectRandomColorName(category, usedNames);
 
     // Ensure unique names
     while (usedNames.has(uniqueName)) {
-      uniqueName = `${name} ${counter}`;
-      counter++;
+      uniqueName = selectRandomColorName(category, usedNames);
     }
 
     usedNames.add(uniqueName);

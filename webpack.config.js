@@ -8,7 +8,7 @@ module.exports = (env, argv) => ({
 
   entry: {
     ui: './src/app/index.tsx',
-    code: './src/plugin/controller.ts',
+    code: './src/plugin/code.ts',
   },
 
   module: {
