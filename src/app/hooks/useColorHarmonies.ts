@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { generateColorHarmonies, ColorData, ColorHarmony } from '../utils/color-harmonies';
 import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colors';
 import { generateUniqueColorNames } from '../utils/color-namer';
@@ -15,24 +15,51 @@ interface HarmoniesState {
 }
 
 export function useColorHarmonies(
-  baseColors: string[] | ColorData[]
+  baseColors: (() => (string | ColorData)[]) | (string | ColorData)[]
 ) {
-  // Convert input to ColorData if needed
-  const processedBaseColors: ColorData[] = baseColors.map(color => {
-    // If already ColorData, return as-is
-    if (typeof color === 'object' && 'baseHex' in color) {
-      return color;
-    }
-    
-    // If string, convert to ColorData
-    const colorName = generateUniqueColorNames([color])[0];
-    return {
-      id: `${colorName.toLowerCase().replace(/\s+/g, '-')}`,
-      baseHex: color,
-      name: colorName,
-      shadeIndex: 0
-    };
-  });
+  // Handle both function and array inputs
+  const getBaseColors = useCallback(() => {
+    return typeof baseColors === 'function' ? baseColors() : baseColors;
+  }, [baseColors]);
+
+  // Process base colors into ColorData
+  const processedBaseColors = useCallback(() => {
+    const colors = getBaseColors();
+    return colors.map(color => {
+      // If already ColorData, return as-is
+      if (typeof color === 'object' && 'baseHex' in color) {
+        return {
+          ...color,
+          shadeIndex: typeof color.shadeIndex === 'string' 
+            ? parseInt(color.shadeIndex) 
+            : color.shadeIndex
+        };
+      }
+      
+      // If string, convert to ColorData
+      const colorName = generateUniqueColorNames([color])[0];
+      return {
+        id: `${colorName.toLowerCase().replace(/\s+/g, '-')}`,
+        baseHex: color as string,
+        name: colorName,
+        shadeIndex: 0,
+        allModes: {
+          'AA-light': { 
+            allShades: []
+          },
+          'AA-dark': { 
+            allShades: []
+          },
+          'AAA-light': { 
+            allShades: []
+          },
+          'AAA-dark': { 
+            allShades: []
+          }
+        }
+      };
+    });
+  }, [getBaseColors]);
 
   const [harmonies, setHarmonies] = useState<HarmoniesState>({
     analogous: null,
@@ -46,35 +73,31 @@ export function useColorHarmonies(
   });
 
   useEffect(() => {
-    if (!processedBaseColors || processedBaseColors.length < 1) {
+    const colors = processedBaseColors();
+
+    console.log('Processed base colors:', colors);
+
+    if (!colors || colors.length < 1) {
       console.warn('Invalid inputs provided');
       return;
     }
 
     try {
-      // Use the first color as the base color
-      const baseColor = processedBaseColors[0];
+      const baseColor = colors[0];
+      const palette = colors;
       
-      // Generate a palette from the input colors
-      const palette = processedBaseColors;
-      
-      // Generate shades for all colors
-      const allShades: Record<string, ColorData[]> = {};
-      palette.forEach(color => {
-        // You might want to generate shades using your color generation utility
-        allShades[color.name] = [color]; // Placeholder - replace with actual shade generation
-      });
+      console.log('Base color:', baseColor);
+      console.log('Palette:', palette);
 
       const results = generateColorHarmonies(
         baseColor,
         palette,
-        allShades,
         hexToRgb,
         rgbToHsl,
         hslToRgb
       );
 
-      setHarmonies({
+      const newHarmonies = {
         analogous: results.find(r => r.type === 'analogous')?.colors || null,
         monochromatic: results.find(r => r.type === 'monochromatic')?.colors || null,
         triadic: results.find(r => r.type === 'triadic')?.colors || null,
@@ -83,6 +106,19 @@ export function useColorHarmonies(
         diadic: results.find(r => r.type === 'diadic')?.colors || null,
         achromatic: results.find(r => r.type === 'achromatic')?.colors || null,
         splitComplementary: results.find(r => r.type === 'split-complementary')?.colors || null
+      };
+
+      // Only update if there are actual changes
+      setHarmonies(prev => {
+        const hasChanges = Object.keys(newHarmonies).some(
+          key => {
+            const prevColor = prev[key as keyof HarmoniesState]?.primary?.baseHex;
+            const newColor = newHarmonies[key as keyof HarmoniesState]?.primary?.baseHex;
+            return prevColor !== newColor;
+          }
+        );
+        
+        return hasChanges ? newHarmonies : prev;
       });
     } catch (error) {
       console.error('Error generating color harmonies:', error);

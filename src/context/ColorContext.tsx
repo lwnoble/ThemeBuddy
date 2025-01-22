@@ -1,15 +1,25 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { ColorData } from '../../src/app/utils/color-harmonies'; // Adjust import path
-import { generateUniqueColorNames } from '../../src/app/utils/color-namer'; // Adjust import path
+import { ColorData } from '../../src/app/utils/color-harmonies';
+import { generateUniqueColorNames } from '../../src/app/utils/color-namer';
 
-
-// Type guard to check if a color is a ColorData
 const isColorData = (color: any): color is ColorData => {
   return typeof color === 'object' && 
          color !== null &&
          'baseHex' in color && 
          'name' in color && 
-         'id' in color;
+         'id' in color &&
+         'shadeIndex' in color &&
+         'allModes' in color &&
+         typeof color.allModes === 'object' &&
+         color.allModes !== null &&
+         'AA-light' in color.allModes &&
+         'AA-dark' in color.allModes &&
+         'AAA-light' in color.allModes &&
+         'AAA-dark' in color.allModes &&
+         Array.isArray(color.allModes['AA-light'].allShades) &&
+         Array.isArray(color.allModes['AA-dark'].allShades) &&
+         Array.isArray(color.allModes['AAA-light'].allShades) &&
+         Array.isArray(color.allModes['AAA-dark'].allShades);
 };
 
 interface ColorContextType {
@@ -17,6 +27,8 @@ interface ColorContextType {
   setColors: (colors: (string | ColorData)[]) => void;
   colorNames: string[];
   setColorNames: (names: string[]) => void;
+  allShades: Record<string, ColorData[]>;
+  setAllShades: (shades: Record<string, ColorData[]>) => void;
 }
 
 const DEFAULT_COLORS = [
@@ -32,14 +44,19 @@ const ColorContext = createContext<ColorContextType>({
   colors: DEFAULT_COLORS,
   setColors: () => {},
   colorNames: [],
-  setColorNames: () => {}
+  setColorNames: () => {},
+  allShades: {},
+  setAllShades: () => {}
 });
 
 export function ColorProvider({ children }: { children: React.ReactNode }) {
   const [colors, setColors] = useState<(string | ColorData)[]>(DEFAULT_COLORS);
   const [colorNames, setColorNames] = useState<string[]>([]);
+  const [allShades, setAllShades] = useState<Record<string, ColorData[]>>({});
 
   const handleSetColors = useCallback((input: (string | ColorData)[]) => {
+    console.log('🎨 ColorContext: Setting colors - Input:', JSON.stringify(input, null, 2));
+
     if (input.length === 0) {
       setColors([]);
       setColorNames([]);
@@ -47,36 +64,58 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Normalize input to ensure consistent type
-    const normalizedColors = input.map(color => {
-      // If it's already a ColorData, return it
+    const normalizedColors = input.map((color, index) => {
       if (isColorData(color)) {
+        console.log(`🎨 ColorContext: Color ${index} is already ColorData:`, JSON.stringify(color, null, 2));
         return color;
       }
       
-      // If it's a string, convert to ColorData
       const colorName = generateUniqueColorNames([color])[0];
-      return {
+      const normalizedColor: ColorData = {
         id: `${colorName.toLowerCase().replace(/\s+/g, '-')}`,
         baseHex: color,
         name: colorName,
-        shadeIndex: 0
+        shadeIndex: 0,  // Use number 0
+        allModes: {
+          'AA-light': { allShades: [] },
+          'AA-dark': { allShades: [] },
+          'AAA-light': { allShades: [] },
+          'AAA-dark': { allShades: [] }
+        }
       };
+    
+    return normalizedColor;
+      
+      console.log(`🎨 ColorContext: Normalized string color ${index}:`, JSON.stringify(normalizedColor, null, 2));
+      return normalizedColor;
     });
 
-    // Extract hex colors and names
     const hexColors = normalizedColors.map(cd => 
       isColorData(cd) ? cd.baseHex : cd
     );
-    const names = normalizedColors.map(cd => 
-      isColorData(cd) ? cd.name : generateUniqueColorNames([cd])[0]
-    );
+    const names = normalizedColors.map(cd => {
+      if (isColorData(cd)) {
+        return cd.name;
+      }
+      const colorStr = typeof cd === 'string' ? cd : String(cd);
+      return generateUniqueColorNames([colorStr])[0];
+    });
+
+    console.log('🎨 ColorContext: Final normalized colors:', JSON.stringify(normalizedColors, null, 2));
+    console.log('🎨 ColorContext: Final color names:', names);
 
     setColors(normalizedColors);
     setColorNames(names);
   }, []);
 
   const handleSetColorNames = useCallback((input: string[]) => {
+    console.log('🎨 ColorContext: Setting color names:', input);
     setColorNames(input);
+  }, []);
+
+  const handleSetAllShades = useCallback((shades: Record<string, ColorData[]>) => {
+    console.log('🎨 ColorContext: Setting all shades:', JSON.stringify(shades, null, 2));
+    setAllShades(shades);
   }, []);
 
   return (
@@ -85,7 +124,9 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
         colors, 
         setColors: handleSetColors, 
         colorNames, 
-        setColorNames: handleSetColorNames 
+        setColorNames: handleSetColorNames,
+        allShades,
+        setAllShades: handleSetAllShades
       }}
     >
       {children}
@@ -96,15 +137,42 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
 export function useColors() {
   const context = useContext(ColorContext);
   
-  // Helper method to get hex colors
   const getHexColors = () => {
     return context.colors.map(color => 
       isColorData(color) ? color.baseHex : color
     );
   };
 
+  const getFullColorData = () => {
+    return context.colors.map(color => 
+      isColorData(color) ? color : {
+        id: `color-${Math.random().toString(36).substr(2, 9)}`,
+        baseHex: color,
+        name: generateUniqueColorNames([color])[0],
+        shadeIndex: "0",
+        allModes: {
+          'AA-light': {
+            allShades: []
+          },
+          'AA-dark': {
+            allShades: []
+          },
+          'AAA-light': {
+            allShades: []
+          },
+          'AAA-dark': {
+            allShades: []
+          }
+        }
+      }
+    );
+  };
+
   return {
     ...context,
-    colors: getHexColors()
+    colors: getHexColors(),
+    fullColorData: getFullColorData(),
+    allShades: context.allShades,
+    setAllShades: context.setAllShades
   };
 }
