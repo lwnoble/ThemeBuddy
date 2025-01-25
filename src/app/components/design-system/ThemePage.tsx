@@ -17,6 +17,11 @@ interface ColorSet {
   tertiary: ColorData | string;
 }
 
+interface ThemePageProps {
+  imageFile?: File;
+  imageUrl?: string;
+}
+
 interface Theme {
   name: string;
   colors: ColorSet;
@@ -40,7 +45,8 @@ const harmonyTypes = [
   { key: 'custom', name: 'Custom' }
 ] as const;
 
-const ThemePage: React.FC = () => {
+const ThemePage: React.FC<ThemePageProps> = ({ imageFile, imageUrl }) => {
+  console.log('ThemePage props:', { imageFile, imageUrl });
   // Context hooks
   const { setCurrentRoute } = useNavigation();
   const { fullColorData } = useColors();
@@ -56,12 +62,16 @@ const ThemePage: React.FC = () => {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [activeTheme, setActiveTheme] = useState<Theme | null>(null);
   const [themes, setThemes] = useState<Theme[]>([]);
+
   const [themeAnalysis, setThemeAnalysis] = useState<Array<{
     theme: Theme;
     isValid: boolean;
     reason: ThemeAnalysisReason;
   }>>([]);
   const [baseColor, setBaseColor] = useState<ColorData | null>(null);
+  const [secondaryColor, setSecondaryColor] = useState<ColorData | null>(null);
+  const [tertiaryColor, setTertiaryColor] = useState<ColorData | null>(null);
+
 
   // Add type guard for ColorData
   function isColorData(color: ColorData | string): color is ColorData {
@@ -69,7 +79,7 @@ const ThemePage: React.FC = () => {
   }
 
   // Update safeColors to filter out state colors and default grey
-const safeColors = useMemo(() => {
+  const safeColors = useMemo(() => {
   if (!fullColorData || !Array.isArray(fullColorData)) {
     return []; // Remove default grey fallback
   }
@@ -90,6 +100,7 @@ const safeColors = useMemo(() => {
       }
     }));
 }, [fullColorData]);
+
 
   // Second: Initialize base color
   useEffect(() => {
@@ -118,10 +129,8 @@ const safeColors = useMemo(() => {
     }
   }, [safeColors]);
 
-
   // Color Harmonies
-  // Update arrangedColors to ensure we're not including state colors or default grey
-const arrangedColors = useMemo(() => {
+ const arrangedColors = useMemo(() => {
   console.log("Creating arrangedColors with:", {
     baseColor,
     safeColors
@@ -161,11 +170,45 @@ const arrangedColors = useMemo(() => {
 }, [baseColor, safeColors.map(color => color.baseHex).join(',')]);
   
 
+useEffect(() => {
+  console.log('useEffect for image insertion triggered');
+  console.log('Props:', { imageFile, imageUrl });
+  
+  const insertImage = async () => {
+    if (imageFile || imageUrl) {
+      try {
+        console.log('Attempting image insertion');
+        const imageBytes = imageFile 
+          ? await imageFile.arrayBuffer() 
+          : await (await fetch(imageUrl as string)).arrayBuffer();
+
+        console.log('Image bytes:', imageBytes.byteLength);
+        
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'insert-image',
+            imageBytes: new Uint8Array(imageBytes),
+            frameName: 'imageHero'
+          }
+        }, '*');
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  };
+
+  insertImage();
+}, [imageFile, imageUrl]);
+
+
   const harmonies = useColorHarmonies(arrangedColors);
   console.log("Generated harmonies:", harmonies);
 
   useEffect(() => {
-    if (!harmonies || !baseColor) return;
+    if (!harmonies || !baseColor) {
+      console.log("Missing harmonies or baseColor, skipping theme generation");
+      return;
+    }
   
     try {
       let newThemes: Theme[] = [];
@@ -175,29 +218,30 @@ const arrangedColors = useMemo(() => {
         reason: ThemeAnalysisReason;
       }> = [];
   
-      // Add regular harmonies
+      // Process regular harmonies
       for (const { key, name } of harmonyTypes) {
         if (key === 'custom') {
-          // Add custom theme with persisted colors
-          newThemes.push({
+          // Handle custom theme as before
+          const customTheme = {
             name: 'Custom',
             colors: {
               primary: customColors[0] || '',
               secondary: customColors[1] || '',
               tertiary: customColors[2] || ''
             },
-            type: 'custom'
+            type: 'custom' as const
+          };
+          newThemes.push(customTheme);
+          newThemeAnalysis.push({
+            theme: customTheme,
+            isValid: customColors.length === 3 && customColors.every(color => color !== ''),
+            reason: 'valid'
           });
           continue;
         }
   
-        // Explicitly use the current harmonies for this specific harmony type
         const harmonyColors = harmonies[key as keyof typeof harmonies];
-        
-        console.log(`${name} Harmony for ${baseColor.name}:`, {
-          baseColor: baseColor,
-          harmonyColors: harmonyColors
-        });
+        console.log(`Processing ${name} harmony:`, harmonyColors);
   
         if (!harmonyColors) continue;
   
@@ -213,58 +257,58 @@ const arrangedColors = useMemo(() => {
           type: key === 'splitComplementary' ? 'split-complementary' : key
         };
   
-        // Check for duplicate and redundant colors
-        const isValid = checkThemeRedundancy([theme, ...newThemes]).find(t => t.theme === theme)?.isValid || false;
-        const reason: ThemeAnalysisReason = isValid ? 'valid' : 'duplicate';
-  
+        // Add to themes array
         newThemes.push(theme);
-        newThemeAnalysis.push({ theme, isValid, reason });
       }
   
-      // Add custom theme
-      const newCustomTheme: Theme = {
-        name: 'Custom',
-        colors: {
-          primary: customColors[0] || '',
-          secondary: customColors[1] || '',
-          tertiary: customColors[2] || ''
-        },
-        type: 'custom'
-      };
+      // Check for duplicates and redundancy across all themes
+      const redundancyResults = checkThemeRedundancy(newThemes);
+      newThemeAnalysis = redundancyResults;
   
-      const hasAllCustomColors = customColors.length === 3 && customColors.every(color => color !== '');
-      newThemeAnalysis.push({
-        theme: newCustomTheme,
-        isValid: hasAllCustomColors,
-        reason: hasAllCustomColors ? 'valid' as ThemeAnalysisReason : 'duplicate' as ThemeAnalysisReason
-      });
+      console.log("Themes after redundancy check:", newThemeAnalysis);
   
-      // Only update if there are actual changes
-      const hasThemeChanges = 
-        themes.length !== newThemes.length || 
-        themes.some((theme, index) => 
-          theme.colors.primary !== newThemes[index]?.colors.primary ||
-          theme.colors.secondary !== newThemes[index]?.colors.secondary ||
-          theme.colors.tertiary !== newThemes[index]?.colors.tertiary
+      // Update state
+      setThemes(newThemes);
+      setThemeAnalysis(newThemeAnalysis);
+  
+      // If active theme is now invalid, select first valid theme
+      if (activeTheme) {
+        const activeThemeAnalysis = redundancyResults.find(t => 
+          t.theme.name === activeTheme.name && t.theme.type === activeTheme.type
         );
   
-      if (hasThemeChanges) {
-        setThemes(newThemes);
-        setThemeAnalysis(newThemeAnalysis);
-      }
+        if (!activeThemeAnalysis?.isValid) {
+          console.log("Active theme is now invalid, selecting new theme");
+          const firstValidTheme = redundancyResults.find(t => t.isValid)?.theme;
+          if (firstValidTheme) {
+            setActiveTheme(firstValidTheme);
+            setSelectedTheme(firstValidTheme);
+            
+            // Update Figma with new theme colors
+            Object.entries(firstValidTheme.colors).forEach(([position, color]) => {
+              const colorHex = typeof color === 'object' ? color.baseHex : color;
+              window.parent.postMessage({
+                pluginMessage: {
+                  type: 'update-design-token',
+                  collection: 'Tones',
+                  group: 'Default',
+                  mode: 'AA-light',
+                  variable: `${position}-color`,
+                  value: colorHex
+                }
+              }, '*');
+            });
   
-      // Only set active theme if there isn't one
-      if (!activeTheme) {
-        const validTheme = newThemeAnalysis.find(({ isValid }) => isValid)?.theme;
-        if (validTheme) {
-          setActiveTheme(validTheme);
-          setSelectedTheme(validTheme);
+            // Trigger surface style update
+            handleSurfaceStyleChange(surfaceStyle);
+          }
         }
       }
+  
     } catch (error) {
       console.error('Error generating themes:', error);
     }
-  }, [harmonies, baseColor, customColors, themes, activeTheme]);
+  }, [harmonies, baseColor, customColors]);
 
   const checkThemeRedundancy = (themes: Theme[]): Array<{
     theme: Theme;
@@ -300,95 +344,1053 @@ const arrangedColors = useMemo(() => {
 let darkTextColor = '#121212';
 let darkTextOpacity = 1;
 
-// Helper function to calculate text color based on background and target contrast
-function getTextColorWithContrast(background: string, targetContrast: number): string {
-  let textColor = darkTextColor;
-  let n = darkTextOpacity;
-  let stepSize = 0.01;
+// Add this useEffect near the top of your component
+useEffect(() => {
+  if (baseColor) {
+    handleSurfaceStyleChange('light-tonal');
+  }
+}, [baseColor]);
 
-  while (chroma.contrast(chroma.mix(background, textColor, n), background) > targetContrast && n > 0) {
-    stepSize = stepSize + stepSize;
-    n = n - stepSize;
+const generateIconTokens = (
+  primary: ColorData,
+  surfaces: string[],
+  stateColors: ColorData[],
+  secondary?: ColorData,
+  tertiary?: ColorData
+): Array<{ name: string, value: string }> => {
+  const iconTokens: Array<{ name: string, value: string }> = [];
+  let requiresIconBg = false;
+
+  // Test all colors
+  const primaryResult = findShadeWithMinContrastRatioMultiSurface(primary, surfaces, 3.1);
+  const secondaryResult = secondary ? findShadeWithMinContrastRatioMultiSurface(secondary, surfaces, 3.1) : null;
+  const tertiaryResult = tertiary ? findShadeWithMinContrastRatioMultiSurface(tertiary, surfaces, 3.1) : null;
+
+  requiresIconBg = primaryResult.requiresBg || 
+                   (secondaryResult?.requiresBg || false) || 
+                   (tertiaryResult?.requiresBg || false);
+
+  // Set background if needed
+  if (requiresIconBg) {
+    const baseFirstShade = baseColor?.allModes?.['AA-light']?.allShades[0]?.hex;
+    iconTokens.push({ name: 'Icon-BG', value: baseFirstShade || '#ffffff' });
+  } else {
+    iconTokens.push({ name: 'Icon-BG', value: 'rgba(255, 255, 255, 0)' });
   }
 
-  n = Math.min(n + stepSize, 1);
-  return chroma.mix(background, textColor, n).hex();
-}
+  // Add icon colors
+  iconTokens.push({ name: 'Icon-Primary', value: primaryResult.shade });
+  if (secondaryResult) iconTokens.push({ name: 'Icon-Secondary', value: secondaryResult.shade });
+  if (tertiaryResult) iconTokens.push({ name: 'Icon-Tertiary', value: tertiaryResult.shade });
 
-// Helper function to find a button color with sufficient contrast
-function findButtonColor(allShades: any[], surfaces: string[]): { buttonColor: string, buttonTextColor: string } {
-  for (let i = 2; i < allShades.length; i++) {
-    const candidate = allShades[i]; // Assuming this is the hex color string
-    if (surfaces.every(surface => chroma.contrast(candidate, surface) >= 3.1)) {
-      return { buttonColor: candidate, buttonTextColor: '#FFFFFF' }; // You might need to adjust how to determine text color
+  return iconTokens;
+};
+
+const findBorderColor = (
+  shadeMixer: string,
+  surfaces: string[],
+  targetContrastRatio: number
+ ): string => {
+  let n = 1;
+  let lastValidN = null;
+ 
+  while (n > 0) {
+    const mixedColor = chroma.mix(surfaces[0], shadeMixer, n);
+    const allSurfacesMeetContrast = surfaces.every(surface => 
+      chroma.contrast(mixedColor, surface) >= targetContrastRatio
+    );
+ 
+    if (allSurfacesMeetContrast) {
+      lastValidN = n;
+      break;
+    }
+    n = n  - 0.01;
+  }
+ 
+  if (lastValidN === null) return shadeMixer;
+  return chroma.mix(surfaces[0], shadeMixer, 1 - lastValidN + .01).hex();
+ };
+
+
+const findShadeWithMinContrastRatioMultiSurface = (
+  targetColor: ColorData,
+  surfaces: string[],
+  targetContrastRatio: number
+): { shade: string, requiresBg: boolean } => {
+  const colorInPalette = safeColors.find(color => color.baseHex === targetColor.baseHex);
+  const shades = colorInPalette?.allModes?.['AA-light']?.allShades || [];
+  const firstSurface = surfaces[0];
+  const surfaceLuminance = chroma(firstSurface).luminance();
+  
+  const sortedShades = [...shades].sort((a, b) => {
+    if (surfaceLuminance < 0.5) {
+      return shades.indexOf(a) - shades.indexOf(b);  // For dark surfaces, start light
+    } else {
+      return shades.indexOf(b) - shades.indexOf(a);  // For light surfaces, start dark
+    }
+  });
+
+  let lastValidShade = null;
+  for (const shade of sortedShades) {
+    const meetsAllSurfaceContrasts = surfaces.every(surface => 
+      chroma.contrast(shade.hex, surface) >= targetContrastRatio
+    );
+
+    if (meetsAllSurfaceContrasts) {
+      lastValidShade = shade;
+    } else if (lastValidShade) {
+      return { shade: lastValidShade.hex, requiresBg: false };
     }
   }
-  return { buttonColor: allShades[2], buttonTextColor: '#FFFFFF' };
+
+  return { shade: lastValidShade?.hex || targetColor.baseHex, requiresBg: !lastValidShade };
+};
+
+// Helper function to find a button color with sufficient contrast
+function findButtonColor(
+  allShades: Array<{hex: string, contrastRatio: number, textColor: string}>,
+  surfaces: string[],
+  prefix: string = ''
+ ): { [key: string]: string } {
+  const firstSurface = surfaces[0];
+  const surfaceLuminance = chroma(firstSurface).luminance();
+  
+  const sortedShades = [...allShades].sort((a, b) => {
+    if (surfaceLuminance < 0.5) {
+      return allShades.indexOf(a) - allShades.indexOf(b);
+    } else {
+      return allShades.indexOf(b) - allShades.indexOf(a);
+    }
+  });
+ 
+  let lastValidShade = null;
+ 
+  for (const shade of sortedShades) {
+    const meetsContrastRequirements = surfaces.every(surface => 
+      chroma.contrast(shade.hex, surface) >= 3.1
+    );
+ 
+    if (meetsContrastRequirements) {
+      lastValidShade = shade;
+    } else if (lastValidShade) {
+      break;
+    }
+  }
+ 
+  if (lastValidShade) {
+    return {
+      [`${prefix}buttonColor`]: lastValidShade.hex,
+      [`${prefix}buttonTextColor`]: lastValidShade.textColor
+    };
+  }
+ 
+  return {
+    [`${prefix}buttonColor`]: sortedShades[0]?.hex || surfaces[0],
+    [`${prefix}buttonTextColor`]: sortedShades[0]?.textColor || '#FFFFFF'
+  };
+ }
+
+// Helper function to find a text color with sufficient contrast
+function findTextColor(
+  allShades: Array<{ hex: string, contrastRatio: number, textColor: string }>, 
+  surfaces: string[],
+  minContrastRatio: number
+): string {
+  console.log('Finding text color with minimum contrast ratio:', minContrastRatio);
+  
+  // Check luminance of first surface to determine direction
+  const firstSurface = surfaces[0];
+  const surfaceLuminance = chroma(firstSurface).luminance();
+  
+  // Sort shades based on surface luminance
+  const sortedShades = [...allShades].sort((a, b) => {
+    if (surfaceLuminance < 0.5) {
+      // For dark surfaces, start from lightest (index 0)
+      return allShades.indexOf(a) - allShades.indexOf(b);
+    } else {
+      // For light surfaces, start from darkest (index 9)
+      return allShades.indexOf(b) - allShades.indexOf(a);
+    }
+  });
+
+  let lastValidShade = null;
+
+  // Iterate through each surface
+  for (const surface of surfaces) {
+    console.log(`\nChecking shades against surface: ${surface}`);
+    const surfaceLum = chroma(surface).luminance();
+    
+    // Find the last valid shade for this surface
+    for (const shade of sortedShades) {
+      const contrast = chroma.contrast(shade.hex, surface);
+      console.log(`Shade ${shade.hex}: Contrast against ${surface} = ${contrast}`);
+
+      if (contrast >= minContrastRatio) {
+        lastValidShade = shade;
+      } else if (lastValidShade) {
+        // If we found a valid shade but this one doesn't work, break
+        break;
+      }
+    }
+
+    // If we don't find a valid shade for any surface, break early
+    if (!lastValidShade) {
+      break;
+    }
+  }
+
+  // If we found a valid shade that works for all surfaces, use it
+  if (lastValidShade) {
+    console.log(`✅ Selected shade ${lastValidShade.hex}`);
+    return lastValidShade.hex;
+  }
+
+  // Fallback if no shade meets the contrast requirement
+  console.log('No shade found meeting contrast requirements');
+  return sortedShades[0]?.hex || '#121212';
 }
 
-// New method to handle surface style changes
-const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
-  console.log("Surface style change called with:", style);
-  console.log("Current baseColor:", baseColor);
-  
-  setSurfaceStyle(style);
+// Helper functions
+function generateAndSendIconTokens(
+  baseColor: ColorData,
+  surfaces: string[],
+  stateColors: ColorData[],
+  secondaryColor: ColorData,
+  tertiaryColor: ColorData
+) {
+  const iconTokens = generateIconTokens(
+    baseColor,
+    surfaces,
+    stateColors,
+    secondaryColor,
+    tertiaryColor
+  );
 
-  // Simplified check
-  if (!baseColor || !baseColor.allModes) {
-    console.log("Early return due to missing baseColor or allModes");
+  iconTokens.forEach(token => {
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'update-design-token',
+        collection: 'Tones',
+        group: 'Default',
+        mode: 'AA-light',
+        variable: token.name,
+        value: token.value
+      }
+    }, '*');
+  });
+}
+
+function generateAndSendSurfaceTokens(
+  surface: string,
+  surfaceDim: string,
+  surfaceBright: string,
+  containerLow: string,
+  containerLowest: string,
+  containerHigh: string,
+  containerHighest: string,
+  buttonColor: string,
+  buttonTextColor: string,
+  containerButton: string,
+  containerButtonText: string,
+  onSurface: string,
+  onContainers: string,
+  borderColor: string | null = null,
+  containerBorder: string | null = null,
+  dropColor1: string | null = null,
+  dropColor2: string | null = null,
+  dropColor3: string | null = null,
+  dropColor4: string | null = null,
+  dropColor5: string | null = null,
+  quietSurface:  string,
+  quietSurfaceDim:string,
+  quietSurfaceBright: string,
+  quietContainer: string,
+  quietContainerLow: string,
+  quietContainerLowest: string,
+  quietContainerHigh: string,
+  quietContainerHighest: string,
+) {
+  const surfaceTokens = [
+    { name: 'Surface', value: surface },
+    { name: 'On-Surface', value: onSurface },
+    { name: 'On-Container', value: onContainers },
+    { name: 'Surface-Dim', value: surfaceDim },
+    { name: 'Surface-Bright', value: surfaceBright },
+    { name: 'Container', value: surface },
+    { name: 'Container-Low', value: containerLow },
+    { name: 'Container-Lowest', value: containerLowest },
+    { name: 'Container-High', value: containerHigh },
+    { name: 'Container-Highest', value: containerHighest },
+    { name: 'Surface-Button', value: buttonColor },
+    { name: 'Surface-On-Button', value: buttonTextColor },
+    { name: 'Surface-Border', value: borderColor },
+    { name: 'Container-Border', value: containerBorder },
+    { name: 'Container-Button', value: containerButton },
+    { name: 'Container-On-Button', value: containerButtonText },
+    { name: 'Dropdown-Color-1', value: dropColor1 },
+    { name: 'Dropdown-Color-2', value: dropColor2 },
+    { name: 'Dropdown-Color-3', value: dropColor3 },
+    { name: 'Dropdown-Color-4', value: dropColor4 },
+    { name: 'Dropdown-Color-5', value: dropColor5 },
+    { name: 'Surface-Quiet', value: quietSurface },
+    { name: 'Surface-Dim-Quiet', value: quietSurfaceDim },
+    { name: 'Surface-Bright-Quiet', value: quietSurfaceBright },
+    { name: 'Container-Quiet', value: quietContainer },
+    { name: 'Container-Low-Quiet', value: quietContainerLow },
+    { name: 'Container-Lowest-Quiet', value: quietContainerLowest },
+    { name: 'Container-High-Quiet', value: quietContainerHigh },
+    { name: 'Container-Highest-Quiet', value: quietContainerHighest },
+  ];
+
+  if (borderColor) {
+    surfaceTokens.push({ name: 'Surface-Border', value: borderColor });
+  }
+
+  surfaceTokens.forEach(token => {
+    console.log("Sending token to Figma:", token.name, token.value);
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'update-design-token',
+        collection: 'Tones',
+        group: 'Default',
+        mode: 'AA-light',
+        variable: token.name,
+        value: token.value
+      }
+    }, '*');
+  });
+}
+
+function getMonochromaticShades(
+  baseColor: ColorData,
+  surfaceStyle: SurfaceStyle,
+  usedShadeIndices: number[]
+) {
+  const allShades = baseColor.allModes?.['AA-light']?.allShades || [];
+  
+  const availableIndices = Array.from(Array(allShades.length).keys())
+    .filter(index => {
+      if (usedShadeIndices.includes(index)) return false;
+      if (surfaceStyle === 'light-tonal' && index === 0) return false;
+      if (surfaceStyle === 'dark-tonal' && index === 8) return false;
+      return true;
+    });
+
+  const randomIndex = Math.floor(Math.random() * availableIndices.length);
+  const secondaryLightIndex = availableIndices[randomIndex];
+  availableIndices.splice(randomIndex, 1);
+
+  const randomIndex2 = Math.floor(Math.random() * availableIndices.length);
+  const secondaryDarkIndex = availableIndices[randomIndex2];
+  availableIndices.splice(randomIndex2, 1);
+
+  const randomIndex3 = Math.floor(Math.random() * availableIndices.length);
+  const tertiaryLightIndex = availableIndices[randomIndex3];
+  availableIndices.splice(randomIndex3, 1);
+
+  const randomIndex4 = Math.floor(Math.random() * availableIndices.length);
+  const tertiaryDarkIndex = availableIndices[randomIndex4];
+
+  return {
+    secondaryLight: allShades[secondaryLightIndex]?.hex || baseColor.baseHex,
+    secondaryDark: allShades[secondaryDarkIndex]?.hex || baseColor.baseHex,
+    tertiaryLight: allShades[tertiaryLightIndex]?.hex || baseColor.baseHex,
+    tertiaryDark: allShades[tertiaryDarkIndex]?.hex || baseColor.baseHex
+  };
+}
+function modifyHSL(color: string): string[] {
+  try {
+    // Parse the input color and extract HSL values
+    const hsl = chroma(color).hsl();
+    const currentH = hsl[0];
+    const currentS = hsl[1];
+    const currentL = hsl[2];
+
+    // Reduce saturation by 20% and lightness by 35%
+    const newS = Math.max(0, currentS * 0.8); // Ensure value stays within 0-1
+    const newL = Math.max(0, currentL * 0.65); // Ensure value stays within 0-1
+
+    // Generate the base color with modified HSL values
+    const newColor = chroma.hsl(currentH, newS, newL).hex();
+
+    // Define the alpha values to apply
+    const alphaValues = [0.7, 0.54, 0.38, 0.32, 0.2];
+
+    // Return an array of colors with different alpha values
+    const colorsWithAlpha = alphaValues.map(alpha => {
+      const alphaHex = opacityToHex(alpha); // Convert opacity to hex
+      return `${newColor}${alphaHex}`; // Append alpha as hex to the base color
+    });
+
+    return colorsWithAlpha;
+  } catch (error) {
+    console.error("Invalid color input:", error);
+    throw new Error("Failed to modify HSL and generate colors. Please check the input color.");
+  }
+}
+// Helper function to convert opacity (0-1) to hex
+function opacityToHex(opacity: number): string {
+  const alpha = Math.round(opacity * 255); // Scale to 0-255
+  return alpha.toString(16).padStart(2, '0'); // Convert to hex and ensure 2 characters
+}
+
+
+function createOrUpdateMeshGradientBackground(
+  primaryColors: string[], // Array of 5 primary color hex codes
+  accentColors: string[],  // Array of 3 accent color hex codes
+  backgroundColor: string, // Background color hex code
+  frameWidth: number,      // Width of the background frame
+  frameHeight: number      // Height of the background frame
+) {
+  // Ensure correct number of colors are provided
+  if (primaryColors.length !== 5 || accentColors.length !== 3) {
+    figma.notify("Please provide exactly 5 primary colors and 3 accent colors.");
     return;
   }
 
-  let surfaceTokens: Array<{ name: string, value: string }> = [];
+  // Helper to convert hex to RGB
+  const hexToRgb = (hex: string) => {
+    const bigint = parseInt(hex.replace("#", ""), 16);
+    return { r: ((bigint >> 16) & 255) / 255, g: ((bigint >> 8) & 255) / 255, b: (bigint & 255) / 255 };
+  };
 
-  if (style === 'light-tonal') {
-    const baseMix = baseColor.baseHex;
-    console.log("Generating light tonal surfaces with baseMix:", baseMix);
+  // Find an existing frame named "MeshGradient"
+  let frame = figma.currentPage.findOne((node) => node.name === "MeshGradient" && node.type === "FRAME") as FrameNode;
 
-    const surface = chroma.mix('white', baseMix, 0.07, 'rgb').hex();
-    const surfaceDim = chroma.mix(surface, 'black', 0.07).hex();
-    const surfaceBright = chroma.mix(surface, 'white', 0.05).hex();
-    const surfaceContainerLow = chroma.mix('white', baseMix, 0.04, 'rgb').hex();
-    const surfaceContainerLowest = chroma.mix('white', baseMix, 0.02, 'rgb').hex();
-    const surfaceContainerHigh = chroma.mix('white', baseMix, 0.11, 'rgb').hex();
-    const surfaceContainerHighest = chroma.mix('white', baseMix, 0.14, 'rgb').hex();
+  if (!frame) {
+    // Create a new frame if one doesn't exist
+    frame = figma.createFrame();
+    frame.name = "MeshGradient";
+    frame.resize(frameWidth, frameHeight);
+    figma.currentPage.appendChild(frame);
+    frame.x = figma.viewport.center.x - frameWidth / 2;
+    frame.y = figma.viewport.center.y - frameHeight / 2;
+  } else {
+    // Resize the existing frame to match the provided dimensions
+    frame.resizeWithoutConstraints(frameWidth, frameHeight);
+  }
 
-    const buttonColor = chroma(baseMix).darken().hex();
-    const buttonTextColor = chroma.contrast(buttonColor, '#FFFFFF') > 4.5 ? '#FFFFFF' : '#000000';
+  // Set the background color of the frame
+  const bgColor = hexToRgb(backgroundColor);
+  frame.fills = [{ type: "SOLID", color: bgColor }];
 
-    surfaceTokens = [
-      { name: 'Surface', value: surface },
-      { name: 'Surface-Dim', value: surfaceDim },
-      { name: 'Surface-Bright', value: surfaceBright },
-      { name: 'Surface-Container', value: surface },
-      { name: 'Surface-Container-Low', value: surfaceContainerLow },
-      { name: 'Surface-Container-Lowest', value: surfaceContainerLowest },
-      { name: 'Surface-Container-High', value: surfaceContainerHigh },
-      { name: 'Surface-Container-Highest', value: surfaceContainerHighest },
-      { name: 'Button', value: buttonColor },
-      { name: 'On-Button', value: buttonTextColor }
+  // Combine primary and accent colors for random selection
+  const allColors = [...primaryColors, ...accentColors];
+
+  // Remove all existing child nodes (optional: to avoid overlaps)
+  frame.children.forEach((child) => child.remove());
+
+  // Generate blob shapes
+  for (let i = 0; i < 20; i++) {
+    const shape = figma.createEllipse(); // Create an ellipse
+    const color = hexToRgb(allColors[Math.floor(Math.random() * allColors.length)]); // Pick a random color
+
+    // Randomly position and size the shape
+    const x = Math.random() * frameWidth;
+    const y = Math.random() * frameHeight;
+    const width = 50 + Math.random() * 150; // Width between 50 and 200
+    const height = 50 + Math.random() * 150; // Height between 50 and 200
+
+    shape.resize(width, height);
+    shape.x = x;
+    shape.y = y;
+
+    // Assign the color and opacity
+    shape.fills = [{ type: "SOLID", color, opacity: 0.7 }];
+
+    // Apply background blur
+    shape.effects = [
+      {
+        type: "BACKGROUND_BLUR",
+        radius: 20, // Adjust blur radius as needed
+        visible: true,
+      },
     ];
 
-    console.log("Generated surface tokens:", surfaceTokens);
+    // Add the shape to the frame
+    frame.appendChild(shape);
+  }
 
-    // Send each token to Figma with updated mode
-    surfaceTokens.forEach(token => {
-      console.log("Sending token to Figma:", token);
+  figma.notify("Mesh gradient background updated!");
+}
+
+const updateShadowVariables = () => {
+  const elevations = [
+    {
+      group: 'Elevation-1',
+      shadows: [
+        {horizontal: .5, vertical: 1, blur: 1, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0}
+      ]
+    },
+    {
+      group: 'Elevation-2', 
+      shadows: [
+        {horizontal: 1, vertical: 2, blur: 2, spread: 0},
+        {horizontal: 2, vertical: 4, blur: 4, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0}
+      ]
+    },
+    {
+      group: 'Elevation-3',
+      shadows: [
+        {horizontal: 1, vertical: 1, blur: 2, spread: 0},
+        {horizontal: 2, vertical: 2,  blur: 4, spread: 0},
+        {horizontal: 3, vertical: 6,  blur: 6, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+      ]
+    },
+    {
+      group: 'Elevation-4',
+      shadows: [
+        {horizontal: 1, vertical: 2, blur: 2, spread: 0},
+        {horizontal: 2, vertical: 4,  blur: 4, spread: 0},
+        {horizontal: 3, vertical: 6,  blur: 6, spread: 0},
+        {horizontal: 6, vertical: 12, blur: 12, spread: 0},
+        {horizontal: 0, vertical: 0, blur: 0, spread: 0},
+      ]
+    },
+    {
+      group: 'Elevation-5',
+      shadows: [
+        {horizontal: 1, vertical: 2, blur: 2, spread: 0},
+        {horizontal: 2, vertical: 4,  blur: 4, spread: 0},
+        {horizontal: 3, vertical: 6,  blur: 6, spread: 0},
+        {horizontal: 6, vertical: 12, blur: 12, spread: 0},
+        {horizontal: 12, vertical: 24, blur: 24, spread: 0},
+      ]
+    }
+  ];
+ 
+  elevations.forEach((elevation) => {
+    elevation.shadows.forEach((shadow, shadowIndex) => {
+      const dropNumber = shadowIndex + 1;
+      const shadowProps = {
+        Vertical: shadow.vertical,
+        Horizontal: shadow.horizontal,
+        Blur: shadow.blur,
+        Spread: shadow.spread
+      };
+      
+      Object.entries(shadowProps).forEach(([property, value]) => {
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'update-design-token',
+            collection: 'Shadows',
+            group: elevation.group,
+            mode: 'Dropshadows', 
+            variable: `Drop${dropNumber}-${property}`,
+            value: value
+          }
+        }, '*');
+      });
+ 
+      // Set color reference
       window.parent.postMessage({
         pluginMessage: {
           type: 'update-design-token',
-          collection: 'Tones',          // Collection name (not the full path)
-          group: 'Default',             // Group name
-          mode: 'AA-light',             // Mode name
-          variable: token.name,         // The variable name you want to update
-          value: token.value            // The new value for the variable
+          collection: 'Shadows',
+          group: elevation.group,
+          mode: 'Dropshadows',
+          variable: `Drop${dropNumber}-Color`,
+          value: {
+            collection: 'Backgrounds',
+            mode: 'Default', 
+            variable: 'Dropdown'
+          }
         }
       }, '*');
     });
-  }
+  });
+ };
 
-  console.log('Surface style tokens updated:', surfaceTokens);
-}, [baseColor]);
+
+function generateQuietSurfaceColor(
+  surfaceColor: string,
+  textColor: string,
+  requiredContrast: number
+): string {
+  let n = 1;
+  let lastValidN = null;
+
+  while (n > 0) {
+    const newColor = chroma.mix(surfaceColor, textColor, n, 'rgb').hex();
+    const contrast = chroma.contrast(surfaceColor, newColor);
+
+    if (contrast <= requiredContrast) {
+      lastValidN = n; // Save the current valid n
+    }
+    n = n - 0.01;
+  }
+  lastValidN = 1 - n + .01 
+
+  return lastValidN !== null
+    ? chroma.mix(surfaceColor, textColor, lastValidN, 'rgb').hex() // Use lastValidN directly
+    : surfaceColor;
+}
+
+// Main surface style handler
+const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
+  const stateColors: ColorData[] = fullColorData.filter(color => 
+    color.id.startsWith('state-color-')
+  ) as ColorData[];
+   
+  if (!baseColor || !baseColor.baseHex) return;
+
+  // Base color definitions
+  const primary = baseColor.baseHex;
+  const shadeIndex = baseColor.shadeIndex;
+  const primaryLight = baseColor.allModes['AA-light'].allShades[shadeIndex - 2]?.hex || primary;
+  const primaryDark = baseColor.allModes['AA-light'].allShades[shadeIndex + 2]?.hex || primary;
+
+  const secondaryColor = activeTheme?.colors.secondary
+  ? (isColorData(activeTheme.colors.secondary)
+    ? activeTheme.colors.secondary
+    : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+  : baseColor;
+
+  const tertiaryColor = activeTheme?.colors.tertiary
+  ? (isColorData(activeTheme.colors.tertiary)
+    ? activeTheme.colors.tertiary
+    : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+  : baseColor;
+
+  const secondary = secondaryColor.baseHex;
+  const tertiary = tertiaryColor.baseHex;
+
+  let secondaryLight, secondaryDark, tertiaryLight, tertiaryDark;
+
+  if (activeTheme?.type === 'monochromatic') {
+    const usedIndices = [shadeIndex, shadeIndex - 2, shadeIndex + 2];
+    const monochromaticShades = getMonochromaticShades(baseColor, style, usedIndices);
+    secondaryLight = monochromaticShades.secondaryLight;
+    secondaryDark = monochromaticShades.secondaryDark;
+    tertiaryLight = monochromaticShades.tertiaryLight;
+    tertiaryDark = monochromaticShades.tertiaryDark;
+  } else {
+    const secondaryPalette = safeColors.find(color => color.baseHex === secondaryColor.baseHex);
+    const tertiaryPalette = safeColors.find(color => color.baseHex === tertiaryColor.baseHex);
+    
+    function getLightDarkIndices(baseIndex: number) {
+      switch (baseIndex) {
+        case 1: return { lightIndex: 3, darkIndex: 6 };
+        case 2: return { lightIndex: 1, darkIndex: 6 };
+        case 3: return { lightIndex: 1, darkIndex: 6 };
+        case 4: return { lightIndex: 2, darkIndex: 7 };
+        case 5: return { lightIndex: 2, darkIndex: 7 };
+        case 6: return { lightIndex: 2, darkIndex: 8 };
+        case 7: return { lightIndex: 2, darkIndex: 5 };
+        case 8: return { lightIndex: 3, darkIndex: 5 };
+        default: return { lightIndex: 3, darkIndex: 7 };
+      }
+    }
+
+    const secondaryIndices = getLightDarkIndices(baseColor.shadeIndex);
+    const tertiaryIndices = getLightDarkIndices(baseColor.shadeIndex);
+
+    secondaryLight = secondaryPalette?.allModes?.['AA-light']?.allShades[secondaryIndices.lightIndex]?.hex || secondary;
+    secondaryDark = secondaryPalette?.allModes?.['AA-light']?.allShades[secondaryIndices.darkIndex]?.hex || secondary;
+    tertiaryLight = tertiaryPalette?.allModes?.['AA-light']?.allShades[tertiaryIndices.lightIndex]?.hex || tertiary;
+    tertiaryDark = tertiaryPalette?.allModes?.['AA-light']?.allShades[tertiaryIndices.darkIndex]?.hex || tertiary;
+  }
+    const white = '#ffffff';
+
+  // Send base tokens
+  const baseTokens = [
+    { collection: 'Tones', group: 'Primary', mode: 'AA-light', value: primary },
+    { collection: 'Tones', group: 'Primary-Light', mode: 'AA-light', value: primaryLight },
+    { collection: 'Tones', group: 'Primary-Dark', mode: 'AA-light', value: primaryDark },
+    { collection: 'Tones', group: 'Secondary', mode: 'AA-light', value: secondary },
+    { collection: 'Tones', group: 'Secondary-Light', mode: 'AA-light', value: secondaryLight },
+    { collection: 'Tones', group: 'Secondary-Dark', mode: 'AA-light', value: secondaryDark },
+    { collection: 'Tones', group: 'Tertiary', mode: 'AA-light', value: tertiary },
+    { collection: 'Tones', group: 'Tertiary-Light', mode: 'AA-light', value: tertiaryLight },
+    { collection: 'Tones', group: 'Tertiary-Dark', mode: 'AA-light', value: tertiaryDark },
+    { collection: 'Tones', group: 'White', mode: 'AA-light', value: white }
+  ];
+
+  baseTokens.forEach(token => {
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'update-design-token',
+        collection: token.collection,
+        group: token.group,
+        mode: token.mode,
+        variable: 'Surface',
+        value: token.value
+      }
+    }, '*');
+  });
+
+  const copyShadowValues = (fromMode: string) => {
+    const shadowGroups = ['Elevation-0', 'Elevation-1', 'Elevation-2', 'Elevation-3', 'Elevation-4', 'Elevation-5'];
+    const shadowProperties = ['Drop1-Vertical', 'Drop1-Horizontal', 'Drop1-Blur', 'Drop1-Spread', 'Drop1-Color', 
+      'Drop2-Vertical', 'Drop2-Horizontal', 'Drop2-Blur', 'Drop2-Spread', 'Drop2-Color',
+      'Drop3-Vertical', 'Drop3-Horizontal', 'Drop3-Blur', 'Drop3-Spread', 'Drop3-Color',
+      'Drop4-Vertical', 'Drop4-Horizontal', 'Drop4-Blur', 'Drop4-Spread', 'Drop4-Color',
+      'Drop5-Vertical', 'Drop5-Horizontal', 'Drop5-Blur', 'Drop5-Spread', 'Drop5-Color'];
+   
+    shadowGroups.forEach(group => {
+      shadowProperties.forEach(property => {
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'copy-token-value',
+            collection: 'Shadows',
+            group: group,
+            fromMode: fromMode,
+            toMode: 'Default',
+            variable: property
+          }
+        }, '*');
+      });
+    });
+   };
+   
+   if (['dark-professional', 'light-tonal', 'colorful-tonal', 'dark-tonal'].includes(style)) {
+    copyShadowValues('None');
+   } else if (['light-glow', 'dark-glow'].includes(style)) {
+    copyShadowValues('Glow');
+   } else {
+    copyShadowValues('Dropshadows');
+   }
+
+  if (style === 'light-tonal') {
+
+    const baseMix = baseColor.allModes?.['AA-light']?.allShades[5]?.hex || baseColor.baseHex;
+    
+    const surface = chroma.mix('white', baseMix, 0.07, 'rgb').hex();
+    const surfaceDim = chroma.mix(surface, 'black', 0.07).hex();
+    const surfaceBright = chroma.mix(surface, 'white', 0.05).hex();
+    const containerLow = chroma.mix('white', baseMix, 0.04, 'rgb').hex();
+    const containerLowest = chroma.mix('white', baseMix, 0.02, 'rgb').hex();
+    const containerHigh = chroma.mix('white', baseMix, 0.11, 'rgb').hex();
+    const containerHighest = chroma.mix('white', baseMix, 0.14, 'rgb').hex();
+
+    const surfaces = [surface, surfaceDim, surfaceBright];
+    const containers = [containerLow, containerLowest, containerHigh, containerHighest];  
+
+    const safeAllShades = baseColor.allModes?.['AA-light']?.allShades || [];
+    const { buttonColor, buttonTextColor } = findButtonColor(safeAllShades, surfaces);
+    const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
+    const onSurface = findTextColor(safeAllShades, surfaces, 4.5);
+    const onContainers = findTextColor(safeAllShades, containers, 4.5);
+    const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+    const containerBorder = findBorderColor(baseColor.baseHex, containers, 3.1);
+    const dropColors = modifyHSL(surface);
+    console.log("Drop colors:", dropColors); // Add this after modifyHSL call
+    const dropColor1 = dropColors[0];
+    const dropColor2 = dropColors[1];
+    const dropColor3 = dropColors[2];
+    const dropColor4 = dropColors[3];
+    const dropColor5 = dropColors[4];
+    const quietSurface = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietSurfaceDim = generateQuietSurfaceColor(surfaceDim, onSurface, 4.5);
+    const quietSurfaceBright = generateQuietSurfaceColor(surfaceBright, onSurface, 4.5);
+    const quietContainer = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietContainerLow = generateQuietSurfaceColor(containerLow, onSurface, 4.5);
+    const quietContainerLowest= generateQuietSurfaceColor(containerLowest, onSurface, 4.5);
+    const quietContainerHigh = generateQuietSurfaceColor(containerHigh, onSurface, 4.5);
+    const quietContainerHighest= generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
+
+
+    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+      containerLowest, containerHigh, containerHighest,
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+
+    generateAndSendIconTokens(
+      baseColor,
+      surfaces,
+      stateColors,
+      activeTheme?.colors.secondary
+        ? (isColorData(activeTheme.colors.secondary)
+          ? activeTheme.colors.secondary
+          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+        : baseColor,
+      activeTheme?.colors.tertiary
+        ? (isColorData(activeTheme.colors.tertiary)
+          ? activeTheme.colors.tertiary
+          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+        : baseColor
+    );
+    
+  } 
+  else if (style === 'dark-tonal') {
+  
+    const baseMix = baseColor.allModes?.['AA-light']?.allShades[5]?.hex || baseColor.baseHex;
+    const surface = chroma.mix('black', baseMix, 0.07).hex();
+    const surfaceDim = chroma.mix(surface, 'black', 0.30).hex();
+    const surfaceBright = chroma(surface).brighten(.1).hex();
+    const containerLow = chroma.mix('black', baseMix, 0.09).hex();
+    const containerLowest = chroma.mix('black', baseMix, 0.11).hex();
+    const containerHigh = chroma(surface).brighten(.3).hex();
+    const containerHighest = chroma(surface).brighten(.4).hex();
+
+    const surfaces = [surface, surfaceDim, surfaceBright];
+    const containers = [containerLow, containerLowest, containerHigh, containerHighest];  
+      
+    const safeAllShades = baseColor.allModes?.['AA-light']?.allShades || [];
+    const { buttonColor, buttonTextColor } = findButtonColor(safeAllShades, surfaces);
+    const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
+    const onSurface = findTextColor(safeAllShades, surfaces, 4.5);
+    const onContainers = findTextColor(safeAllShades, surfaces, 4.5);
+    const dropColors = modifyHSL(surface);
+    const dropColor1 = dropColors[0];
+    const dropColor2 = dropColors[1];
+    const dropColor3 = dropColors[2];
+    const dropColor4 = dropColors[3];
+    const dropColor5 = dropColors[4];
+    const quietSurface = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietSurfaceDim = generateQuietSurfaceColor(surfaceDim, onSurface, 4.5);
+    const quietSurfaceBright = generateQuietSurfaceColor(surfaceBright, onSurface, 4.5);
+    const quietContainer = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietContainerLow = generateQuietSurfaceColor(containerLow, onSurface, 4.5);
+    const quietContainerLowest = generateQuietSurfaceColor(containerLowest, onSurface, 4.5);
+    const quietContainerHigh = generateQuietSurfaceColor(containerHigh, onSurface, 4.5);
+    const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
+    const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+    const containerBorder = findBorderColor(baseColor.baseHex, containers, 3.1);
+
+    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+      containerLowest, containerHigh, containerHighest,
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+
+    generateAndSendIconTokens(
+      baseColor,
+      surfaces,
+      stateColors,
+      activeTheme?.colors.secondary
+        ? (isColorData(activeTheme.colors.secondary)
+          ? activeTheme.colors.secondary
+          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+        : baseColor,
+      activeTheme?.colors.tertiary
+        ? (isColorData(activeTheme.colors.tertiary)
+          ? activeTheme.colors.tertiary
+          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+        : baseColor
+    );
+   
+  }
+  else if (style === 'colorful-tonal') {
+    
+    const baseMix = baseColor.baseHex;
+    const baseLuminance = chroma(baseMix).luminance();
+    const lighten1 = baseLuminance >= 0.5 ? 0.08 : 0.06;
+    const lighten2 = baseLuminance >= 0.5 ? 0.11 : 0.09;
+
+    const surface = baseMix;
+    const surfaceDim = chroma.mix(surface, 'black', 0.08).hex();
+    const surfaceBright = chroma(baseMix).brighten(.1).hex();
+    const containerLow = chroma.mix(surface, 'black', 0.04, 'rgb').hex();
+    const containerLowest = chroma.mix(surface, 'black', 0.07, 'rgb').hex();
+    const containerHigh = chroma.mix(surface, 'white', lighten1, 'rgb').hex();
+    const containerHighest = chroma.mix(surface, 'white', lighten2, 'rgb').hex();
+    const safeAllShades = baseColor.allModes?.['AA-light']?.allShades || [];
+    const surfaces = [surface, surfaceDim, surfaceBright];
+    const containers = [containerLow, containerLowest, containerHigh, containerHighest];  
+    const onSurface = findTextColor(safeAllShades, surfaces, 4.5);
+    const onContainers = findTextColor(safeAllShades, surfaces, 4.5);
+
+    const { buttonColor, buttonTextColor } = findButtonColor(safeAllShades, surfaces);
+    const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
+
+    const dropColors = modifyHSL(surface);
+    const dropColor1 = dropColors[0];
+    const dropColor2 = dropColors[1];
+    const dropColor3 = dropColors[2];
+    const dropColor4 = dropColors[3];
+    const dropColor5 = dropColors[4];
+    const quietSurface = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietSurfaceDim = generateQuietSurfaceColor(surfaceDim, onSurface, 4.5);
+    const quietSurfaceBright = generateQuietSurfaceColor(surfaceBright, onSurface, 4.5);
+    const quietContainer = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietContainerLow = generateQuietSurfaceColor(containerLow, onSurface, 4.5);
+    const quietContainerLowest = generateQuietSurfaceColor(containerLowest, onSurface, 4.5);
+    const quietContainerHigh = generateQuietSurfaceColor(containerHigh, onSurface, 4.5);
+    const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
+    const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+    const containerBorder = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+
+    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+      containerLowest, containerHigh, containerHighest,
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+
+    generateAndSendIconTokens(
+      baseColor,
+      surfaces,
+      stateColors,
+      activeTheme?.colors.secondary
+        ? (isColorData(activeTheme.colors.secondary)
+          ? activeTheme.colors.secondary
+          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+        : baseColor,
+      activeTheme?.colors.tertiary
+        ? (isColorData(activeTheme.colors.tertiary)
+          ? activeTheme.colors.tertiary
+          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+        : baseColor
+    );
+  } else if (style === 'light-professional') {
+    
+    const surface = '#ffffff';
+    const surfaceDim = chroma.mix(surface, 'black', 0.05).hex();
+    const surfaceBright = '#ffffff';
+    const containerLow = '#ffffff';
+    const containerLowest = '#ffffff';
+    const containerHigh = '#ffffff';
+    const containerHighest = '#ffffff';
+    const onSurface = '#121212';
+    const onContainers = '#121212';
+    const dropColors = modifyHSL(surface);
+    const dropColor1 = dropColors[0];
+    const dropColor2 = dropColors[1];
+    const dropColor3 = dropColors[2];
+    const dropColor4 = dropColors[3];
+    const dropColor5 = dropColors[4];
+    const surfaces = [surface, surfaceDim, surfaceBright];
+    const containers = [containerLow, containerLowest, containerHigh, containerHighest];  
+    const safeAllShades = baseColor.allModes?.['AA-light']?.allShades || [];
+    const { buttonColor, buttonTextColor } = findButtonColor(safeAllShades, surfaces);
+    const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
+    const quietSurface = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietSurfaceDim = generateQuietSurfaceColor(surfaceDim, onSurface, 4.5);
+    const quietSurfaceBright = generateQuietSurfaceColor(surfaceBright, onSurface, 4.5);
+    const quietContainer = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietContainerLow = generateQuietSurfaceColor(containerLow, onSurface, 4.5);
+    const quietContainerLowest = generateQuietSurfaceColor(containerLowest, onSurface, 4.5);
+    const quietContainerHigh = generateQuietSurfaceColor(containerHigh, onSurface, 4.5);
+    const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
+    const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+    const containerBorder = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+
+    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+      containerLowest, containerHigh, containerHighest,
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+
+    generateAndSendIconTokens(
+      baseColor,
+      surfaces,
+      stateColors,
+      activeTheme?.colors.secondary
+        ? (isColorData(activeTheme.colors.secondary)
+          ? activeTheme.colors.secondary
+          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+        : baseColor,
+      activeTheme?.colors.tertiary
+        ? (isColorData(activeTheme.colors.tertiary)
+          ? activeTheme.colors.tertiary
+          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+        : baseColor
+    );
+  } else if (style === 'grey-professional') {
+   
+    const baseMix = baseColor.allModes?.['AA-light']?.allShades[5]?.hex || baseColor.baseHex;
+    const surface = chroma.mix('white', baseMix, 0.03, 'rgb').desaturate(2).hex();
+    const surfaceDim = chroma.mix(surface, 'black', 0.05).hex();
+    const surfaceBright = '#ffffff';
+    const containerLow = chroma.mix(surface, 'black', 0.05).hex();
+    const containerLowest = chroma.mix(surface, 'black', 0.07).hex();
+    const containerHigh = '#ffffff';
+    const containerHighest = '#ffffff';
+    const onSurface = '#121212';
+    const onContainers = '#121212';
+    const dropColors = modifyHSL(surface);
+    const dropColor1 = dropColors[0];
+    const dropColor2 = dropColors[1];
+    const dropColor3 = dropColors[2];
+    const dropColor4 = dropColors[3];
+    const dropColor5 = dropColors[4];
+    const surfaces = [surface, surfaceDim, surfaceBright];
+    const containers = [containerLow, containerLowest, containerHigh, containerHighest];  
+    const safeAllShades = baseColor.allModes?.['AA-light']?.allShades || [];
+    const { buttonColor, buttonTextColor } = findButtonColor(safeAllShades, surfaces);
+    const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
+    const quietSurface = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietSurfaceDim = generateQuietSurfaceColor(surfaceDim, onSurface, 4.5);
+    const quietSurfaceBright = generateQuietSurfaceColor(surfaceBright, onSurface, 4.5);
+    const quietContainer= generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietContainerLow = generateQuietSurfaceColor(containerLow, onSurface, 4.5);
+    const quietContainerLowest = generateQuietSurfaceColor(containerLowest, onSurface, 4.5);
+    const quietContainerHigh = generateQuietSurfaceColor(containerHigh, onSurface, 4.5);
+    const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
+    const borderColor = findBorderColor('#000000', surfaces, 3.1);
+    const containerBorder = findBorderColor('#000000', surfaces, 3.1);
+
+    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+      containerLowest, containerHigh, containerHighest,
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+
+    generateAndSendIconTokens(
+      baseColor,
+      surfaces,
+      stateColors,
+      secondaryColor || undefined,
+      tertiaryColor || undefined
+    );
+   } else if (style === 'dark-professional') {
+   
+    const surface = '#121212';
+    const surfaceDim = chroma.mix(surface, 'black', 0.30).hex();
+    const surfaceBright = chroma(surface).brighten(.1).hex();
+    const containerLow = chroma.mix('black', surface, 0.09).hex();
+    const containerLowest = chroma.mix('black', surface, 0.11).hex();
+    const containerHigh = chroma(surface).brighten(.3).hex();
+    const containerHighest = chroma(surface).brighten(.4).hex();
+    const onSurface = '#fafafa'
+    const onContainers = '#fafafa'
+    const dropColors = modifyHSL(surface);
+    const dropColor1 = dropColors[0];
+    const dropColor2 = dropColors[1];
+    const dropColor3 = dropColors[2];
+    const dropColor4 = dropColors[3];
+    const dropColor5 = dropColors[4];
+    const quietSurface = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietSurfaceDim = generateQuietSurfaceColor(surfaceDim, onSurface, 4.5);
+    const quietSurfaceBright = generateQuietSurfaceColor(surfaceBright, onSurface, 4.5);
+    const quietContainer = generateQuietSurfaceColor(surface, onSurface, 4.5);
+    const quietContainerLow = generateQuietSurfaceColor(containerLow, onSurface, 4.5);
+    const quietContainerLowest = generateQuietSurfaceColor(containerLowest, onSurface, 4.5);
+    const quietContainerHigh = generateQuietSurfaceColor(containerHigh, onSurface, 4.5);
+    const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
+    const surfaces = [surface, surfaceDim, surfaceBright];
+    const containers = [containerLow, containerLowest, containerHigh, containerHighest];  
+    const safeAllShades = baseColor.allModes?.['AA-light']?.allShades || [];
+    const { buttonColor, buttonTextColor } = findButtonColor(safeAllShades, surfaces);
+    const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
+    const borderColor = findBorderColor('#000000', surfaces, 3.1);
+    const containerBorder = findBorderColor('#000000', surfaces, 3.1);
+
+    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+      containerLowest, containerHigh, containerHighest,
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+
+    generateAndSendIconTokens(
+      baseColor,
+      surfaces,
+      stateColors,
+      activeTheme?.colors.secondary
+        ? (isColorData(activeTheme.colors.secondary)
+          ? activeTheme.colors.secondary
+          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+        : baseColor,
+      activeTheme?.colors.tertiary
+        ? (isColorData(activeTheme.colors.tertiary)
+          ? activeTheme.colors.tertiary
+          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+        : baseColor
+    );
+    
+  }
+  updateShadowVariables();
+
+  
+}, [baseColor, findButtonColor, findTextColor, fullColorData, activeTheme]);
 
   // Navigation handler
   const handleBack = () => {
@@ -424,22 +1426,73 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     setButtonShape(shape);
   };
 
-  const handleThemeSelect = (theme: Theme) => {
-    setSelectedTheme(theme);
-    setActiveTheme(theme);
+  useEffect(() => {
+    if (themes.length > 0 && !activeTheme && themeAnalysis.length > 0) {
+      const validTheme = themeAnalysis.find(t => t.isValid)?.theme;
+      if (validTheme) {
+        handleThemeSelect(validTheme);
+      }
+    }
+  }, [themes, themeAnalysis, baseColor, harmonies]);
+
+  // Add handleThemeSelect to deps array and useCallback
+  const handleThemeSelect = useCallback((theme: Theme) => {
+    if (!baseColor || !harmonies) return;
   
-    Object.entries(theme.colors).forEach(([position, color]) => {
-      const colorHex = isColorData(color) ? color.baseHex : color;
-      window.parent.postMessage({
-        pluginMessage: {
-          type: 'update-design-token',
-          collection: 'System-Colors',
-          variable: `${position}-color`,
-          value: colorHex
-        }
-      }, '*');
-    });
-  };
+    const harmonyType = theme.type === 'split-complementary' ? 'splitComplementary' : theme.type;
+    const harmonyColors = harmonies[harmonyType as keyof typeof harmonies];
+  
+    if (harmonyColors) {
+      const findColorInPalette = (hex: string) => {
+        const color = safeColors.find(color => color.baseHex === hex);
+        console.log(`Found color ${hex} in palette:`, color?.allModes?.['AA-light']?.allShades);
+        return color;
+      };
+  
+      const secondaryColorFromPalette = findColorInPalette(harmonyColors.secondary.baseHex);
+      const tertiaryColorFromPalette = findColorInPalette(harmonyColors.tertiary.baseHex);
+  
+      if (secondaryColorFromPalette) {
+        const normalizedSecondary = {
+          ...secondaryColorFromPalette,
+          shadeIndex: typeof secondaryColorFromPalette.shadeIndex === 'string' 
+            ? parseInt(secondaryColorFromPalette.shadeIndex, 10) 
+            : secondaryColorFromPalette.shadeIndex,
+          allModes: secondaryColorFromPalette.allModes || {
+            'AA-light': { allShades: [] },
+            'AA-dark': { allShades: [] },
+            'AAA-light': { allShades: [] },
+            'AAA-dark': { allShades: [] }
+          }
+        };
+        setSecondaryColor(normalizedSecondary);
+      }
+  
+      if (tertiaryColorFromPalette) {
+        const normalizedTertiary = {
+          ...tertiaryColorFromPalette,
+          shadeIndex: typeof tertiaryColorFromPalette.shadeIndex === 'string' 
+            ? parseInt(tertiaryColorFromPalette.shadeIndex, 10) 
+            : tertiaryColorFromPalette.shadeIndex,
+          allModes: tertiaryColorFromPalette.allModes || {
+            'AA-light': { allShades: [] },
+            'AA-dark': { allShades: [] },
+            'AAA-light': { allShades: [] },
+            'AAA-dark': { allShades: [] }
+          }
+        };
+        setTertiaryColor(normalizedTertiary);
+      }
+  
+      setBaseColor(baseColor);
+      setSelectedTheme(theme);
+      setActiveTheme(theme);
+    }
+
+    
+  }, [baseColor, harmonies, safeColors]);
+
+  
 
   // Transform safeColors to hex strings for the modal
   const modalColors = useMemo(() => 
@@ -458,6 +1511,13 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     // Update base color
     setBaseColor(colorData);
   }, [baseColor]);
+
+    // Add this effect to handle surface updates when theme changes
+    useEffect(() => {
+      if (activeTheme) {
+        handleSurfaceStyleChange(surfaceStyle);
+      }
+    }, [activeTheme, surfaceStyle]);
   
   // Custom color handlers using hex strings
   const handleCustomColorSelect = (color: string) => {
@@ -801,36 +1861,50 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
           {/* Surface Styling */}
           <CollapsiblePanel title="Surface Styling">
             <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium mb-3">Tonal</h3>
-                <div className="grid grid-cols-2 gap-3">
+            <div>
+              <h3 className="text-lg font-medium mb-3">Tonal</h3>
+              <div className="grid grid-cols-2 gap-3">
                 <button
-                onClick={() => handleSurfaceStyleChange('light-tonal')}
-                className={`px-6 py-3 rounded-xl ${
-                  surfaceStyle === 'light-tonal' ? 'bg-purple-50 border-2 border-purple-500' : 'border border-gray-200'
-                }`}
-              >
-                Light Tonal
-              </button>
-              <button
-                onClick={() => handleSurfaceStyleChange('colorful-tonal')}
-                className={`px-6 py-3 rounded-xl ${
-                  surfaceStyle === 'colorful-tonal' ? 'bg-purple-50 border-2 border-purple-500' : 'border border-gray-200'
-                }`}
-              >
-                Colorful Tonal
-              </button>
-              <button
-                onClick={() => handleSurfaceStyleChange('dark-tonal')}
-                className={`px-6 py-3 rounded-xl ${
-                  surfaceStyle === 'dark-tonal' ? 'bg-purple-50 border-2 border-purple-500' : 'border border-gray-200'
-                }`}
-              >
-                Dark Tonal
-              </button>
-                </div>
+                  onClick={() => {
+                    setSurfaceStyle('light-tonal');
+                    handleSurfaceStyleChange('light-tonal');
+                  }}
+                  className={`px-6 py-3 rounded-xl ${
+                    surfaceStyle === 'light-tonal' 
+                      ? 'bg-purple-50 border-2 border-purple-500' 
+                      : 'border border-gray-200'
+                  }`}
+                >
+                  Light Tonal
+                </button>
+                <button
+                  onClick={() => {
+                    setSurfaceStyle('colorful-tonal');
+                    handleSurfaceStyleChange('colorful-tonal');
+                  }}
+                  className={`px-6 py-3 rounded-xl ${
+                    surfaceStyle === 'colorful-tonal' 
+                      ? 'bg-purple-50 border-2 border-purple-500' 
+                      : 'border border-gray-200'
+                  }`}
+                >
+                  Colorful Tonal
+                </button>
+                <button
+                  onClick={() => {
+                    setSurfaceStyle('dark-tonal');
+                    handleSurfaceStyleChange('dark-tonal');
+                  }}
+                  className={`px-6 py-3 rounded-xl ${
+                    surfaceStyle === 'dark-tonal' 
+                      ? 'bg-purple-50 border-2 border-purple-500' 
+                      : 'border border-gray-200'
+                  }`}
+                >
+                  Dark Tonal
+                </button>
               </div>
-
+            </div>
               <div>
                 <h3 className="text-lg font-medium mb-3">Corporate</h3>
                 <div className="grid grid-cols-2 gap-3">

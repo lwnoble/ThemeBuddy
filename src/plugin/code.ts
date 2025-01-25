@@ -39,7 +39,6 @@ try {
   }
 
   // Message handler
-  // Message handler
 figma.ui.onmessage = (msg) => {
   console.log('🔍 Message received in plugin:', msg);
 
@@ -74,10 +73,18 @@ figma.ui.onmessage = (msg) => {
         // Convert color strings to RGBA if needed
         let finalValue = value;
         if (varType === 'COLOR' && typeof value === 'string') {
-          const r = parseInt(value.substr(1,2), 16) / 255;
-          const g = parseInt(value.substr(3,2), 16) / 255;
-          const b = parseInt(value.substr(5,2), 16) / 255;
-          finalValue = { r, g, b, a: 1 };
+          if (value.length === 9) { // 8-digit hex (#RRGGBBAA)
+            const r = parseInt(value.substr(1,2), 16) / 255;
+            const g = parseInt(value.substr(3,2), 16) / 255;
+            const b = parseInt(value.substr(5,2), 16) / 255;
+            const a = parseInt(value.substr(7,2), 16) / 255;
+            finalValue = { r, g, b, a };
+          } else { // 6-digit hex (#RRGGBB)
+            const r = parseInt(value.substr(1,2), 16) / 255;
+            const g = parseInt(value.substr(3,2), 16) / 255;
+            const b = parseInt(value.substr(5,2), 16) / 255;
+            finalValue = { r, g, b, a: 1 };
+          }
         }
 
         // Set the value for the specific mode
@@ -104,7 +111,59 @@ figma.ui.onmessage = (msg) => {
     case 'PLUGIN_UI_READY':
       console.log('🔍 Plugin UI is ready');
       break;
+
+      case 'copy-token-value':
+        try {
+            const { collection: collectionName, group, fromMode, toMode, variable: variableName } = msg;
+            const collection = getOrCreateCollection(collectionName);
+            
+            const fromModeId = collection.modes.find(m => m.name === fromMode)?.modeId;
+            const toModeId = collection.modes.find(m => m.name === toMode)?.modeId;
+            
+            if (!fromModeId || !toModeId) {
+                console.error(`Mode not found: From ${fromMode}, To ${toMode}`);
+                return;
+            }
+    
+            const fullVariableName = group ? `${group}/${variableName}` : variableName;
+            
+            const variable = figma.variables.getLocalVariables().find(
+                v => v.name === fullVariableName && v.variableCollectionId === collection.id
+            );
+    
+            if (!variable) {
+                console.error(`Variable ${fullVariableName} not found`);
+                return;
+            }
+    
+            const sourceValue = variable.valuesByMode[fromModeId];
+            variable.setValueForMode(toModeId, sourceValue);
+    
+        } catch (err) {
+            console.error('Error copying token value:', err);
+        }
+        break;
   }
+  if (msg.type === 'insert-image') {
+    const targetFrame = figma.currentPage.findOne(node => 
+      node.type === 'FRAME' && node.name === msg.frameName
+    ) as FrameNode;
+    
+    if (targetFrame) {
+      const image = figma.createImage(msg.imageBytes);
+      const imageNode = figma.createRectangle();
+      
+      imageNode.resize(targetFrame.width, targetFrame.height);
+      imageNode.fills = [{ 
+        type: 'IMAGE', 
+        imageHash: image.hash, 
+        scaleMode: 'FILL' 
+      }];
+      
+      targetFrame.appendChild(imageNode);
+    }
+  }
+
 };
 
   console.log('🔍 Plugin successfully connected to Figma');

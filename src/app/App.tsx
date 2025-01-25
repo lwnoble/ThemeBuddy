@@ -87,8 +87,13 @@ const App = () => {
           />
         );
 
-      case '/theme':
-        return <ThemePage />;
+    case '/theme':
+      return (
+        <ThemePage 
+          imageFile={settings.imageFile} 
+          imageUrl={settings.imageUrl} 
+        />
+      );
 
       case '/logos':
         return <LogosPage />;

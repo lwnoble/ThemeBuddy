@@ -42,15 +42,21 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('File input change event:', e.target.files);
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       const fileUrl = URL.createObjectURL(selectedFile);
-
-      setSettings(prev => ({
-        ...prev,
-        imageFile: selectedFile,
-        imageUrl: fileUrl,
-      }));
+      console.log('Creating file URL:', fileUrl);
+  
+      setSettings(prev => {
+        const newSettings = {
+          ...prev,
+          imageFile: selectedFile,
+          imageUrl: fileUrl,
+        };
+        console.log('Updated settings:', newSettings);
+        return newSettings;
+      });
     }
   };
 
