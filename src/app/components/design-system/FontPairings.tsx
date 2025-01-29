@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronRight, ArrowLeft } from 'lucide-react';
 import { MoodType } from '../../types/fonts';
 import moodFonts from '../../data/moods.json';
 import bodyFonts from '../../data/body.json';
-
 import { detectMoodFromImage } from '../../utils/moodDetection';
 
 interface FontStyle {
@@ -11,23 +10,16 @@ interface FontStyle {
   Type: string;
 }
 
-interface MoodFonts {
-  [key: string]: FontStyle[];
-}
-
-interface BodyFonts {
-  Body: FontStyle[];
-}
-
 interface FontPair {
   headerFont: FontStyle;
   bodyFont: FontStyle;
 }
 
-interface FontPairingProps {
-  imageFile: File | null;
-  onBack: () => void;
-  onFontPairingSelect: (headerFont: { "Font Name": string; Type: string }, bodyFont: { "Font Name": string; Type: string }) => void;
+export interface FontPairingProps {
+  imageFile: File | null | undefined;
+  onBack?: () => void;
+  onFontPairingComplete?: () => void;
+  onFontPairingSelect?: (headerFont: any, bodyFont: any) => void;
   preferences: {
     header: {
       serif: string[];
@@ -41,35 +33,166 @@ interface FontPairingProps {
   };
 }
 
-const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPairingSelect, preferences }) => {
+const FontPairings: React.FC<FontPairingProps> = ({ 
+  imageFile, 
+  onBack, 
+  onFontPairingSelect, 
+  onFontPairingComplete,
+  preferences 
+}) => {
   const [selectedPair, setSelectedPair] = useState<FontPair | null>(null);
   const [fontPairs, setFontPairs] = useState<FontPair[]>([]);
   const [detectedMood, setDetectedMood] = useState<MoodType>('Sophisticated');
   const [error, setError] = useState<string | null>(null);
   const [isPreferencesExpanded, setIsPreferencesExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [processingComplete, setProcessingComplete] = useState(false);
+
+  // Prevent multiple completions
+  const completionSentRef = useRef(false);
+
+  // Send font tokens with explicit mode and validation
+  const sendFontTokens = (headerFont: string, bodyFont: string) => {
+    const safeHeaderFont = headerFont || 'Inter';
+    const safeBodyFont = bodyFont || 'Roboto';
+
+    console.log('Sending font tokens:', { 
+      headerFont: safeHeaderFont, 
+      bodyFont: safeBodyFont 
+    });
+
+    // Send Header Font Token
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'update-design-token',
+        collection: 'Typography',
+        mode: 'Default',
+        variable: 'Header-Font',
+        value: safeHeaderFont
+      }
+    }, '*');
+
+    // Send Body Font Token
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'update-design-token',
+        collection: 'Typography',
+        mode: 'Default',
+        variable: 'Body-Font',
+        value: safeBodyFont
+      }
+    }, '*');
+  };
 
   // Load fonts when pairs change
   useEffect(() => {
-    if (fontPairs.length > 0) {
-      const families = fontPairs.flatMap(pair => [
-        pair.headerFont["Font Name"],
-        pair.bodyFont["Font Name"]
-      ]);
-      
-      // Create a link element for Google Fonts
-      const link = document.createElement('link');
-      link.href = `https://fonts.googleapis.com/css?family=${encodeURIComponent(families.join('|'))}&display=swap`;
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
-    }
-  }, [fontPairs]);
+    const loadFonts = async () => {
+      if (fontPairs.length > 0 && !processingComplete) {
+        try {
+          const families = fontPairs.flatMap(pair => [
+            pair.headerFont["Font Name"],
+            pair.bodyFont["Font Name"]
+          ]);
+          
+          // Create a link element for Google Fonts
+          const link = document.createElement('link');
+          link.href = `https://fonts.googleapis.com/css?family=${encodeURIComponent(families.join('|'))}&display=swap`;
+          link.rel = 'stylesheet';
+          
+          // Wrap font loading in a timeout to prevent hanging
+          await new Promise((resolve, reject) => {
+            const loadTimeout = setTimeout(() => {
+              console.warn('Font loading timed out');
+              resolve(null);
+            }, 5000); // 5 second timeout
+
+            link.onload = () => {
+              clearTimeout(loadTimeout);
+              resolve(null);
+            };
+            link.onerror = () => {
+              clearTimeout(loadTimeout);
+              reject(new Error('Failed to load fonts'));
+            };
+            
+            document.head.appendChild(link);
+          });
+
+          // Mark processing as complete
+          setProcessingComplete(true);
+          
+          // Ensure completion is sent only once
+          if (!completionSentRef.current) {
+            completionSentRef.current = true;
+            
+            // Send font tokens to Figma with explicit mode
+            sendFontTokens(
+              selectedPair?.headerFont["Font Name"] || 'Default Header', 
+              selectedPair?.bodyFont["Font Name"] || 'Default Body'
+            );
+
+            console.log('Font pairing processing complete');
+            window.parent.postMessage({
+              pluginMessage: {
+                type: 'font-pairing-complete'
+              }
+            }, '*');
+
+            if (onFontPairingComplete) {
+              onFontPairingComplete();
+            }
+          }
+        } catch (err) {
+          console.error('Error loading fonts:', err);
+          setError('Failed to load fonts');
+          
+          // Ensure completion is sent only once
+          if (!completionSentRef.current) {
+            completionSentRef.current = true;
+            
+            window.parent.postMessage({
+              pluginMessage: {
+                type: 'font-pairing-complete',
+                error: err instanceof Error ? err.message : 'Unknown font loading error'
+              }
+            }, '*');
+
+            if (onFontPairingComplete) {
+              onFontPairingComplete();
+            }
+          }
+        }
+      }
+    };
+
+    loadFonts();
+  }, [fontPairs, processingComplete]);
+
+  const resetFontPairs = () => {
+    console.log('Resetting font pairs');
+    
+    // Reset all relevant state
+    setSelectedPair(null);
+    setFontPairs([]);
+    setProcessingComplete(false);
+    completionSentRef.current = false;
+    
+    // Force regeneration of font pairs
+    generateFontPairs();
+  };
 
   // Detect mood from image and generate pairs
   useEffect(() => {
-    if (imageFile) {
-      detectImageMood();
-    }
+    const initializeFonts = async () => {
+      if (imageFile) {
+        await detectImageMood();
+      } else {
+        // If no image, proceed with default mood
+        generateFontPairs();
+      }
+    };
+
+    initializeFonts();
   }, [imageFile]);
 
   // Generate font pairs when mood is detected
@@ -86,7 +209,6 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
       setIsLoading(true);
       const detectedMood = await detectMoodFromImage(imageFile);
       if (detectedMood && typeof detectedMood === 'string') {
-        // Ensure the first letter is capitalized to match moods.json
         const formattedMood = detectedMood.charAt(0).toUpperCase() + detectedMood.slice(1).toLowerCase();
         setDetectedMood(formattedMood as MoodType);
       } else {
@@ -95,6 +217,8 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
     } catch (err) {
       console.error('Mood detection error:', err);
       setError('Failed to detect mood from image');
+      // Use default mood if detection fails
+      setDetectedMood('Sophisticated');
     } finally {
       setIsLoading(false);
     }
@@ -102,12 +226,14 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
 
   const generateFontPairs = () => {
     try {
-      // Handle case of "Sophisticated" mood
+      console.log('Current detected mood:', detectedMood);
       const mood = detectedMood === "Sophisticated" ? "Sophisticated" : detectedMood;
-      const moodFontList = moodFonts[mood as keyof typeof moodFonts] || [];
-      console.log('Available moods:', Object.keys(moodFonts));
-      console.log('Trying to access mood:', mood);
-      console.log('Found fonts:', moodFontList);
+      
+      // Fallback to Sophisticated if mood not found
+      const moodFontList = moodFonts[mood as keyof typeof moodFonts] || moodFonts['Sophisticated'];
+      
+      console.log('Generating font pairs for mood:', mood);
+      console.log('Available mood font lists:', Object.keys(moodFonts));
       
       if (moodFontList.length === 0) {
         throw new Error(`No header fonts found for mood: ${mood}`);
@@ -117,7 +243,6 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
       const pairs: FontPair[] = [];
       const usedPairs = new Set<string>();
 
-      // Access the Body array from body.json
       const bodyFontList = bodyFonts.Body || [];
       if (bodyFontList.length === 0) {
         throw new Error('No body fonts available');
@@ -126,7 +251,6 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
       while (pairs.length < 25 && pairs.length < moodFontList.length * bodyFontList.length) {
         const headerFont = moodFontList[Math.floor(Math.random() * moodFontList.length)];
         const bodyFont = bodyFontList[Math.floor(Math.random() * bodyFontList.length)];
-
         const pairKey = `${headerFont["Font Name"]}-${bodyFont["Font Name"]}`;
         
         if (!usedPairs.has(pairKey)) {
@@ -135,31 +259,60 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
         }
       }
 
+      console.log('Generated font pairs:', 
+        pairs.map(p => `${p.headerFont["Font Name"]} + ${p.bodyFont["Font Name"]}`)
+      );
+
       setFontPairs(pairs);
-      setSelectedPair(pairs[0]);
-      
-      // Notify parent of initial selection
       if (pairs.length > 0) {
-        onFontPairingSelect(pairs[0].headerFont, pairs[0].bodyFont);
+        const firstPair = pairs[0];
+        setSelectedPair(firstPair);
+        onFontPairingSelect?.(firstPair.headerFont, firstPair.bodyFont);
       }
     } catch (err) {
       console.error('Font pair generation error:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate font pairs');
+      
+      // Force completion with default fonts
+      if (!completionSentRef.current) {
+        completionSentRef.current = true;
+        
+        // Use default fonts if generation fails
+        const defaultHeaderFont = { "Font Name": "Inter", "Type": "Sans-Serif" };
+        const defaultBodyFont = { "Font Name": "Roboto", "Type": "Sans-Serif" };
+        
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'font-pairing-complete',
+            error: err instanceof Error ? err.message : 'Font pair generation error'
+          }
+        }, '*');
+
+        // Send default font tokens
+        sendFontTokens(defaultHeaderFont["Font Name"], defaultBodyFont["Font Name"]);
+        onFontPairingSelect?.(defaultHeaderFont, defaultBodyFont);
+
+        if (onFontPairingComplete) {
+          onFontPairingComplete();
+        }
+      }
     }
   };
 
-  const resetFontPairs = () => {
-    setSelectedPair(null);
-    generateFontPairs();
-  };
+  // Only render UI if processing is complete or if we're not in "hidden" mode
+  if (onFontPairingComplete && !processingComplete) {
+    return null;
+  }
 
+  // Rest of the component remains the same
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Back Button */}
-      <button onClick={onBack} className="flex items-center text-gray-600 hover:text-gray-800">
-        <ArrowLeft className="mr-2 w-5 h-5" />
-        Back to Design System
-      </button>
+      {onBack && (
+        <button onClick={onBack} className="flex items-center text-gray-600 hover:text-gray-800">
+          <ArrowLeft className="mr-2 w-5 h-5" />
+          Back to Design System
+        </button>
+      )}
 
       {/* Header with Detected Mood */}
       <div className="bg-white rounded-lg p-6 shadow-sm border">
@@ -201,7 +354,7 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
 
         {isPreferencesExpanded && (
           <div className="p-4">
-            {/* Preferences UI would go here */}
+            {/* Preferences UI */}
           </div>
         )}
       </div>
@@ -250,7 +403,7 @@ const FontPairings: React.FC<FontPairingProps> = ({ imageFile, onBack, onFontPai
                 key={`${pair.headerFont["Font Name"]}-${pair.bodyFont["Font Name"]}`}
                 onClick={() => {
                   setSelectedPair(pair);
-                  onFontPairingSelect(pair.headerFont, pair.bodyFont);
+                  onFontPairingSelect?.(pair.headerFont, pair.bodyFont);
                 }}
                 className={`p-4 border rounded-lg text-left hover:bg-gray-50 ${
                   selectedPair === pair ? 'border-purple-500' : 'border-gray-200'

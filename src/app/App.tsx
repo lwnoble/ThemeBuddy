@@ -5,12 +5,12 @@ import { MenuOverlay } from './components/navigation/MenuOverlay';
 import { SystemSettings } from './components/settings/SystemSettings';
 import ColorPalette from './components/design-system/ColorPalette';
 import FontPairings from './components/design-system/FontPairings';
+import LoadingScreen from './components/design-system/LoadingScreen';
 import { GoogleFont } from './utils/googleFontsManager';
 import { DESIGN_SYSTEM_ROUTES } from './constants/routes';
 import { useNavigation } from '../context/NavigationContext';
 import type { DesignSystemSettings } from './types';
 import { ColorProvider } from '../context/ColorContext';
-
 
 // Import all page components
 import ThemePage from './components/design-system/ThemePage';
@@ -27,18 +27,183 @@ import { CognitivePage } from './components/design-system/CognitivePage';
 import { WCAGPage } from './components/design-system/WCAGPage';
 import { ExportPage } from './components/design-system/ExportPage';
 
+type StepStatus = 'pending' | 'loading' | 'complete';
+
+interface GenerationStep {
+  label: string;
+  status: StepStatus;
+}
+
 const App = () => {
   const { currentRoute, setCurrentRoute, isMenuOpen } = useNavigation();
   const [isSystemGenerated, setIsSystemGenerated] = useState(false);
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
   const [isInfoPanelExpanded, setIsInfoPanelExpanded] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [colorExtractionComplete, setColorExtractionComplete] = useState(false);
+  const [fontPairingComplete, setFontPairingComplete] = useState(false);
+  
+  const [generationSteps, setGenerationSteps] = useState<GenerationStep[]>([
+    { label: 'Extracting Colors', status: 'pending' },
+    { label: 'Generating Font Pairs', status: 'pending' },
+    { label: 'Generating Theme', status: 'pending' },
+    { label: 'Finalizing Design System', status: 'pending' }
+  ]);
+
   const [settings, setSettings] = useState<DesignSystemSettings>({
     name: '',
     generationMethod: 'Generate from photo/image',
+    imageFile: null,
+    imageUrl: undefined
   });
 
+ // Add new state for theme completion
+const [themeGenerationComplete, setThemeGenerationComplete] = useState(false);
+
+// Update the color extraction effect
+useEffect(() => {
+  if (colorExtractionComplete) {
+    setGenerationSteps(prevSteps => 
+      prevSteps.map((step, index) => ({
+        ...step,
+        status: index === 0 ? 'complete' as const :
+                index === 1 ? 'loading' as const :
+                'pending' as const
+      }))
+    );
+  }
+}, [colorExtractionComplete]);
+
+// Update the font pairing effect
+useEffect(() => {
+  if (fontPairingComplete) {
+    setGenerationSteps(prevSteps => 
+      prevSteps.map((step, index) => ({
+        ...step,
+        status: index <= 1 ? 'complete' as const :
+                index === 2 ? 'loading' as const :
+                'pending' as const
+      }))
+    );
+  }
+  console.log("Font pairing complete:", fontPairingComplete);
+}, [fontPairingComplete]);
+
+// Add new effect for theme generation
+useEffect(() => {
+  if (themeGenerationComplete) {
+    setGenerationSteps(prevSteps => 
+      prevSteps.map((step, index) => ({
+        ...step,
+        status: index <= 2 ? 'complete' as const :
+                index === 3 ? 'loading' as const :
+                'pending' as const
+      }))
+    );
+    setTimeout(completeGeneration, 500);
+  }
+  console.log("Theme generation complete:", themeGenerationComplete);
+}, [themeGenerationComplete]);
+
+const completeGeneration = () => {
+  console.log('Completing generation...');
+  setGenerationSteps(prevSteps => 
+    prevSteps.map(step => ({
+      ...step,
+      status: 'complete' as const
+    }))
+  );
+  
+  // Add a fallback timeout to ensure loading screen disappears
+  const completionTimer = setTimeout(() => {
+    console.warn('Generation completion timed out, forcing UI update');
+    setIsSystemGenerated(true);
+    setIsSettingsExpanded(false);
+    setIsLoading(false);
+    setCurrentRoute({
+      id: 'home',
+      title: 'Design System',
+      path: '/',
+      icon: Home
+    });
+  }, 10000); // 10 second fallback
+
+  // Clear the timer if generation completes successfully
+  return () => clearTimeout(completionTimer);
+};
+
+  const handleGenerate = () => {
+    console.log('Starting generation...');
+    setIsLoading(true);
+    setColorExtractionComplete(false);
+    setFontPairingComplete(false);
+    setGenerationSteps(prevSteps => 
+      prevSteps.map((step, index) => ({
+        ...step,
+        status: index === 0 ? 'loading' : 'pending'
+      }))
+    );
+  };
+
+  // Hidden processing components
+const HiddenProcessing = () => {
+  if (!settings.imageFile && !settings.imageUrl) return null;
+  
+  return (
+    <div style={{ display: 'none' }}>
+      <ColorPalette
+        imageFile={settings.imageFile}
+        imageUrl={settings.imageUrl}
+        onColorExtractionComplete={() => {
+          console.log('Color extraction complete');
+          setColorExtractionComplete(true);
+        }}
+      />
+      {colorExtractionComplete && (
+        <FontPairings
+          imageFile={settings.imageFile}
+          onFontPairingComplete={() => {
+            console.log('Font pairing complete');
+            setFontPairingComplete(true);
+          }}
+          preferences={{
+            header: {
+              serif: ['All', 'Transitional', 'Slab', 'Old Style', 'Modern', 'Humanist'],
+              sansSerif: ['All', 'Geometric', 'Humanist', 'Neo Grotesque'],
+              calligraphy: ['All', 'Handwritten', 'Formal']
+            },
+            body: {
+              serif: ['All', 'Transitional', 'Modern'],
+              sansSerif: ['All', 'Geometric', 'Humanist']
+            }
+          }}
+        />
+      )}
+      {fontPairingComplete && (
+        <ThemePage 
+          imageFile={settings.imageFile}
+          imageUrl={settings.imageUrl}
+          onThemeComplete={() => {
+            console.log('Theme generation complete');
+            setThemeGenerationComplete(true);
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
   const renderContent = () => {
-    console.log('Current route:', currentRoute.path);
+    console.log('Rendering content:', { isLoading });
+
+    if (isLoading) {
+      return (
+        <>
+          <LoadingScreen steps={generationSteps} />
+          <HiddenProcessing />
+        </>
+      );
+    }
 
     if (isMenuOpen) {
       return <MenuOverlay />;
@@ -63,7 +228,11 @@ const App = () => {
       case '/fonts':
         return (
           <FontPairings
-            imageFile={settings.imageFile || null}
+            imageFile={settings.imageFile}
+            onFontPairingComplete={() => {
+              console.log('Font pairing complete');
+              setFontPairingComplete(true);
+            }}
             onBack={() => setCurrentRoute({
               id: 'home',
               title: 'Design System',
@@ -87,13 +256,13 @@ const App = () => {
           />
         );
 
-    case '/theme':
-      return (
-        <ThemePage 
-          imageFile={settings.imageFile} 
-          imageUrl={settings.imageUrl} 
-        />
-      );
+      case '/theme':
+        return (
+          <ThemePage 
+            imageFile={settings.imageFile} 
+            imageUrl={settings.imageUrl} 
+          />
+        );
 
       case '/logos':
         return <LogosPage />;
@@ -168,10 +337,7 @@ const App = () => {
                   <SystemSettings
                     settings={settings}
                     setSettings={setSettings}
-                    onGenerate={() => {
-                      setIsSystemGenerated(true);
-                      setIsSettingsExpanded(false);
-                    }}
+                    onGenerate={handleGenerate}
                     isSystemGenerated={isSystemGenerated}
                   />
                 </div>

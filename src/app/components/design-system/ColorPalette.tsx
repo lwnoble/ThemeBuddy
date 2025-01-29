@@ -19,10 +19,11 @@ const stateColors = {
   Info: "#0E8AF7"
 };
 
-interface ColorPaletteProps {
-  imageFile?: File;
+export interface ColorPaletteProps {
+  imageFile: File | null | undefined;
   imageUrl?: string;
   onBack?: () => void;
+  onColorExtractionComplete?: () => void;
 }
 
 const findClosestAccessibleShade = (baseColor: string, shades: Array<{color: string, contrastRatio: number}>): string => {
@@ -40,7 +41,13 @@ const findClosestAccessibleShade = (baseColor: string, shades: Array<{color: str
   return closestShade;
 };
 
-const ColorPalette: React.FC<ColorPaletteProps> = ({ imageFile, imageUrl, onBack }) => {
+const ColorPalette: React.FC<ColorPaletteProps> = ({ 
+  imageFile, 
+  imageUrl, 
+  onBack,
+  onColorExtractionComplete 
+}) => {
+  const [shadesRendered, setShadesRendered] = useState(false);
   const { setColors: setContextColors, setColorNames: setContextColorNames } = useColors();
   const [colors, setColors] = useState<string[]>([]);
   const [colorNames, setColorNames] = useState<string[]>([]);
@@ -80,7 +87,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ imageFile, imageUrl, onBack
 
   useEffect(() => {
     const extractColors = async () => {
-        console.log('Extracting colors...'); // Add this line
+      console.log('Starting color extraction');
       setIsLoading(true);
       setError(null);
       
@@ -265,32 +272,33 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ imageFile, imageUrl, onBack
         const displayColors = extractedColorData.map(cd => cd.baseHex);
         const displayColorNames = extractedColorData.map(cd => cd.name);
 
-        // Update state with filtered colors for rendering
-        setColors(displayColors);
-        setColorNames(displayColorNames);
+       // After all color processing is complete
+       console.log('Color extraction successful');
+       setColors(displayColors);
+       setColorNames(displayColorNames);
+       setContextColors(allColorData);
+       setContextColorNames(allColorData.map(cd => cd.name));
+     } catch (err) {
+       console.error('Error extracting colors:', err);
+       setError('Failed to extract colors from image');
+     } finally {
+       console.log('Setting loading to false in ColorPalette');
+       setIsLoading(false);
+     }
+   };
 
-        // Log all color data being set to context
-        console.log('All Color Data Being Set:', JSON.stringify(allColorData, null, 2));
+   if (imageFile || imageUrl) {
+     extractColors();
+   }
+ }, [imageFile, imageUrl, setContextColors, setContextColorNames]);
 
-        // Update context with all color data (including default-grey and state colors)
-        setContextColors(allColorData);
-        setContextColorNames(allColorData.map(cd => cd.name));
+   // Add effect to check when both colors and shades are ready
+   useEffect(() => {
+    if (!isLoading && colors.length > 0 && shadesRendered && onColorExtractionComplete) {
+      onColorExtractionComplete();
+    }
+  }, [isLoading, colors.length, shadesRendered, onColorExtractionComplete]);
 
-        if (imageFile) {
-          URL.revokeObjectURL(imgUrl);
-        }
-        } catch (err) {
-        console.error('Error extracting colors:', err);
-        setError('Failed to extract colors from image');
-        } finally {
-        setIsLoading(false);
-        }
-        };
-
-        if (imageFile || imageUrl) {
-        extractColors();
-        }
-        }, [imageFile, imageUrl, setContextColors, setContextColorNames]);
           
   const WCAGModeSelector = () => (
     <div className="flex space-x-4 border-b border-gray-200 mb-6">
@@ -315,7 +323,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ imageFile, imageUrl, onBack
       const modes = generateAllColorModes(color, colorSettings);
       const shades = modes[activeWCAGMode];
       
-      return shades.map((shade, index) => (
+      const renderedShades = shades.map((shade, index) => (
         <div
           key={index}
           className="w-20 h-24 rounded flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
@@ -328,10 +336,17 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ imageFile, imageUrl, onBack
           </span>
         </div>
       ));
-    } catch (err) {
+
+      // After shades are rendered, set the flag
+      if (!shadesRendered && renderedShades.length > 0) {
+        setShadesRendered(true);
+      }
+
+      return renderedShades;
+      } catch (err) {
       console.error('Error generating shades:', err);
       return null;
-    }
+}
   };
 
   return (

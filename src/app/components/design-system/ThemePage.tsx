@@ -18,8 +18,11 @@ interface ColorSet {
 }
 
 interface ThemePageProps {
-  imageFile?: File;
+  imageFile: File | null | undefined;
   imageUrl?: string;
+  onThemeComplete?: () => void;
+  onThemeGenerationError?: (error: Error) => void;
+  isProcessing?: boolean;
 }
 
 interface Theme {
@@ -34,9 +37,9 @@ type ButtonShape = 'gently-rounded' | 'amply-rounded' | 'boldly-rounded' | 'squa
 type ComponentEffect = 'none' | 'bevel' | 'ridged';
 
 const harmonyTypes = [
+  { key: 'triadic', name: 'Triadic' },
   { key: 'analogous', name: 'Analogous' },
   { key: 'monochromatic', name: 'Monochromatic' },
-  { key: 'triadic', name: 'Triadic' },
   { key: 'tetradic', name: 'Tetradic' },
   { key: 'square', name: 'Square' },
   { key: 'diadic', name: 'Diadic' },
@@ -45,7 +48,14 @@ const harmonyTypes = [
   { key: 'custom', name: 'Custom' }
 ] as const;
 
-const ThemePage: React.FC<ThemePageProps> = ({ imageFile, imageUrl }) => {
+const ThemePage: React.FC<ThemePageProps> = ({ 
+  imageFile, 
+  imageUrl, 
+  onThemeComplete,
+  onThemeGenerationError,
+  isProcessing = false 
+}) => {
+  const [isGenerating, setIsGenerating] = useState(false);
   console.log('ThemePage props:', { imageFile, imageUrl });
   // Context hooks
   const { setCurrentRoute } = useNavigation();
@@ -54,7 +64,7 @@ const ThemePage: React.FC<ThemePageProps> = ({ imageFile, imageUrl }) => {
   // All state declarations
   const [surfaceStyle, setSurfaceStyle] = useState<SurfaceStyle>('light-tonal');
   const [buttonShape, setButtonShape] = useState<ButtonShape>('gently-rounded');
-  const [componentEffect, setComponentEffect] = useState<ComponentEffect>('none');
+  const [hasButtonShape, setHasButtonShape] = useState(false);const [componentEffect, setComponentEffect] = useState<ComponentEffect>('none');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [customMode, setCustomMode] = useState(false);
   const [customColors, setCustomColors] = useState<string[]>([]);
@@ -71,7 +81,6 @@ const ThemePage: React.FC<ThemePageProps> = ({ imageFile, imageUrl }) => {
   const [baseColor, setBaseColor] = useState<ColorData | null>(null);
   const [secondaryColor, setSecondaryColor] = useState<ColorData | null>(null);
   const [tertiaryColor, setTertiaryColor] = useState<ColorData | null>(null);
-
 
   // Add type guard for ColorData
   function isColorData(color: ColorData | string): color is ColorData {
@@ -351,40 +360,30 @@ useEffect(() => {
   }
 }, [baseColor]);
 
-const generateIconTokens = (
-  primary: ColorData,
-  surfaces: string[],
-  stateColors: ColorData[],
-  secondary?: ColorData,
-  tertiary?: ColorData
-): Array<{ name: string, value: string }> => {
-  const iconTokens: Array<{ name: string, value: string }> = [];
-  let requiresIconBg = false;
+useEffect(() => {
+  const checkThemeGeneration = () => {
+    console.log('Checking theme generation:', {
+      surfaceStyle,
+      buttonShape,
+      activeTheme,
+      isProcessing,
+    });
 
-  // Test all colors
-  const primaryResult = findShadeWithMinContrastRatioMultiSurface(primary, surfaces, 3.1);
-  const secondaryResult = secondary ? findShadeWithMinContrastRatioMultiSurface(secondary, surfaces, 3.1) : null;
-  const tertiaryResult = tertiary ? findShadeWithMinContrastRatioMultiSurface(tertiary, surfaces, 3.1) : null;
+    const isThemeGenerated =
+      surfaceStyle !== undefined &&
+      buttonShape !== undefined &&
+      activeTheme !== null &&
+      isProcessing;
 
-  requiresIconBg = primaryResult.requiresBg || 
-                   (secondaryResult?.requiresBg || false) || 
-                   (tertiaryResult?.requiresBg || false);
+    if (isThemeGenerated && onThemeComplete) {
+      console.log('Triggering onThemeComplete');
+      onThemeComplete();
+    }
+  };
 
-  // Set background if needed
-  if (requiresIconBg) {
-    const baseFirstShade = baseColor?.allModes?.['AA-light']?.allShades[0]?.hex;
-    iconTokens.push({ name: 'Icon-BG', value: baseFirstShade || '#ffffff' });
-  } else {
-    iconTokens.push({ name: 'Icon-BG', value: 'rgba(255, 255, 255, 0)' });
-  }
-
-  // Add icon colors
-  iconTokens.push({ name: 'Icon-Primary', value: primaryResult.shade });
-  if (secondaryResult) iconTokens.push({ name: 'Icon-Secondary', value: secondaryResult.shade });
-  if (tertiaryResult) iconTokens.push({ name: 'Icon-Tertiary', value: tertiaryResult.shade });
-
-  return iconTokens;
-};
+  const timer = setTimeout(checkThemeGeneration, 500);
+  return () => clearTimeout(timer);
+}, [surfaceStyle, activeTheme, buttonShape, onThemeComplete, isProcessing]);
 
 const findBorderColor = (
   shadeMixer: string,
@@ -550,23 +549,75 @@ function findTextColor(
   return sortedShades[0]?.hex || '#121212';
 }
 
+const generateIconTokens = (
+  primary: ColorData,
+  surfaceOrContainer: 'surface' | 'container',
+  surfaceOrContainerColors: string[],
+  stateColors: ColorData[],
+  secondary?: ColorData,
+  tertiary?: ColorData,
+  baseColor?: any // Add baseColor here
+): Array<{ name: string; value: string }> => {
+  const iconTokens: Array<{ name: string; value: string }> = [];
+  let requiresIconBg = false;
+
+  // Test all colors
+  const primaryResult = findShadeWithMinContrastRatioMultiSurface(
+    primary,
+    surfaceOrContainerColors,
+    3.1
+  );
+  const secondaryResult = secondary
+    ? findShadeWithMinContrastRatioMultiSurface(secondary, surfaceOrContainerColors, 3.1)
+    : null;
+  const tertiaryResult = tertiary
+    ? findShadeWithMinContrastRatioMultiSurface(tertiary, surfaceOrContainerColors, 3.1)
+    : null;
+
+  requiresIconBg =
+    primaryResult.requiresBg ||
+    (secondaryResult?.requiresBg || false) ||
+    (tertiaryResult?.requiresBg || false);
+
+  // Set background if needed
+  const bgPrefix = surfaceOrContainer === 'surface' ? 'Surface-' : 'Container-';
+  if (requiresIconBg) {
+    const baseFirstShade = baseColor?.allModes?.['AA-light']?.allShades[0]?.hex;
+    iconTokens.push({ name: `${bgPrefix}Icon-BG`, value: baseFirstShade || '#ffffff' });
+  } else {
+    iconTokens.push({ name: `${bgPrefix}Icon-BG`, value: 'rgba(255, 255, 255, 0)' });
+  }
+
+  // Add icon colors
+  const colorPrefix = surfaceOrContainer === 'surface' ? 'Surface-' : 'Container-';
+  iconTokens.push({ name: `${colorPrefix}Icon-Primary`, value: primaryResult.shade });
+  if (secondaryResult)
+    iconTokens.push({ name: `${colorPrefix}Icon-Secondary`, value: secondaryResult.shade });
+  if (tertiaryResult)
+    iconTokens.push({ name: `${colorPrefix}Icon-Tertiary`, value: tertiaryResult.shade });
+
+  return iconTokens;
+}
+
 // Helper functions
 function generateAndSendIconTokens(
   baseColor: ColorData,
-  surfaces: string[],
+  surfaceOrContainer: 'surface' | 'container',
+  surfaceOrContainerColors: string[],
   stateColors: ColorData[],
-  secondaryColor: ColorData,
-  tertiaryColor: ColorData
+  secondaryColor?: ColorData,
+  tertiaryColor?: ColorData
 ) {
   const iconTokens = generateIconTokens(
     baseColor,
-    surfaces,
+    surfaceOrContainer,
+    surfaceOrContainerColors,
     stateColors,
     secondaryColor,
     tertiaryColor
   );
 
-  iconTokens.forEach(token => {
+  iconTokens.forEach((token) => {
     window.parent.postMessage({
       pluginMessage: {
         type: 'update-design-token',
@@ -574,8 +625,8 @@ function generateAndSendIconTokens(
         group: 'Default',
         mode: 'AA-light',
         variable: token.name,
-        value: token.value
-      }
+        value: token.value,
+      },
     }, '*');
   });
 }
@@ -584,6 +635,7 @@ function generateAndSendSurfaceTokens(
   surface: string,
   surfaceDim: string,
   surfaceBright: string,
+  container: string,
   containerLow: string,
   containerLowest: string,
   containerHigh: string,
@@ -616,7 +668,7 @@ function generateAndSendSurfaceTokens(
     { name: 'On-Container', value: onContainers },
     { name: 'Surface-Dim', value: surfaceDim },
     { name: 'Surface-Bright', value: surfaceBright },
-    { name: 'Container', value: surface },
+    { name: 'Container', value: container },
     { name: 'Container-Low', value: containerLow },
     { name: 'Container-Lowest', value: containerLowest },
     { name: 'Container-High', value: containerHigh },
@@ -979,6 +1031,7 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     
     function getLightDarkIndices(baseIndex: number) {
       switch (baseIndex) {
+        case 0: return { lightIndex: 2, darkIndex: 6 };
         case 1: return { lightIndex: 3, darkIndex: 6 };
         case 2: return { lightIndex: 1, darkIndex: 6 };
         case 3: return { lightIndex: 1, darkIndex: 6 };
@@ -1067,6 +1120,7 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const surface = chroma.mix('white', baseMix, 0.07, 'rgb').hex();
     const surfaceDim = chroma.mix(surface, 'black', 0.07).hex();
     const surfaceBright = chroma.mix(surface, 'white', 0.05).hex();
+    const container = surface;
     const containerLow = chroma.mix('white', baseMix, 0.04, 'rgb').hex();
     const containerLowest = chroma.mix('white', baseMix, 0.02, 'rgb').hex();
     const containerHigh = chroma.mix('white', baseMix, 0.11, 'rgb').hex();
@@ -1099,26 +1153,38 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const quietContainerHighest= generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
 
 
-    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+    generateAndSendSurfaceTokens(
+      surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
-      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
-
-    generateAndSendIconTokens(
-      baseColor,
-      surfaces,
-      stateColors,
-      activeTheme?.colors.secondary
-        ? (isColorData(activeTheme.colors.secondary)
-          ? activeTheme.colors.secondary
-          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
-        : baseColor,
-      activeTheme?.colors.tertiary
-        ? (isColorData(activeTheme.colors.tertiary)
-          ? activeTheme.colors.tertiary
-          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
-        : baseColor
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
+      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
     );
-    
+
+      generateAndSendIconTokens(
+        baseColor,
+        'surface',
+        [surface, surfaceDim, surfaceBright, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
+      
+      generateAndSendIconTokens(
+        baseColor,
+        'container',
+        [container, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
   } 
   else if (style === 'dark-tonal') {
   
@@ -1126,6 +1192,7 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const surface = chroma.mix('black', baseMix, 0.07).hex();
     const surfaceDim = chroma.mix(surface, 'black', 0.30).hex();
     const surfaceBright = chroma(surface).brighten(.1).hex();
+    const container = surface;
     const containerLow = chroma.mix('black', baseMix, 0.09).hex();
     const containerLowest = chroma.mix('black', baseMix, 0.11).hex();
     const containerHigh = chroma(surface).brighten(.3).hex();
@@ -1156,25 +1223,35 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
     const containerBorder = findBorderColor(baseColor.baseHex, containers, 3.1);
 
-    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
       buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
 
-    generateAndSendIconTokens(
-      baseColor,
-      surfaces,
-      stateColors,
-      activeTheme?.colors.secondary
-        ? (isColorData(activeTheme.colors.secondary)
-          ? activeTheme.colors.secondary
-          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
-        : baseColor,
-      activeTheme?.colors.tertiary
-        ? (isColorData(activeTheme.colors.tertiary)
-          ? activeTheme.colors.tertiary
-          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
-        : baseColor
-    );
+      generateAndSendIconTokens(
+        baseColor,
+        'surface',
+        [surface, surfaceDim, surfaceBright, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
+      
+      generateAndSendIconTokens(
+        baseColor,
+        'container',
+        [container, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
    
   }
   else if (style === 'colorful-tonal') {
@@ -1187,6 +1264,7 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const surface = baseMix;
     const surfaceDim = chroma.mix(surface, 'black', 0.08).hex();
     const surfaceBright = chroma(baseMix).brighten(.1).hex();
+    const container = surface;
     const containerLow = chroma.mix(surface, 'black', 0.04, 'rgb').hex();
     const containerLowest = chroma.mix(surface, 'black', 0.07, 'rgb').hex();
     const containerHigh = chroma.mix(surface, 'white', lighten1, 'rgb').hex();
@@ -1217,30 +1295,44 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
     const containerBorder = findBorderColor(baseColor.baseHex, surfaces, 3.1);
 
-    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
-      containerLowest, containerHigh, containerHighest,
-      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+      generateAndSendSurfaceTokens(
+        surface, surfaceDim, surfaceBright, container, containerLow,
+        containerLowest, containerHigh, containerHighest,
+        buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
+        quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
+      );
+      generateAndSendIconTokens(
+        baseColor,
+        'surface',
+        [surface, surfaceDim, surfaceBright, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
+      
+      generateAndSendIconTokens(
+        baseColor,
+        'container',
+        [container, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
 
-    generateAndSendIconTokens(
-      baseColor,
-      surfaces,
-      stateColors,
-      activeTheme?.colors.secondary
-        ? (isColorData(activeTheme.colors.secondary)
-          ? activeTheme.colors.secondary
-          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
-        : baseColor,
-      activeTheme?.colors.tertiary
-        ? (isColorData(activeTheme.colors.tertiary)
-          ? activeTheme.colors.tertiary
-          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
-        : baseColor
-    );
   } else if (style === 'light-professional') {
     
     const surface = '#ffffff';
     const surfaceDim = chroma.mix(surface, 'black', 0.05).hex();
     const surfaceBright = '#ffffff';
+    const container = '#ffffff';
     const containerLow = '#ffffff';
     const containerLowest = '#ffffff';
     const containerHigh = '#ffffff';
@@ -1269,31 +1361,45 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
     const containerBorder = findBorderColor(baseColor.baseHex, surfaces, 3.1);
 
-    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+    generateAndSendSurfaceTokens(
+      surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
-      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
-
-    generateAndSendIconTokens(
-      baseColor,
-      surfaces,
-      stateColors,
-      activeTheme?.colors.secondary
-        ? (isColorData(activeTheme.colors.secondary)
-          ? activeTheme.colors.secondary
-          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
-        : baseColor,
-      activeTheme?.colors.tertiary
-        ? (isColorData(activeTheme.colors.tertiary)
-          ? activeTheme.colors.tertiary
-          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
-        : baseColor
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
+      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
     );
+
+      generateAndSendIconTokens(
+        baseColor,
+        'surface',
+        [surface, surfaceDim, surfaceBright, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
+      
+      generateAndSendIconTokens(
+        baseColor,
+        'container',
+        [container, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
   } else if (style === 'grey-professional') {
    
     const baseMix = baseColor.allModes?.['AA-light']?.allShades[5]?.hex || baseColor.baseHex;
     const surface = chroma.mix('white', baseMix, 0.03, 'rgb').desaturate(2).hex();
     const surfaceDim = chroma.mix(surface, 'black', 0.05).hex();
     const surfaceBright = '#ffffff';
+    const container = '#ffffff';
     const containerLow = chroma.mix(surface, 'black', 0.05).hex();
     const containerLowest = chroma.mix(surface, 'black', 0.07).hex();
     const containerHigh = '#ffffff';
@@ -1322,28 +1428,49 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const borderColor = findBorderColor('#000000', surfaces, 3.1);
     const containerBorder = findBorderColor('#000000', surfaces, 3.1);
 
-    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
-      containerLowest, containerHigh, containerHighest,
-      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
-
-    generateAndSendIconTokens(
-      baseColor,
-      surfaces,
-      stateColors,
-      secondaryColor || undefined,
-      tertiaryColor || undefined
-    );
+generateAndSendSurfaceTokens(
+  surface, surfaceDim, surfaceBright, container, containerLow,
+  containerLowest, containerHigh, containerHighest,
+  buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
+  quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
+);
+      generateAndSendIconTokens(
+        baseColor,
+        'surface',
+        [surface, surfaceDim, surfaceBright, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
+      
+      generateAndSendIconTokens(
+        baseColor,
+        'container',
+        [container, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
    } else if (style === 'dark-professional') {
    
     const surface = '#121212';
     const surfaceDim = chroma.mix(surface, 'black', 0.30).hex();
     const surfaceBright = chroma(surface).brighten(.1).hex();
-    const containerLow = chroma.mix('black', surface, 0.09).hex();
-    const containerLowest = chroma.mix('black', surface, 0.11).hex();
-    const containerHigh = chroma(surface).brighten(.3).hex();
-    const containerHighest = chroma(surface).brighten(.4).hex();
+    const container = '#ffffff'
+    const containerLow = '#ffffff'
+    const containerLowest = '#ffffff'
+    const containerHigh = '#ffffff'
+    const containerHighest = '#ffffff'
     const onSurface = '#fafafa'
-    const onContainers = '#fafafa'
+    const onContainers = '#121212'
     const dropColors = modifyHSL(surface);
     const dropColor1 = dropColors[0];
     const dropColor2 = dropColors[1];
@@ -1363,28 +1490,41 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const safeAllShades = baseColor.allModes?.['AA-light']?.allShades || [];
     const { buttonColor, buttonTextColor } = findButtonColor(safeAllShades, surfaces);
     const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
-    const borderColor = findBorderColor('#000000', surfaces, 3.1);
+    const borderColor = findBorderColor('#ffffff', surfaces, 3.1);
     const containerBorder = findBorderColor('#000000', surfaces, 3.1);
 
-    generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, containerLow,
+    generateAndSendSurfaceTokens(
+      surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
-      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
-
-    generateAndSendIconTokens(
-      baseColor,
-      surfaces,
-      stateColors,
-      activeTheme?.colors.secondary
-        ? (isColorData(activeTheme.colors.secondary)
-          ? activeTheme.colors.secondary
-          : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
-        : baseColor,
-      activeTheme?.colors.tertiary
-        ? (isColorData(activeTheme.colors.tertiary)
-          ? activeTheme.colors.tertiary
-          : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
-        : baseColor
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
+      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
     );
+
+      generateAndSendIconTokens(
+        baseColor,
+        'surface',
+        [surface, surfaceDim, surfaceBright, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
+      
+      generateAndSendIconTokens(
+        baseColor,
+        'container',
+        [container, containerLow, containerLowest, containerHigh, containerHighest],
+        stateColors,
+        activeTheme?.colors.secondary
+          ? (isColorData(activeTheme.colors.secondary) ? activeTheme.colors.secondary : { ...baseColor, baseHex: activeTheme.colors.secondary as string })
+          : baseColor,
+        activeTheme?.colors.tertiary
+          ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
+          : baseColor
+      );
     
   }
   updateShadowVariables();
@@ -1402,17 +1542,25 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     });
   };
 
+  // Set initial button shape
+  useEffect(() => {
+    console.log('Setting initial button shape');
+    handleButtonShapeChange('gently-rounded');
+  }, []); // Run once on mount
+
   const handleButtonShapeChange = (shape: ButtonShape) => {
+    console.log('Button shape change initiated:', shape);
+    
     const borderRadiusMap: Record<ButtonShape, number> = {
       'gently-rounded': 8,
       'amply-rounded': 16,
       'boldly-rounded': 32,
       'square': 0
     };
-  
+
     const borderRadius = borderRadiusMap[shape];
-  
-    // First update Figma
+
+    // Update Figma
     window.parent.postMessage({
       pluginMessage: {
         type: 'update-design-token',
@@ -1421,10 +1569,30 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
         value: borderRadius
       }
     }, '*');
-  
-    // Then update local state
+
+    // Update state
     setButtonShape(shape);
+    setHasButtonShape(true);
+    
+    console.log('Button shape updated:', {
+      shape,
+      hasButtonShape: true,
+      borderRadius
+    });
   };
+
+    // Monitor button shape status
+    useEffect(() => {
+      console.log('Button shape state changed:', {
+        buttonShape,
+        hasButtonShape
+      });
+  
+      if (hasButtonShape) {
+        // Trigger theme completion if this was the last requirement
+        onThemeComplete?.();
+      }
+    }, [buttonShape, hasButtonShape, onThemeComplete]);
 
   useEffect(() => {
     if (themes.length > 0 && !activeTheme && themeAnalysis.length > 0) {
@@ -1958,8 +2126,7 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
               </div>
             </div>
           </CollapsiblePanel>
-
-          {/* Button Shape */}
+          {/* Button Shape Panel */}
           <CollapsiblePanel title="Button Shape">
             <div className="grid grid-cols-2 gap-3">
               <button
@@ -1996,7 +2163,7 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
               </button>
             </div>
           </CollapsiblePanel>
-
+          {/* ... rest of your JSX */}
           {/* Component Effects */}
           <CollapsiblePanel title="Component Effects">
             <div className="grid grid-cols-2 gap-3">
