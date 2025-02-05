@@ -59,9 +59,11 @@ figma.ui.onmessage = (msg) => {
         }
 
         // Determine variable type based on value
-        let varType: VariableResolvedDataType = 'FLOAT';
+        let varType: VariableResolvedDataType = 'STRING';
         if (typeof value === 'string' && value.startsWith('#')) {
           varType = 'COLOR';
+        } else if (typeof value === 'number') {
+          varType = 'FLOAT';
         }
 
         // Create full variable name including group

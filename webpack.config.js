@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = (env, argv) => ({
@@ -25,6 +26,10 @@ module.exports = (env, argv) => ({
       {
         test: /\.(png|jpg|gif|webp|svg)$/,
         loader: 'url-loader',
+        options: {
+          limit: 8192, // Images under 8KB will be inlined as base64 URLs
+          name: 'assets/images/[name].[hash].[ext]', // Images will be saved to dist/assets/images/
+        },
       },
     ],
   },
@@ -47,5 +52,15 @@ module.exports = (env, argv) => ({
       inject: 'body',
     }),
     new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/ui/]),
+    
+    // Copy image assets from the public folder to the dist folder
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'public/assets/images'),
+          to: path.resolve(__dirname, 'dist/assets/images'),
+        },
+      ],
+    }),
   ],
 });

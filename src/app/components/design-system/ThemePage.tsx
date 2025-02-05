@@ -20,9 +20,9 @@ interface ColorSet {
 interface ThemePageProps {
   imageFile: File | null | undefined;
   imageUrl?: string;
-  onThemeComplete?: () => void;
+  onThemeComplete?: (baseColor: string) => void;  // Update the interface to include baseColor
   onThemeGenerationError?: (error: Error) => void;
-  isProcessing?: boolean;
+  isProcessing?: boolean,
 }
 
 interface Theme {
@@ -35,6 +35,7 @@ type ThemeAnalysisReason = 'duplicate' | 'redundant' | 'valid';
 type SurfaceStyle = 'light-tonal' | 'colorful-tonal' | 'dark-tonal' | 'light-professional' | 'grey-professional' | 'dark-professional' | 'light-glow' | 'dark-glow';
 type ButtonShape = 'gently-rounded' | 'amply-rounded' | 'boldly-rounded' | 'square';
 type ComponentEffect = 'none' | 'bevel' | 'ridged';
+type HotlinkStyle = 'tonal' | 'blue';
 
 const harmonyTypes = [
   { key: 'triadic', name: 'Triadic' },
@@ -72,7 +73,8 @@ const ThemePage: React.FC<ThemePageProps> = ({
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [activeTheme, setActiveTheme] = useState<Theme | null>(null);
   const [themes, setThemes] = useState<Theme[]>([]);
-
+  const [hotlinkStyle, setHotlinkStyle] = useState<HotlinkStyle>('tonal');
+  
   const [themeAnalysis, setThemeAnalysis] = useState<Array<{
     theme: Theme;
     isValid: boolean;
@@ -299,7 +301,7 @@ useEffect(() => {
               window.parent.postMessage({
                 pluginMessage: {
                   type: 'update-design-token',
-                  collection: 'Tones',
+                  collection: 'Modes',
                   group: 'Default',
                   mode: 'AA-light',
                   variable: `${position}-color`,
@@ -310,6 +312,7 @@ useEffect(() => {
   
             // Trigger surface style update
             handleSurfaceStyleChange(surfaceStyle);
+            onThemeComplete?.(baseColor.baseHex);  // Pass the baseColor hex
           }
         }
       }
@@ -318,6 +321,51 @@ useEffect(() => {
       console.error('Error generating themes:', error);
     }
   }, [harmonies, baseColor, customColors]);
+
+  // Helper function for finding hotlink colors
+  function findHotlinkColor(
+    surfaces: string[],
+    shades: Array<{ hex: string, contrastRatio: number, textColor: string }>,
+    isBlueStyle: boolean = false
+  ): { color: string, requiresInvert: boolean } {
+    if (isBlueStyle) {
+      const blueColor = '#0066CC';
+      const meetsContrast = surfaces.every(surface => 
+        chroma.contrast(blueColor, surface) >= 4.5
+      );
+
+      if (meetsContrast) {
+        return { color: blueColor, requiresInvert: false };
+      }
+      return { color: '#000000', requiresInvert: true };
+    }
+
+    const firstSurface = surfaces[0];
+    const surfaceLuminance = chroma(firstSurface).luminance();
+    
+    const sortedShades = [...shades].sort((a, b) => {
+      if (surfaceLuminance < 0.5) {
+        return shades.indexOf(a) - shades.indexOf(b);
+      } else {
+        return shades.indexOf(b) - shades.indexOf(a);
+      }
+    });
+
+    for (const shade of sortedShades) {
+      const meetsAllContrasts = surfaces.every(surface => 
+        chroma.contrast(shade.hex, surface) >= 4.5
+      );
+
+      if (meetsAllContrasts) {
+        return { color: shade.hex, requiresInvert: false };
+      }
+    }
+
+    return {
+      color: surfaceLuminance < 0.5 ? '#FFFFFF' : '#000000',
+      requiresInvert: true
+    };
+  }
 
   const checkThemeRedundancy = (themes: Theme[]): Array<{
     theme: Theme;
@@ -367,18 +415,20 @@ useEffect(() => {
       buttonShape,
       activeTheme,
       isProcessing,
+      baseColor: baseColor?.baseHex
     });
 
     const isThemeGenerated =
       surfaceStyle !== undefined &&
       buttonShape !== undefined &&
       activeTheme !== null &&
+      baseColor?.baseHex &&  // Add check for baseColor
       isProcessing;
 
-    if (isThemeGenerated && onThemeComplete) {
-      console.log('Triggering onThemeComplete');
-      onThemeComplete();
-    }
+      if (isThemeGenerated && onThemeComplete) {
+        console.log('Triggering onThemeComplete with baseColor:', baseColor.baseHex);
+        onThemeComplete(baseColor.baseHex);
+      }
   };
 
   const timer = setTimeout(checkThemeGeneration, 500);
@@ -621,8 +671,8 @@ function generateAndSendIconTokens(
     window.parent.postMessage({
       pluginMessage: {
         type: 'update-design-token',
-        collection: 'Tones',
-        group: 'Default',
+        collection: 'Modes',
+        group: 'Backgrounds/Default',
         mode: 'AA-light',
         variable: token.name,
         value: token.value,
@@ -661,7 +711,9 @@ function generateAndSendSurfaceTokens(
   quietContainerLowest: string,
   quietContainerHigh: string,
   quietContainerHighest: string,
-) {
+  surfaceHotlinkColor: string | null = null,
+  containerHotlinkColor: string | null = null
+  ) {
   const surfaceTokens = [
     { name: 'Surface', value: surface },
     { name: 'On-Surface', value: onSurface },
@@ -692,6 +744,9 @@ function generateAndSendSurfaceTokens(
     { name: 'Container-Lowest-Quiet', value: quietContainerLowest },
     { name: 'Container-High-Quiet', value: quietContainerHigh },
     { name: 'Container-Highest-Quiet', value: quietContainerHighest },
+    { name: 'Surface-Hotlink', value: surfaceHotlinkColor || onSurface },
+    { name: 'Container-Hotlink', value: containerHotlinkColor || onContainers },
+  
   ];
 
   if (borderColor) {
@@ -703,8 +758,8 @@ function generateAndSendSurfaceTokens(
     window.parent.postMessage({
       pluginMessage: {
         type: 'update-design-token',
-        collection: 'Tones',
-        group: 'Default',
+        collection: 'Modes',
+        group: 'Backgrounds/Default',
         mode: 'AA-light',
         variable: token.name,
         value: token.value
@@ -952,8 +1007,8 @@ const updateShadowVariables = () => {
           mode: 'Dropshadows',
           variable: `Drop${dropNumber}-Color`,
           value: {
-            collection: 'Backgrounds',
-            mode: 'Default', 
+            collection: 'Modes',
+            mode: 'Backgrounds/Default', 
             variable: 'Dropdown'
           }
         }
@@ -1056,16 +1111,16 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
 
   // Send base tokens
   const baseTokens = [
-    { collection: 'Tones', group: 'Primary', mode: 'AA-light', value: primary },
-    { collection: 'Tones', group: 'Primary-Light', mode: 'AA-light', value: primaryLight },
-    { collection: 'Tones', group: 'Primary-Dark', mode: 'AA-light', value: primaryDark },
-    { collection: 'Tones', group: 'Secondary', mode: 'AA-light', value: secondary },
-    { collection: 'Tones', group: 'Secondary-Light', mode: 'AA-light', value: secondaryLight },
-    { collection: 'Tones', group: 'Secondary-Dark', mode: 'AA-light', value: secondaryDark },
-    { collection: 'Tones', group: 'Tertiary', mode: 'AA-light', value: tertiary },
-    { collection: 'Tones', group: 'Tertiary-Light', mode: 'AA-light', value: tertiaryLight },
-    { collection: 'Tones', group: 'Tertiary-Dark', mode: 'AA-light', value: tertiaryDark },
-    { collection: 'Tones', group: 'White', mode: 'AA-light', value: white }
+    { collection: 'Modes', group: 'Backgrounds/Primary', mode: 'AA-light', value: primary },
+    { collection: 'Modes', group: 'Backgrounds/Primary-Light', mode: 'AA-light', value: primaryLight },
+    { collection: 'Modes', group: 'Backgrounds/Primary-Dark', mode: 'AA-light', value: primaryDark },
+    { collection: 'Modes', group: 'Backgrounds/Secondary', mode: 'AA-light', value: secondary },
+    { collection: 'Modes', group: 'Backgrounds/Secondary-Light', mode: 'AA-light', value: secondaryLight },
+    { collection: 'Modes', group: 'Backgrounds/Secondary-Dark', mode: 'AA-light', value: secondaryDark },
+    { collection: 'Modes', group: 'Backgrounds/Tertiary', mode: 'AA-light', value: tertiary },
+    { collection: 'Modes', group: 'Backgrounds/Tertiary-Light', mode: 'AA-light', value: tertiaryLight },
+    { collection: 'Modes', group: 'Backgrounds/Tertiary-Dark', mode: 'AA-light', value: tertiaryDark },
+    { collection: 'Modes', group: 'Backgrounds/White', mode: 'AA-light', value: white }
   ];
 
   baseTokens.forEach(token => {
@@ -1151,13 +1206,24 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const quietContainerLowest= generateQuietSurfaceColor(containerLowest, onSurface, 4.5);
     const quietContainerHigh = generateQuietSurfaceColor(containerHigh, onSurface, 4.5);
     const quietContainerHighest= generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
+    // Calculate hotlink colors
+    const surfaceHotlink = findHotlinkColor(
+      surfaces,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
 
+    const containerHotlink = findHotlinkColor(
+      containers,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
 
     generateAndSendSurfaceTokens(
       surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
       buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
-      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
+      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest, surfaceHotlink.color, containerHotlink.color
     );
 
       generateAndSendIconTokens(
@@ -1185,6 +1251,7 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
           ? (isColorData(activeTheme.colors.tertiary) ? activeTheme.colors.tertiary : { ...baseColor, baseHex: activeTheme.colors.tertiary as string })
           : baseColor
       );
+
   } 
   else if (style === 'dark-tonal') {
   
@@ -1222,10 +1289,21 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
     const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
     const containerBorder = findBorderColor(baseColor.baseHex, containers, 3.1);
+    // Calculate hotlink colors
+    const surfaceHotlink = findHotlinkColor(
+      surfaces,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
 
+    const containerHotlink = findHotlinkColor(
+      containers,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
     generateAndSendSurfaceTokens(surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
-      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest);
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest, surfaceHotlink.color, containerHotlink.color);
 
       generateAndSendIconTokens(
         baseColor,
@@ -1294,12 +1372,23 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
     const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
     const containerBorder = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+    // Calculate hotlink colors
+    const surfaceHotlink = findHotlinkColor(
+      surfaces,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
 
+    const containerHotlink = findHotlinkColor(
+      containers,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
       generateAndSendSurfaceTokens(
         surface, surfaceDim, surfaceBright, container, containerLow,
         containerLowest, containerHigh, containerHighest,
         buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
-        quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
+        quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest, surfaceHotlink.color, containerHotlink.color
       );
       generateAndSendIconTokens(
         baseColor,
@@ -1360,12 +1449,22 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
     const borderColor = findBorderColor(baseColor.baseHex, surfaces, 3.1);
     const containerBorder = findBorderColor(baseColor.baseHex, surfaces, 3.1);
+    const surfaceHotlink = findHotlinkColor(
+      surfaces,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
 
+    const containerHotlink = findHotlinkColor(
+      containers,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
     generateAndSendSurfaceTokens(
       surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
       buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
-      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
+      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest, surfaceHotlink.color, containerHotlink.color
     );
 
       generateAndSendIconTokens(
@@ -1427,13 +1526,23 @@ const handleSurfaceStyleChange = useCallback((style: SurfaceStyle) => {
     const quietContainerHighest = generateQuietSurfaceColor(containerHighest, onSurface, 4.5);
     const borderColor = findBorderColor('#000000', surfaces, 3.1);
     const containerBorder = findBorderColor('#000000', surfaces, 3.1);
+    const surfaceHotlink = findHotlinkColor(
+      surfaces,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
 
-generateAndSendSurfaceTokens(
-  surface, surfaceDim, surfaceBright, container, containerLow,
-  containerLowest, containerHigh, containerHighest,
-  buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
-  quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
-);
+    const containerHotlink = findHotlinkColor(
+      containers,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
+    generateAndSendSurfaceTokens(
+      surface, surfaceDim, surfaceBright, container, containerLow,
+      containerLowest, containerHigh, containerHighest,
+      buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
+      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest, surfaceHotlink.color, containerHotlink.color
+    );
       generateAndSendIconTokens(
         baseColor,
         'surface',
@@ -1492,12 +1601,22 @@ generateAndSendSurfaceTokens(
     const { containerButton, containerButtonText } = findButtonColor(safeAllShades, containers, 'container');
     const borderColor = findBorderColor('#ffffff', surfaces, 3.1);
     const containerBorder = findBorderColor('#000000', surfaces, 3.1);
+    const surfaceHotlink = findHotlinkColor(
+      surfaces,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
 
+    const containerHotlink = findHotlinkColor(
+      containers,
+      baseColor.allModes?.['AA-light']?.allShades || [],
+      hotlinkStyle === 'blue'
+    );
     generateAndSendSurfaceTokens(
       surface, surfaceDim, surfaceBright, container, containerLow,
       containerLowest, containerHigh, containerHighest,
       buttonColor, buttonTextColor, containerButton, containerButtonText, onSurface, onContainers, borderColor, containerBorder, dropColor1, dropColor2, dropColor3, dropColor4, dropColor5,
-      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest
+      quietSurface, quietSurfaceDim, quietSurfaceBright, quietContainer, quietContainerLow, quietContainerLowest, quietContainerHigh, quietContainerHighest, surfaceHotlink.color, containerHotlink.color
     );
 
       generateAndSendIconTokens(
@@ -1542,11 +1661,30 @@ generateAndSendSurfaceTokens(
     });
   };
 
-  // Set initial button shape
+  // Monitor button shape status
   useEffect(() => {
-    console.log('Setting initial button shape');
-    handleButtonShapeChange('gently-rounded');
-  }, []); // Run once on mount
+    console.log('Button shape state changed:', {
+      buttonShape,
+      hasButtonShape,
+      surfaceStyle,
+      activeTheme,
+      isProcessing,
+      baseColor: baseColor?.baseHex
+    });
+
+    // Check if all required conditions are met
+    const isThemeGenerated =
+      hasButtonShape &&
+      surfaceStyle !== undefined &&
+      activeTheme !== null &&
+      baseColor?.baseHex &&
+      isProcessing;
+
+    if (isThemeGenerated && onThemeComplete && baseColor) {
+      console.log('Triggering onThemeComplete with baseColor:', baseColor.baseHex);
+      onThemeComplete(baseColor.baseHex);
+    }
+  }, [buttonShape, hasButtonShape, surfaceStyle, activeTheme, onThemeComplete, isProcessing, baseColor]);
 
   const handleButtonShapeChange = (shape: ButtonShape) => {
     console.log('Button shape change initiated:', shape);
@@ -1580,19 +1718,6 @@ generateAndSendSurfaceTokens(
       borderRadius
     });
   };
-
-    // Monitor button shape status
-    useEffect(() => {
-      console.log('Button shape state changed:', {
-        buttonShape,
-        hasButtonShape
-      });
-  
-      if (hasButtonShape) {
-        // Trigger theme completion if this was the last requirement
-        onThemeComplete?.();
-      }
-    }, [buttonShape, hasButtonShape, onThemeComplete]);
 
   useEffect(() => {
     if (themes.length > 0 && !activeTheme && themeAnalysis.length > 0) {
@@ -2163,7 +2288,32 @@ generateAndSendSurfaceTokens(
               </button>
             </div>
           </CollapsiblePanel>
-          {/* ... rest of your JSX */}
+          {/* Add Hotlink Coloring panel */}
+          <CollapsiblePanel title="Hotlink Coloring">
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setHotlinkStyle('tonal')}
+                  className={`px-6 py-3 rounded-xl ${
+                    hotlinkStyle === 'tonal' ? 'bg-purple-50 border-2 border-purple-500' : 'border border-gray-200'
+                  }`}
+                >
+                  Tonal
+                </button>
+                <button
+                  onClick={() => setHotlinkStyle('blue')}
+                  className={`px-6 py-3 rounded-xl ${
+                    hotlinkStyle === 'blue' ? 'bg-purple-50 border-2 border-purple-500' : 'border border-gray-200'
+                  }`}
+                >
+                  Blue
+                </button>
+              </div>
+              <p className="text-sm text-gray-500">
+                Note: the design system will default to black or white if unable to find a hotlink color with the required contrast.
+              </p>
+            </div>
+          </CollapsiblePanel>
           {/* Component Effects */}
           <CollapsiblePanel title="Component Effects">
             <div className="grid grid-cols-2 gap-3">

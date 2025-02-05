@@ -15,11 +15,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ steps }) => {
       <div className="flex flex-col items-center max-w-md w-full">
         {/* Animated Dog */}
         <div>
-          <img 
-            src="../../../../public/assets/images/Puppyrun.gif" 
-            alt="Puppy running to fetch your desing system"
-            className="w-full h-auto" // Tailwind classes for responsive sizing
-          />
+        <img 
+          src="/assets/images/Puppyrun.gif" 
+          alt="Puppy running to fetch your design system" 
+          className="w-full h-auto"
+        />
         </div>
         
         {/* Steps */}

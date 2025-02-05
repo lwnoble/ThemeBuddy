@@ -11,6 +11,7 @@ import { DESIGN_SYSTEM_ROUTES } from './constants/routes';
 import { useNavigation } from '../context/NavigationContext';
 import type { DesignSystemSettings } from './types';
 import { ColorProvider } from '../context/ColorContext';
+import { MoodType } from './types/fonts';
 
 // Import all page components
 import ThemePage from './components/design-system/ThemePage';
@@ -42,13 +43,16 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [colorExtractionComplete, setColorExtractionComplete] = useState(false);
   const [fontPairingComplete, setFontPairingComplete] = useState(false);
-  
+  const [cachedFontPairs, setCachedFontPairs] = useState<any[]>([]);
+  const [cachedMood, setCachedMood] = useState<MoodType>('Sophisticated');
+  const [baseColorForFonts, setBaseColorForFonts] = useState<string | null>(null);
   const [generationSteps, setGenerationSteps] = useState<GenerationStep[]>([
     { label: 'Extracting Colors', status: 'pending' },
-    { label: 'Generating Font Pairs', status: 'pending' },
-    { label: 'Generating Theme', status: 'pending' },
+    { label: 'Generating Theme', status: 'pending' },    // Moved up
+    { label: 'Generating Font Pairs', status: 'pending' }, // Moved down
     { label: 'Finalizing Design System', status: 'pending' }
   ]);
+  
 
   const [settings, setSettings] = useState<DesignSystemSettings>({
     name: '',
@@ -74,9 +78,8 @@ useEffect(() => {
   }
 }, [colorExtractionComplete]);
 
-// Update the font pairing effect
 useEffect(() => {
-  if (fontPairingComplete) {
+  if (themeGenerationComplete) {
     setGenerationSteps(prevSteps => 
       prevSteps.map((step, index) => ({
         ...step,
@@ -86,27 +89,24 @@ useEffect(() => {
       }))
     );
   }
-  console.log("Font pairing complete:", fontPairingComplete);
-}, [fontPairingComplete]);
-
-// Add new effect for theme generation
-useEffect(() => {
-  if (themeGenerationComplete) {
-    setGenerationSteps(prevSteps => 
-      prevSteps.map((step, index) => ({
-        ...step,
-        status: index <= 2 ? 'complete' as const :
-                index === 3 ? 'loading' as const :
-                'pending' as const
-      }))
-    );
-    setTimeout(completeGeneration, 500);
-  }
-  console.log("Theme generation complete:", themeGenerationComplete);
 }, [themeGenerationComplete]);
 
+
+// Update the font pairing effect
+useEffect(() => {
+  if (fontPairingComplete) {
+    setTimeout(completeGeneration, 500);
+  }
+}, [fontPairingComplete]);
+
 const completeGeneration = () => {
-  console.log('Completing generation...');
+  console.log('Running complete generation', {
+    colorExtractionComplete,
+    themeGenerationComplete,
+    fontPairingComplete
+  });
+  
+  // Mark all steps complete
   setGenerationSteps(prevSteps => 
     prevSteps.map(step => ({
       ...step,
@@ -114,22 +114,20 @@ const completeGeneration = () => {
     }))
   );
   
-  // Add a fallback timeout to ensure loading screen disappears
-  const completionTimer = setTimeout(() => {
-    console.warn('Generation completion timed out, forcing UI update');
-    setIsSystemGenerated(true);
-    setIsSettingsExpanded(false);
-    setIsLoading(false);
-    setCurrentRoute({
-      id: 'home',
-      title: 'Design System',
-      path: '/',
-      icon: Home
-    });
-  }, 10000); // 10 second fallback
-
-  // Clear the timer if generation completes successfully
-  return () => clearTimeout(completionTimer);
+  // Update UI state
+  setIsSystemGenerated(true);
+  setIsSettingsExpanded(false);
+  setIsLoading(false);
+  
+  // Navigate home
+  setCurrentRoute({
+    id: 'home',
+    title: 'Design System',
+    path: '/',
+    icon: Home
+  });
+  
+  console.log('Generation completed, UI updated');
 };
 
   const handleGenerate = () => {
@@ -145,53 +143,125 @@ const completeGeneration = () => {
     );
   };
 
-  // Hidden processing components
+// Update the HiddenProcessing component with better sequencing
 const HiddenProcessing = () => {
+  console.log('HiddenProcessing render conditions:', {
+    hasImage: !!(settings.imageFile || settings.imageUrl),
+    colorExtractionComplete,
+    themeGenerationComplete,
+    fontPairingComplete,
+    currentStep: !colorExtractionComplete ? 'colors' :
+                !themeGenerationComplete ? 'theme' :
+                !fontPairingComplete ? 'fonts' : 'complete',
+    baseColorForFonts        
+  });
+
   if (!settings.imageFile && !settings.imageUrl) return null;
-  
+
   return (
     <div style={{ display: 'none' }}>
-      <ColorPalette
-        imageFile={settings.imageFile}
-        imageUrl={settings.imageUrl}
-        onColorExtractionComplete={() => {
-          console.log('Color extraction complete');
-          setColorExtractionComplete(true);
-        }}
-      />
-      {colorExtractionComplete && (
-        <FontPairings
+      {/* Step 1: Color Extraction */}
+      {!colorExtractionComplete && (
+        <ColorPalette
           imageFile={settings.imageFile}
-          onFontPairingComplete={() => {
-            console.log('Font pairing complete');
-            setFontPairingComplete(true);
-          }}
-          preferences={{
-            header: {
-              serif: ['All', 'Transitional', 'Slab', 'Old Style', 'Modern', 'Humanist'],
-              sansSerif: ['All', 'Geometric', 'Humanist', 'Neo Grotesque'],
-              calligraphy: ['All', 'Handwritten', 'Formal']
-            },
-            body: {
-              serif: ['All', 'Transitional', 'Modern'],
-              sansSerif: ['All', 'Geometric', 'Humanist']
-            }
+          imageUrl={settings.imageUrl}
+          onColorExtractionComplete={() => {
+            console.log('Color extraction complete');
+            setColorExtractionComplete(true);
           }}
         />
       )}
-      {fontPairingComplete && (
+
+      {/* Step 2: Theme Generation */}
+      {colorExtractionComplete && !themeGenerationComplete && (
         <ThemePage 
           imageFile={settings.imageFile}
           imageUrl={settings.imageUrl}
-          onThemeComplete={() => {
+          isProcessing={true}
+          onThemeComplete={(baseColor) => {
             console.log('Theme generation complete');
             setThemeGenerationComplete(true);
+            setBaseColorForFonts(baseColor);
+            setThemeGenerationComplete(true);
+            // Start font processing by marking theme as done
+            setGenerationSteps(prevSteps => 
+              prevSteps.map((step, index) => ({
+                ...step,
+                status: index <= 1 ? 'complete' as const :
+                        index === 2 ? 'loading' as const :
+                        'pending' as const
+              }))
+            );
           }}
         />
       )}
+
+      {/* Step 3: Font Pairing */}
+      {themeGenerationComplete && (
+      <FontPairings
+        imageFile={settings.imageFile}
+        baseColor={baseColorForFonts || undefined} // Convert null to undefined to match prop type
+        isHiddenProcessing={true}
+        onFontPairingComplete={() => {
+          console.log('Font pairing complete');
+          setFontPairingComplete(true);
+        }}
+        onFontPairingSelect={(headerFont, bodyFont, pairs, mood) => {
+          console.log('Selected fonts:', { headerFont, bodyFont });
+          setCachedFontPairs(pairs || []);
+          setCachedMood(mood || 'Sophisticated');
+        }}
+        preferences={{
+          header: {
+            serif: ['All', 'Transitional', 'Slab', 'Old Style', 'Modern', 'Humanist'],
+            sansSerif: ['All', 'Geometric', 'Humanist', 'Neo Grotesque'],
+            calligraphy: ['All', 'Handwritten', 'Formal']
+          },
+          body: {
+            serif: ['All', 'Transitional', 'Modern'],
+            sansSerif: ['All', 'Geometric', 'Humanist']
+          }
+        }}
+      />
+    )}
     </div>
   );
 };
+
+// Single monitoring effect for generation process
+useEffect(() => {
+  if (!isLoading) return;
+
+  console.log('Generation state:', {
+    colorExtractionComplete,
+    themeGenerationComplete,
+    fontPairingComplete,
+    step: !colorExtractionComplete ? 'colors' :
+          !themeGenerationComplete ? 'theme' :
+          !fontPairingComplete ? 'fonts' : 'complete'
+  });
+
+  // Don't start timeout until theme is complete
+  if (!themeGenerationComplete) return;
+
+  // Only start font timeout after theme is done
+  const timeout = setTimeout(() => {
+    if (!fontPairingComplete) {
+      console.log('Font pairing timeout after 10s - using defaults');
+      setCachedFontPairs([{
+        headerFont: 'Inter',
+        bodyFont: 'Roboto',
+        category: 'sans-serif',
+        style: 'modern'
+      }]);
+      setCachedMood('Sophisticated');
+      setFontPairingComplete(true);
+      completeGeneration();
+    }
+  }, 10000); // Give it 10 full seconds
+
+  return () => clearTimeout(timeout);
+}, [isLoading, themeGenerationComplete, fontPairingComplete]);
 
   const renderContent = () => {
     console.log('Rendering content:', { isLoading });
@@ -225,44 +295,73 @@ const HiddenProcessing = () => {
           />
         );
 
-      case '/fonts':
-        return (
-          <FontPairings
-            imageFile={settings.imageFile}
-            onFontPairingComplete={() => {
-              console.log('Font pairing complete');
-              setFontPairingComplete(true);
-            }}
-            onBack={() => setCurrentRoute({
-              id: 'home',
-              title: 'Design System',
-              path: '/',
-              icon: Home
-            })}
-            onFontPairingSelect={(headerFont, bodyFont) => {
-              console.log('Selected fonts:', { headerFont, bodyFont });
-            }}
-            preferences={{
-              header: {
-                serif: ['All', 'Transitional', 'Slab', 'Old Style', 'Modern', 'Humanist'],
-                sansSerif: ['All', 'Geometric', 'Humanist', 'Neo Grotesque'],
-                calligraphy: ['All', 'Handwritten', 'Formal']
-              },
-              body: {
-                serif: ['All', 'Transitional', 'Modern'],
-                sansSerif: ['All', 'Geometric', 'Humanist']
-              }
-            }}
-          />
-        );
-
-      case '/theme':
-        return (
-          <ThemePage 
-            imageFile={settings.imageFile} 
-            imageUrl={settings.imageUrl} 
-          />
-        );
+        case '/fonts':
+          console.log('Rendering font route:', {
+            imageFile: settings.imageFile,
+            cachedPairs: cachedFontPairs?.length,
+            detectedMood: cachedMood
+          });
+          
+          return (
+            <FontPairings
+              imageFile={settings.imageFile}
+              onFontPairingComplete={() => {
+                console.log('Font pairing completed in route');
+                setFontPairingComplete(true);
+              }}
+              onBack={() => {
+                console.log('Navigating back from fonts');
+                setCurrentRoute({
+                  id: 'home',
+                  title: 'Design System',
+                  path: '/',
+                  icon: Home
+                });
+              }}
+              onFontPairingSelect={(headerFont, bodyFont, pairs, mood) => {
+                console.log('Selected fonts:', {
+                  headerFont,
+                  bodyFont,
+                  pairsCount: pairs?.length,
+                  mood
+                });
+                
+                if (pairs) setCachedFontPairs(pairs);
+                if (mood) setCachedMood(mood);
+              }}
+              preferences={{
+                header: {
+                  serif: ['All', 'Transitional', 'Slab', 'Old Style', 'Modern', 'Humanist'],
+                  sansSerif: ['All', 'Geometric', 'Humanist', 'Neo Grotesque'],
+                  calligraphy: ['All', 'Handwritten', 'Formal']
+                },
+                body: {
+                  serif: ['All', 'Transitional', 'Modern'],
+                  sansSerif: ['All', 'Geometric', 'Humanist']
+                }
+              }}
+              cachedPairs={cachedFontPairs}
+              detectedMood={cachedMood}
+            />
+          );
+            
+    // Update the theme route case in App.tsx
+case '/theme':
+  return (
+    <ThemePage 
+      imageFile={settings.imageFile} 
+      imageUrl={settings.imageUrl}
+      isProcessing={isLoading} // Add isProcessing prop
+      onThemeComplete={() => {
+        console.log('Theme generation complete');
+        setThemeGenerationComplete(true);
+      }}
+      onThemeGenerationError={(error) => {
+        console.error('Theme generation error:', error);
+        // Optionally handle the error (e.g., show error message)
+      }}
+    />
+  );
 
       case '/logos':
         return <LogosPage />;
