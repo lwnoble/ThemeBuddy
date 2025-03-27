@@ -1,0 +1,2364 @@
+{
+    "Active": [
+      {
+        "Font Name": "Caveat",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Permanent Marker",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Oleo Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Merienda",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Bangers",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Kalam",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Kaushan Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Reenie Beanie",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Bad Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Sriracha",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Shrikhand",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Marck Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Nothing You Could Do",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Fugaz One",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Charm",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Racing Sans One",
+        "Type": "Monospace"
+      },
+      {
+        "Font Name": "Knewave",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Oooh Baby",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Niconne",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Calligraffitti",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Contrail One",
+        "Type": "Monospace"
+      },
+      {
+        "Font Name": "Sansita Swashed",
+        "Type": "Monospace"
+      },
+      {
+        "Font Name": "Sedgwick Ave",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Allan",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Oregano",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Oleo Script Swash Caps",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Trade Winds",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Square Peg",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Ma Shan Zheng",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Qwitcher Grypen",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Edu SA Beginner",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Bilbo Swash Caps",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Sedgwick Ave Display",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Ceviche One",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Mogra",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Sail",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Vujahday Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Carattere",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Zhi Mang Xing",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Srisakdi",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Grape Nuts",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Nova Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Tillana",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Alkatra",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Edu VIC WA NT Beginner",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Farsan",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Kite One",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Edu TAS Beginner",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Edu NSW ACT Foundation",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Condiment",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Lugrasimo",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Bilbo",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Solitreo",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Lumanosimo",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Ranga",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Playwrite USA Traditional",
+        "Type": "Display/Decorative"
+      }
+    ],
+
+    "Artistic": [
+      {
+        "Font Name": "Josefin Sans",
+        "Type": "Monospace"
+      },
+      {
+        "Font Name": "Dancing Script",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Pacifico",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Lobster",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Caveat",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Shadows Into Light",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Permanent Marker",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Satisfy",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Cinzel",
+        "Type": "Serif"
+      },
+      {
+        "Font Name": "Great Vibes",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Lobster Two",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Yellowtail",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Kalam",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Courgette",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Pirata One",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Gloria Hallelujah",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Kaushan Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Sacramento",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Allura",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Yatra One",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Tangerine",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Parisienne",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Cookie",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Architects Daughter",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Bad Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Alex Brush",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Monoton",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Playball",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Sriracha",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Homemade Apple",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Rock Salt",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Damion",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Pinyon Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Zeyada",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Italianno",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Julius Sans One",
+        "Type": "Sans Serif"
+      },
+      {
+        "Font Name": "Mr Dafoe",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Fredericka the Great",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Caveat Brush",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Cinzel Decorative",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Charm",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Rochester",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Seaweed Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Cabin Sketch",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Covered By Your Grace",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Gochi Hand",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Allison",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Just Another Hand",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Mrs Saint Delafield",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Grand Hotel",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Chango",
+        "Type": "Display/Decorative"
+      }
+    ],
+    "Awkward": [
+      {
+        "Font Name": "Caveat",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Indie Flower",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Amatic SC",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Kalam",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Gloria Hallelujah",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Rubik Bubbles",
+        "Type": "Sans Serif"
+      },
+      {
+        "Font Name": "Neucha",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Luckiest Guy",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Yatra One",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Special Elite",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Dela Gothic One",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Reenie Beanie",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Architects Daughter",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Rammetto One",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Rock Salt",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Creepster",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Zeyada",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Pangolin",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Londrina Solid",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Averia Serif Libre",
+        "Type": "Serif"
+      },
+      {
+        "Font Name": "Syncopate",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Caveat Brush",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Potta One",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Seaweed Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Julee",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Covered By Your Grace",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Hachi Maru Pop",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Nanum Brush Script",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Eater",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Yuji Mai",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Major Mono Display",
+        "Type": "Monospace"
+      },
+      {
+        "Font Name": "La Belle Aurore",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Annie Use Your Telescope",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Cedarville Cursive",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Mali",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Mountains of Christmas",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Love Ya Like A Sister",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Coming Soon",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Wallpoet",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Irish Grover",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Schoolbell",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Calligraffitti",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Turret Road",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Waiting for the Sunrise",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Black And White Picture",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Mouse Memoirs",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Aladin",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Sedgwick Ave",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Syne Mono",
+        "Type": "Monospace"
+      },
+      {
+        "Font Name": "Over the Rainbow",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "B612 Mono",
+        "Type": "Monospace"
+      },
+      {
+        "Font Name": "Rubik Vinyl",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "ZCOOL QingKe HuangYou",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Chelsea Market",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Frijole",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Unkempt",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "McLaren",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Finger Paint",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Skranji",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Crafty Girls",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Kranky",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Trade Winds",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Vibur",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Amarante",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Ruslan Display",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Dokdo",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Barriecito",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Cherry Cream Soda",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Life Savers",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Shojumaru",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Wendy One",
+        "Type": "Sans Serif"
+      },
+      {
+        "Font Name": "Slackey",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Rubik Moonrocks",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Shantell Sans",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Hi Melody",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "ZCOOL KuaiLe",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Fontdiner Swanky",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Macondo",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "The Girl Next Door",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Nerko One",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Gaegu",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Henny Penny",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Original Surfer",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Reggae One",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Peralta",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Mirza",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Freckle Face",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Ceviche One",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Underdog",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Delicious Handrawn",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Swanky and Moo Moo",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Miniver",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Macondo Swash Caps",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Emilys Candy",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Flavors",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Stick",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Yomogi",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Miltonian Tattoo",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "DynaPuff",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Ribeye",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Stylish",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Srisakdi",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Londrina Outline",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Ranchers",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Autour One",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Barrio",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Tillana",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Karantina",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Metal Mania",
+        "Type": "Display/Decorative"
+      },
+      {
+        "Font Name": "Liu Jian Mao Cao",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Fuzzy Bubbles",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Federant",
+        "Type": "Serif"
+      },
+      {
+        "Font Name": "Mynerve",
+        "Type": "Calligraphy"
+      },
+      {
+        "Font Name": "Gorditas",
+        "Type": "Display/Decorative"
+      }
+    ],
+    "Business": [
+      { "Font Name": "Roboto", "Type": "Monospace" },
+      { "Font Name": "Open Sans", "Type": "Monospace" },
+      { "Font Name": "Montserrat", "Type": "Monospace" },
+      { "Font Name": "Poppins", "Type": "Monospace" },
+      { "Font Name": "Inter", "Type": "Monospace" },
+      { "Font Name": "Lato", "Type": "Monospace" },
+      { "Font Name": "Roboto Condensed", "Type": "Monospace" },
+      { "Font Name": "Oswald", "Type": "Monospace" },
+      { "Font Name": "Noto Sans", "Type": "Monospace" },
+      { "Font Name": "Raleway", "Type": "Monospace" },
+      { "Font Name": "Nunito Sans", "Type": "Monospace" },
+      { "Font Name": "Ubuntu", "Type": "Monospace" },
+      { "Font Name": "Merriweather", "Type": "Serif" },
+      { "Font Name": "Kanit", "Type": "Monospace" },
+      { "Font Name": "Roboto Slab", "Type": "Serif" },
+      { "Font Name": "PT Sans", "Type": "Monospace" },
+      { "Font Name": "Lora", "Type": "Serif" },
+      { "Font Name": "DM Sans", "Type": "Monospace" },
+      { "Font Name": "Manrope", "Type": "Monospace" },
+      { "Font Name": "Fira Sans", "Type": "Monospace" },
+      { "Font Name": "Noto Serif", "Type": "Serif" },
+      { "Font Name": "Outfit", "Type": "Monospace" },
+      { "Font Name": "Titillium Web", "Type": "Monospace" },
+      { "Font Name": "Libre Franklin", "Type": "Monospace" },
+      { "Font Name": "Schibsted Grotesk", "Type": "Monospace" },
+      { "Font Name": "Space Grotesk", "Type": "Monospace" },
+      { "Font Name": "Libre Baskerville", "Type": "Serif" },
+      { "Font Name": "EB Garamond", "Type": "Serif" },
+      { "Font Name": "Arimo", "Type": "Monospace" },
+      { "Font Name": "Mukta", "Type": "Monospace" },
+      { "Font Name": "Crimson Text", "Type": "Serif" },
+      { "Font Name": "PT Sans Narrow", "Type": "Monospace" },
+      { "Font Name": "Source Sans 3", "Type": "Monospace" },
+      { "Font Name": "Hind", "Type": "Monospace" },
+      { "Font Name": "Assistant", "Type": "Monospace" },
+      { "Font Name": "Plus Jakarta Sans", "Type": "Monospace" },
+      { "Font Name": "Signika Negative", "Type": "Monospace" },
+      { "Font Name": "Prompt", "Type": "Monospace" },
+      { "Font Name": "Oxygen", "Type": "Monospace" },
+      { "Font Name": "Cabin", "Type": "Monospace" },
+      { "Font Name": "Figtree", "Type": "Monospace" },
+      { "Font Name": "Hind Siliguri", "Type": "Monospace" },
+      { "Font Name": "Archivo", "Type": "Monospace" },
+      { "Font Name": "Bitter", "Type": "Serif" },
+      { "Font Name": "Roboto Flex", "Type": "Monospace" },
+      { "Font Name": "Tajawal", "Type": "Monospace" },
+      { "Font Name": "Slabo 27px", "Type": "Serif" },
+      { "Font Name": "Varela Round", "Type": "Monospace" },
+      { "Font Name": "Arvo", "Type": "Serif" },
+      { "Font Name": "Cormorant Garamond", "Type": "Serif" },
+      { "Font Name": "Sora", "Type": "Monospace" },
+      { "Font Name": "Asap", "Type": "Monospace" },
+      { "Font Name": "Zilla Slab", "Type": "Serif" },
+      { "Font Name": "Source Serif 4", "Type": "Serif" },
+      { "Font Name": "Merriweather Sans", "Type": "Monospace" },
+      { "Font Name": "Almarai", "Type": "Monospace" },
+      { "Font Name": "Urbanist", "Type": "Monospace" },
+      { "Font Name": "IBM Plex Serif", "Type": "Serif" },
+      { "Font Name": "Frank Ruhl Libre", "Type": "Serif" },
+      { "Font Name": "Signika", "Type": "Monospace" },
+      { "Font Name": "Yanone Kaffeesatz", "Type": "Monospace" },
+      { "Font Name": "Alegreya", "Type": "Serif" },
+      { "Font Name": "Marcellus", "Type": "Serif" },
+      { "Font Name": "Archivo Narrow", "Type": "Monospace" },
+      { "Font Name": "Sofia Sans", "Type": "Monospace" },
+      { "Font Name": "Noto Sans Display", "Type": "Monospace" },
+      { "Font Name": "League Spartan", "Type": "Monospace" },
+      { "Font Name": "Sarabun", "Type": "Monospace" },
+      { "Font Name": "Spectral", "Type": "Serif" },
+      { "Font Name": "Zen Kaku Gothic New", "Type": "Monospace" },
+      { "Font Name": "Prata", "Type": "Serif" },
+      { "Font Name": "Bodoni Moda", "Type": "Serif" },
+      { "Font Name": "Saira", "Type": "Monospace" },
+      { "Font Name": "Crimson Pro", "Type": "Serif" },
+      { "Font Name": "Yantramanav", "Type": "Monospace" },
+      { "Font Name": "Noticia Text", "Type": "Serif" },
+      { "Font Name": "Crete Round", "Type": "Serif" },
+      { "Font Name": "Sen", "Type": "Monospace" },
+      { "Font Name": "Rokkitt", "Type": "Serif" },
+      { "Font Name": "Didact Gothic", "Type": "Monospace" },
+      { "Font Name": "Philosopher", "Type": "Monospace" },
+      { "Font Name": "Libre Caslon Text", "Type": "Serif" },
+      { "Font Name": "Old Standard TT", "Type": "Serif" },
+      { "Font Name": "Encode Sans Condensed", "Type": "Monospace" },
+      { "Font Name": "Gruppo", "Type": "Display/Decorative" },
+      { "Font Name": "DM Serif Text", "Type": "Serif" },
+      { "Font Name": "Zen Maru Gothic", "Type": "Monospace" },
+      { "Font Name": "Mate", "Type": "Serif" },
+      { "Font Name": "Fira Sans Extra Condensed", "Type": "Monospace" },
+      { "Font Name": "Onest", "Type": "Monospace" },
+      { "Font Name": "Noto Sans Mono", "Type": "Monospace" },
+      { "Font Name": "Cantarell", "Type": "Monospace" },
+      { "Font Name": "Taviraj", "Type": "Serif" },
+      { "Font Name": "Neuton", "Type": "Serif" },
+      { "Font Name": "Gelasio", "Type": "Serif" },
+      { "Font Name": "Sanchez", "Type": "Serif" },
+      { "Font Name": "Poiret One", "Type": "Display/Decorative" },
+      { "Font Name": "Geologica", "Type": "Monospace" },
+      { "Font Name": "Syne", "Type": "Monospace" },
+      { "Font Name": "IBM Plex Sans Condensed", "Type": "Monospace" },
+      { "Font Name": "News Cycle", "Type": "Monospace" }
+    ],
+    "Calm": [
+      { "Font Name": "Funnel", "Type": "Monospace" },
+      { "Font Name": "NORD", "Type": "Monospace" },
+      { "Font Name": "Alumni Sans", "Type": "Monospace" },
+      { "Font Name": "Lexend", "Type": "Monospace" },
+      { "Font Name": "Poiret One", "Type": "Display/Decorative" },
+      { "Font Name": "Gowun Dodum", "Type": "Monospace" },
+      { "Font Name": "Outfit", "Type": "Monospace" },
+      { "Font Name": "Red Hat Display", "Type": "Monospace" },
+      { "Font Name": "Red Hat Text", "Type": "Monospace" },
+      { "Font Name": "Noto Sans", "Type": "Monospace" },
+      { "Font Name": "M PLUS 1p", "Type": "Monospace" },
+      { "Font Name": "Noto Sans Display", "Type": "Monospace" },
+      { "Font Name": "Noto Sans Mono", "Type": "Monospace" },
+      { "Font Name": "M PLUS 2", "Type": "Monospace" },
+      { "Font Name": "Nokora", "Type": "Monospace" },
+      { "Font Name": "Be Vietnam Pro", "Type": "Monospace" },
+      { "Font Name": "Onest", "Type": "Monospace" },
+      { "Font Name": "Gabarito", "Type": "Monospace" },
+      { "Font Name": "Quicksand", "Type": "Monospace" },
+      { "Font Name": "Kumbh Sans", "Type": "Monospace" },
+      { "Font Name": "Mulish", "Type": "Monospace" },
+      { "Font Name": "Inter", "Type": "Monospace" },
+      { "Font Name": "Inter Tight", "Type": "Monospace" },
+      { "Font Name": "Montserrat", "Type": "Monospace" },
+      { "Font Name": "Montserrat Alternates", "Type": "Monospace" },
+      { "Font Name": "Hind", "Type": "Monospace" },
+      { "Font Name": "Instrument Sans", "Type": "Monospace" },
+      { "Font Name": "Archivo", "Type": "Monospace" },
+      { "Font Name": "Assistant", "Type": "Monospace" },
+      { "Font Name": "M PLUS 1", "Type": "Monospace" },
+      { "Font Name": "Heebo", "Type": "Monospace" },
+      { "Font Name": "Commissioner", "Type": "Monospace" },
+      { "Font Name": "Anuphan", "Type": "Monospace" },
+      { "Font Name": "Figtree", "Type": "Monospace" },
+      { "Font Name": "Radio Canada", "Type": "Monospace" },
+      { "Font Name": "Nunito", "Type": "Monospace" },
+      { "Font Name": "Molengo", "Type": "Monospace" },
+      { "Font Name": "DM Sans", "Type": "Monospace" },
+      { "Font Name": "Meera Inimai", "Type": "Monospace" },
+      { "Font Name": "Poppins", "Type": "Monospace" },
+      { "Font Name": "Jost", "Type": "Monospace" },
+      { "Font Name": "Average Sans", "Type": "Monospace" },
+      { "Font Name": "Numans", "Type": "Monospace" },
+      { "Font Name": "Jura", "Type": "Monospace" },
+      { "Font Name": "Anaheim", "Type": "Monospace" },
+      { "Font Name": "Arimo", "Type": "Monospace" },
+      { "Font Name": "Encode Sans", "Type": "Monospace" },
+      { "Font Name": "Andika", "Type": "Monospace" },
+      { "Font Name": "Barlow", "Type": "Monospace" },
+      { "Font Name": "Barlow Condensed", "Type": "Monospace" },
+      { "Font Name": "Barlow Semi Condensed", "Type": "Monospace" },
+      { "Font Name": "Geist", "Type": "Monospace" },
+      { "Font Name": "Host Grotesk", "Type": "Monospace" },
+      { "Font Name": "Azeret Mono", "Type": "Monospace" },
+      { "Font Name": "Encode Sans SC", "Type": "Monospace" },
+      { "Font Name": "Rethink Sans", "Type": "Monospace" },
+      { "Font Name": "Almarai", "Type": "Monospace" },
+      { "Font Name": "Jaldi", "Type": "Monospace" },
+      { "Font Name": "Akatab", "Type": "Monospace" },
+      { "Font Name": "Cambay", "Type": "Monospace" },
+      { "Font Name": "Public Sans", "Type": "Monospace" },
+      { "Font Name": "League Spartan", "Type": "Monospace" },
+      { "Font Name": "Asap Condensed", "Type": "Monospace" },
+      { "Font Name": "Actor", "Type": "Monospace" },
+      { "Font Name": "Mukta", "Type": "Monospace" },
+      { "Font Name": "Mukta Malar", "Type": "Monospace" },
+      { "Font Name": "Mukta Vaani", "Type": "Monospace" },
+      { "Font Name": "Mukta Mahee", "Type": "Monospace" },
+      { "Font Name": "Athiti", "Type": "Monospace" },
+      { "Font Name": "Alef", "Type": "Monospace" },
+      { "Font Name": "Prompt", "Type": "Monospace" },
+      { "Font Name": "Bellota Text", "Type": "Monospace" },
+      { "Font Name": "Agdasima", "Type": "Monospace" },
+      { "Font Name": "Readex Pro", "Type": "Monospace" },
+      { "Font Name": "B612", "Type": "Monospace" },
+      { "Font Name": "Istok Web", "Type": "Monospace" },
+      { "Font Name": "Alexandria", "Type": "Monospace" },
+      { "Font Name": "Basic", "Type": "Monospace" },
+      { "Font Name": "Cantarell", "Type": "Monospace" },
+      { "Font Name": "Gantari", "Type": "Monospace" },
+      { "Font Name": "ABeeZee", "Type": "Monospace" },
+      { "Font Name": "Carlito", "Type": "Monospace" },
+      { "Font Name": "Shippori Antique B1", "Type": "Monospace" },
+      { "Font Name": "Libre Franklin", "Type": "Monospace" },
+      { "Font Name": "Finlandica", "Type": "Monospace" },
+      { "Font Name": "Mohave", "Type": "Monospace" },
+      { "Font Name": "Titillium Web", "Type": "Monospace" },
+      { "Font Name": "Hanken Grotesk", "Type": "Monospace" },
+      { "Font Name": "PT Sans Caption", "Type": "Monospace" },
+      { "Font Name": "Quattrocento Sans", "Type": "Monospace" },
+      { "Font Name": "Raleway", "Type": "Monospace" },
+      { "Font Name": "Kanit", "Type": "Monospace" },
+      { "Font Name": "Open Sans", "Type": "Monospace" },
+      { "Font Name": "Khula", "Type": "Monospace" },
+      { "Font Name": "Kdam Thmor Pro", "Type": "Monospace" },
+      { "Font Name": "Cousine", "Type": "Monospace" },
+      { "Font Name": "Rambla", "Type": "Monospace" },
+      { "Font Name": "Kantumruy Pro", "Type": "Monospace" },
+      { "Font Name": "Martel Sans", "Type": "Monospace" },
+      { "Font Name": "PT Sans", "Type": "Monospace" },
+      { "Font Name": "Oxygen", "Type": "Monospace" },
+      { "Font Name": "Istok Web4 styles", "Type": "Display/Decorative" }
+    ],
+    "Childlike": [
+      { "Font Name": "Shadows Into Light", "Type": "Display/Decorative" },
+      { "Font Name": "Indie Flower", "Type": "Display/Decorative" },
+      { "Font Name": "Amatic SC", "Type": "Display/Decorative" },
+      { "Font Name": "Kalam", "Type": "Sans Serif" },
+      { "Font Name": "Courgette", "Type": "Display/Decorative" },
+      { "Font Name": "Gloria Hallelujah", "Type": "Display/Decorative" },
+      { "Font Name": "Neucha", "Type": "Display/Decorative" },
+      { "Font Name": "Luckiest Guy", "Type": "Display/Decorative" },
+      { "Font Name": "Patrick Hand", "Type": "Display/Decorative" },
+      { "Font Name": "Itim", "Type": "Sans Serif" },
+      { "Font Name": "Reenie Beanie", "Type": "Display/Decorative" },
+      { "Font Name": "Architects Daughter", "Type": "Display/Decorative" },
+      { "Font Name": "Bad Script", "Type": "Display/Decorative" },
+      { "Font Name": "Comic Neue", "Type": "Sans Serif" },
+      { "Font Name": "Zeyada", "Type": "Display/Decorative" },
+      { "Font Name": "Handlee", "Type": "Display/Decorative" },
+      { "Font Name": "Pangolin", "Type": "Display/Decorative" },
+      { "Font Name": "Nothing You Could Do", "Type": "Display/Decorative" },
+      { "Font Name": "Averia Serif Libre", "Type": "Monospace" },
+      { "Font Name": "Balsamiq Sans", "Type": "Sans Serif" },
+      { "Font Name": "Caveat Brush", "Type": "Display/Decorative" },
+      { "Font Name": "Chewy", "Type": "Display/Decorative" },
+      { "Font Name": "Fugaz One", "Type": "Display/Decorative" },
+      { "Font Name": "Boogaloo", "Type": "Display/Decorative" },
+      { "Font Name": "Poetsen One", "Type": "Display/Decorative" },
+      { "Font Name": "Covered By Your Grace", "Type": "Display/Decorative" },
+      { "Font Name": "Hachi Maru Pop", "Type": "Display/Decorative" },
+      { "Font Name": "Nanum Brush Script", "Type": "Display/Decorative" },
+      { "Font Name": "Gochi Hand", "Type": "Display/Decorative" },
+      { "Font Name": "Just Another Hand", "Type": "Display/Decorative" },
+      { "Font Name": "Jua", "Type": "Sans Serif" },
+      { "Font Name": "Chango", "Type": "Display/Decorative" },
+      { "Font Name": "Shadows Into Light Two", "Type": "Display/Decorative" },
+      { "Font Name": "Annie Use Your Telescope", "Type": "Display/Decorative" },
+      { "Font Name": "Mali", "Type": "Sans Serif" },
+      { "Font Name": "Oooh Baby", "Type": "Display/Decorative" },
+      { "Font Name": "Klee One", "Type": "Sans Serif" },
+      { "Font Name": "Love Ya Like A Sister", "Type": "Display/Decorative" },
+      { "Font Name": "Coming Soon", "Type": "Display/Decorative" },
+      { "Font Name": "Schoolbell", "Type": "Display/Decorative" },
+      { "Font Name": "Kristi", "Type": "Display/Decorative" },
+      { "Font Name": "Sniglet", "Type": "Display/Decorative" },
+      { "Font Name": "Delius", "Type": "Sans Serif" },
+      { "Font Name": "Calligraffitti", "Type": "Display/Decorative" },
+      { "Font Name": "Short Stack", "Type": "Display/Decorative" },
+      { "Font Name": "Waiting for the Sunrise", "Type": "Display/Decorative" },
+      { "Font Name": "Mansalva", "Type": "Display/Decorative" },
+      { "Font Name": "Over the Rainbow", "Type": "Display/Decorative" },
+      { "Font Name": "Allan", "Type": "Display/Decorative" },
+      { "Font Name": "Lacquer", "Type": "Display/Decorative" },
+      { "Font Name": "Capriola", "Type": "Sans Serif" },
+      { "Font Name": "Loved by the King", "Type": "Display/Decorative" },
+      { "Font Name": "Unkempt", "Type": "Display/Decorative" },
+      { "Font Name": "Happy Monkey", "Type": "Sans Serif" },
+      { "Font Name": "Sue Ellen Francisco", "Type": "Display/Decorative" },
+      { "Font Name": "Walter Turncoat", "Type": "Display/Decorative" },
+      { "Font Name": "Finger Paint", "Type": "Display/Decorative" },
+      { "Font Name": "Coiny", "Type": "Display/Decorative" },
+      { "Font Name": "Gamja Flower", "Type": "Display/Decorative" },
+      { "Font Name": "Give You Glory", "Type": "Display/Decorative" },
+      { "Font Name": "Crafty Girls", "Type": "Display/Decorative" },
+      { "Font Name": "Bellota", "Type": "Sans Serif" },
+      { "Font Name": "Kranky", "Type": "Display/Decorative" },
+      { "Font Name": "Vibur", "Type": "Display/Decorative" },
+      { "Font Name": "Square Peg", "Type": "Display/Decorative" },
+      { "Font Name": "Just Me Again Down Here", "Type": "Display/Decorative" },
+      { "Font Name": "Cherry Cream Soda", "Type": "Display/Decorative" },
+      { "Font Name": "Wendy One", "Type": "Display/Decorative" },
+      { "Font Name": "Gluten", "Type": "Display/Decorative" },
+      { "Font Name": "Sofadi One", "Type": "Display/Decorative" },
+      { "Font Name": "Shantell Sans", "Type": "Sans Serif" },
+      { "Font Name": "Hi Melody", "Type": "Display/Decorative" },
+      { "Font Name": "The Girl Next Door", "Type": "Display/Decorative" },
+      { "Font Name": "Nerko One", "Type": "Display/Decorative" },
+      { "Font Name": "Akaya Kanadaka", "Type": "Display/Decorative" },
+      { "Font Name": "Patrick Hand SC", "Type": "Display/Decorative" },
+      { "Font Name": "Gaegu", "Type": "Sans Serif" },
+      { "Font Name": "Edu SA Beginner", "Type": "Display/Decorative" },
+      { "Font Name": "Delius Unicase", "Type": "Sans Serif" },
+      { "Font Name": "Peralta", "Type": "Display/Decorative" },
+      { "Font Name": "Rum Raisin", "Type": "Display/Decorative" },
+      { "Font Name": "Sunshiney", "Type": "Display/Decorative" },
+      { "Font Name": "East Sea Dokdo", "Type": "Display/Decorative" },
+      { "Font Name": "Dekko", "Type": "Sans Serif" },
+      { "Font Name": "Swanky and Moo Moo", "Type": "Display/Decorative" },
+      { "Font Name": "Borel", "Type": "Display/Decorative" },
+      { "Font Name": "Playpen Sans", "Type": "Sans Serif" },
+      { "Font Name": "Margarine", "Type": "Display/Decorative" },
+      { "Font Name": "Delius Swash Caps", "Type": "Sans Serif" },
+      { "Font Name": "Yomogi", "Type": "Display/Decorative" },
+      { "Font Name": "DynaPuff", "Type": "Display/Decorative" },
+      { "Font Name": "Ribeye", "Type": "Display/Decorative" },
+      { "Font Name": "Autour One", "Type": "Display/Decorative" },
+      { "Font Name": "Kablammo", "Type": "Display/Decorative" },
+      { "Font Name": "Kavivanar", "Type": "Display/Decorative" },
+      { "Font Name": "Miltonian", "Type": "Display/Decorative" },
+      { "Font Name": "Liu Jian Mao Cao", "Type": "Display/Decorative" },
+      { "Font Name": "Fuzzy Bubbles", "Type": "Display/Decorative" },
+      { "Font Name": "Long Cang", "Type": "Display/Decorative" },
+      { "Font Name": "Akaya Telivigala", "Type": "Display/Decorative" },
+      { "Font Name": "Mynerve", "Type": "Display/Decorative" },
+      { "Font Name": "Chicle", "Type": "Display/Decorative" },
+      { "Font Name": "Farsan", "Type": "Display/Decorative" },
+      { "Font Name": "Edu TAS Beginner", "Type": "Display/Decorative" },
+      { "Font Name": "Edu NSW ACT Foundation", "Type": "Display/Decorative" },
+      { "Font Name": "Ribeye Marrow", "Type": "Display/Decorative" },
+      { "Font Name": "Yeon Sung", "Type": "Display/Decorative" },
+      { "Font Name": "Solitreo", "Type": "Display/Decorative" },
+      { "Font Name": "Twinkle Star", "Type": "Display/Decorative" },
+      { "Font Name": "Single Day", "Type": "Display/Decorative" },
+      { "Font Name": "Yuji Boku", "Type": "Monospace" },
+      { "Font Name": "Bonbon", "Type": "Display/Decorative" },
+      { "Font Name": "Edu Australia VIC WA NT Hand Dots", "Type": "Display/Decorative" },
+      { "Font Name": "Edu Australia VIC WA NT Hand Guides", "Type": "Display/Decorative" },
+      { "Font Name": "Matemasie", "Type": "Display/Decorative" },
+      { "Font Name": "Edu Australia VIC WA NT Hand", "Type": "Display/Decorative" },
+      { "Font Name": "Snowburst One", "Type": "Display/Decorative" },
+      { "Font Name": "Edu QLD Beginner", "Type": "Display/Decorative" },
+      { "Font Name": "Moo Lah Lah", "Type": "Display/Decorative" },
+      { "Font Name": "Edu Australia VIC WA NT Hand Arrows", "Type": "Display/Decorative" }
+    ],
+    "Cute": [
+      { "Font Name": "Pacifico", "Type": "Display/Decorative" },
+      { "Font Name": "Sour Gummy", "Type": "Display/Decorative" },
+      { "Font Name": "Delius", "Type": "Sans Serif" },
+      { "Font Name": "Meow Script", "Type": "Display/Decorative" },
+      { "Font Name": "Borel", "Type": "Display/Decorative" },
+      { "Font Name": "Delius Swash Caps", "Type": "Display/Decorative" },
+      { "Font Name": "Yellowtail", "Type": "Display/Decorative" },
+      { "Font Name": "Leckerli One", "Type": "Display/Decorative" },
+      { "Font Name": "Delius Unicase", "Type": "Sans Serif" },
+      { "Font Name": "Emilys Candy", "Type": "Display/Decorative" },
+      { "Font Name": "Mystery Quest", "Type": "Display/Decorative" },
+      { "Font Name": "Griffy", "Type": "Display/Decorative" },
+      { "Font Name": "Bonbon", "Type": "Display/Decorative" },
+      { "Font Name": "DynaPuff", "Type": "Display/Decorative" },
+      { "Font Name": "Ruge Boogie", "Type": "Display/Decorative" },
+      { "Font Name": "Chewy", "Type": "Display/Decorative" },
+      { "Font Name": "Butterfly Kids", "Type": "Display/Decorative" },
+      { "Font Name": "Ole", "Type": "Display/Decorative" },
+      { "Font Name": "Jua", "Type": "Sans Serif" },
+      { "Font Name": "Twinkle Star", "Type": "Display/Decorative" },
+      { "Font Name": "Send Flowers", "Type": "Display/Decorative" },
+      { "Font Name": "Princess Sofia", "Type": "Display/Decorative" },
+      { "Font Name": "Gamja Flower", "Type": "Display/Decorative" },
+      { "Font Name": "Vibur", "Type": "Display/Decorative" },
+      { "Font Name": "Ms Madi", "Type": "Sans Serif" },
+      { "Font Name": "Hi Melody", "Type": "Display/Decorative" },
+      { "Font Name": "Delicious Handrawn", "Type": "Display/Decorative" },
+      { "Font Name": "Sarina", "Type": "Sans Serif" },
+      { "Font Name": "Miniver", "Type": "Display/Decorative" },
+      { "Font Name": "Cookie", "Type": "Sans Serif" },
+      { "Font Name": "Sacramento", "Type": "Display/Decorative" },
+      { "Font Name": "Homemade Apple", "Type": "Display/Decorative" },
+      { "Font Name": "Miss Fajardose", "Type": "Display/Decorative" },
+      { "Font Name": "Ingrid Darling", "Type": "Display/Decorative" },
+      { "Font Name": "Damion", "Type": "Sans Serif" },
+      { "Font Name": "Henny Penny", "Type": "Display/Decorative" },
+      { "Font Name": "Schoolbell", "Type": "Display/Decorative" },
+      { "Font Name": "Just Me Again Down Here", "Type": "Display/Decorative" },
+      { "Font Name": "Comic Neue", "Type": "Sans Serif" },
+      { "Font Name": "Mynerve", "Type": "Display/Decorative" },
+      { "Font Name": "Englebert", "Type": "Sans Serif" },
+      { "Font Name": "Snowburst One", "Type": "Display/Decorative" },
+      { "Font Name": "Satisfy", "Type": "Display/Decorative" },
+      { "Font Name": "Akaya Kanadaka", "Type": "Display/Decorative" },
+      { "Font Name": "Akaya Telivigala", "Type": "Display/Decorative" },
+      { "Font Name": "Moo Lah Lah", "Type": "Display/Decorative" },
+      { "Font Name": "Knewave", "Type": "Display/Decorative" },
+      { "Font Name": "Autour One", "Type": "Display/Decorative" },
+      { "Font Name": "Fuzzy Bubbles", "Type": "Display/Decorative" },
+      { "Font Name": "Klee One", "Type": "Sans Serif" },
+      { "Font Name": "Chilanka", "Type": "Display/Decorative" },
+      { "Font Name": "Crafty Girls", "Type": "Display/Decorative" },
+      { "Font Name": "Mrs Sheppards", "Type": "Sans Serif" },
+      { "Font Name": "Puppies Play", "Type": "Display/Decorative" },
+      { "Font Name": "Indie Flower", "Type": "Display/Decorative" },
+      { "Font Name": "Agbalumo", "Type": "Display/Decorative" },
+      { "Font Name": "Lily Script One", "Type": "Display/Decorative" },
+      { "Font Name": "Oldenburg", "Type": "Sans Serif" },
+      { "Font Name": "Ribeye", "Type": "Display/Decorative" },
+      { "Font Name": "Gorditas", "Type": "Sans Serif" },
+      { "Font Name": "Ribeye Marrow", "Type": "Display/Decorative" },
+      { "Font Name": "Gwendolyn", "Type": "Sans Serif" },
+      { "Font Name": "Playwrite Australia SA", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Ísland", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite India", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Việt Nam", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite España Decorativa", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Česko", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Perú", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Danmark Loopet", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite België Walloon", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Danmark Uloopet", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Magyarország", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Hrvatska Lijeva", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Österreich", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite België Vlaams Gewest", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Argentina", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Hrvatska", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Australia Tasmania", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Polska", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Portugal", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Australia Victoria", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Colombia", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Slovensko", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Australia QLD", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Netherlands", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite France Moderne", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Brasil", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Tanzania", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Indonesia", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Deutschland Vereinfachte Ausgangsschrift", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Canada", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Deutschland Lateinische Ausgangsschrift", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Ireland", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite USA Modern", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite New Zealand", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Nigeria Modern", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite England Joined", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite España", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite México", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite South Africa", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite Italia Moderna", "Type": "Display/Decorative" },
+      { "Font Name": "Playwrite USA Traditional", "Type": "Display/Decorative" }
+    ],
+    "Elegant": [
+      { "Font Name": "Dancing Script", "Type": "Display/Decorative" },
+      { "Font Name": "Lobster", "Type": "Display/Decorative" },
+      { "Font Name": "Great Vibes", "Type": "Display/Decorative" },
+      { "Font Name": "Sacramento", "Type": "Display/Decorative" },
+      { "Font Name": "Allura", "Type": "Display/Decorative" },
+      { "Font Name": "Sofia", "Type": "Display/Decorative" },
+      { "Font Name": "Tangerine", "Type": "Display/Decorative" },
+      { "Font Name": "Parisienne", "Type": "Display/Decorative" },
+      { "Font Name": "Cookie", "Type": "Display/Decorative" },
+      { "Font Name": "Alex Brush", "Type": "Display/Decorative" },
+      { "Font Name": "Pinyon Script", "Type": "Display/Decorative" },
+      { "Font Name": "Marck Script", "Type": "Display/Decorative" },
+      { "Font Name": "Italianno", "Type": "Display/Decorative" },
+      { "Font Name": "Mr Dafoe", "Type": "Display/Decorative" },
+      { "Font Name": "Charm", "Type": "Display/Decorative" },
+      { "Font Name": "Rochester", "Type": "Display/Decorative" },
+      { "Font Name": "Mrs Saint Delafield", "Type": "Display/Decorative" },
+      { "Font Name": "Grand Hotel", "Type": "Display/Decorative" },
+      { "Font Name": "Herr Von Muellerhoff", "Type": "Display/Decorative" },
+      { "Font Name": "Pattaya", "Type": "Display/Decorative" },
+      { "Font Name": "Norican", "Type": "Display/Decorative" },
+      { "Font Name": "Arizonia", "Type": "Display/Decorative" },
+      { "Font Name": "Ms Madi", "Type": "Display/Decorative" },
+      { "Font Name": "Petit Formal Script", "Type": "Display/Decorative" },
+      { "Font Name": "Style Script", "Type": "Display/Decorative" },
+      { "Font Name": "Birthstone", "Type": "Display/Decorative" },
+      { "Font Name": "Euphoria Script", "Type": "Display/Decorative" },
+      { "Font Name": "Corinthia", "Type": "Display/Decorative" },
+      { "Font Name": "Charmonman", "Type": "Display/Decorative" },
+      { "Font Name": "Galada", "Type": "Display/Decorative" },
+      { "Font Name": "Montez", "Type": "Display/Decorative" },
+      { "Font Name": "Meow Script", "Type": "Display/Decorative" },
+      { "Font Name": "Qwitcher Grypen", "Type": "Display/Decorative" },
+      { "Font Name": "Clicker Script", "Type": "Display/Decorative" },
+      { "Font Name": "Dynalight", "Type": "Display/Decorative" },
+      { "Font Name": "Ruthie", "Type": "Display/Decorative" },
+      { "Font Name": "Eagle Lake", "Type": "Display/Decorative" },
+      { "Font Name": "The Nautigal", "Type": "Display/Decorative" },
+      { "Font Name": "Licorice", "Type": "Display/Decorative" },
+      { "Font Name": "Lovers Quarrel", "Type": "Display/Decorative" },
+      { "Font Name": "Monte Carlo", "Type": "Display/Decorative" },
+      { "Font Name": "WindSong", "Type": "Display/Decorative" },
+      { "Font Name": "Whisper", "Type": "Display/Decorative" },
+      { "Font Name": "Stalemate", "Type": "Display/Decorative" },
+      { "Font Name": "Carattere", "Type": "Display/Decorative" },
+      { "Font Name": "Luxurious Script", "Type": "Display/Decorative" },
+      { "Font Name": "Meie Script", "Type": "Display/Decorative" },
+      { "Font Name": "Waterfall", "Type": "Display/Decorative" },
+      { "Font Name": "Mea Culpa", "Type": "Display/Decorative" },
+      { "Font Name": "Passions Conflict", "Type": "Display/Decorative" },
+      { "Font Name": "Caramel", "Type": "Display/Decorative" },
+      { "Font Name": "Imperial Script", "Type": "Display/Decorative" },
+      { "Font Name": "Beau Rivage", "Type": "Display/Decorative" },
+      { "Font Name": "Engagement", "Type": "Display/Decorative" },
+      { "Font Name": "Lugrasimo", "Type": "Display/Decorative" },
+      { "Font Name": "Gwendolyn", "Type": "Display/Decorative" },
+      { "Font Name": "Bilbo", "Type": "Display/Decorative" },
+      { "Font Name": "Mrs Sheppards", "Type": "Display/Decorative" },
+      { "Font Name": "Felipa", "Type": "Display/Decorative" },
+      { "Font Name": "Grey Qo", "Type": "Display/Decorative" },
+      { "Font Name": "Lavishly Yours", "Type": "Display/Decorative" },
+      { "Font Name": "Bonheur Royale", "Type": "Display/Decorative" },
+      { "Font Name": "Ballet", "Type": "Display/Decorative" },
+      { "Font Name": "Molle", "Type": "Display/Decorative" },
+      { "Font Name": "Romanesco", "Type": "Display/Decorative" },
+      { "Font Name": "Love Light", "Type": "Display/Decorative" },
+      { "Font Name": "Neonderthaw", "Type": "Display/Decorative" },
+      { "Font Name": "Mr Bedfort", "Type": "Display/Decorative" },
+      { "Font Name": "Inspiration", "Type": "Display/Decorative" },
+      { "Font Name": "Send Flowers", "Type": "Display/Decorative" },
+      { "Font Name": "Fleur De Leah", "Type": "Display/Decorative" },
+      { "Font Name": "Miss Fajardose", "Type": "Display/Decorative" },
+      { "Font Name": "Kings", "Type": "Display/Decorative" },
+      { "Font Name": "Updock", "Type": "Display/Decorative" },
+      { "Font Name": "Island Moments", "Type": "Display/Decorative" },
+      { "Font Name": "My Soul", "Type": "Display/Decorative" },
+      { "Font Name": "Sassy Frass", "Type": "Display/Decorative" },
+      { "Font Name": "Petemoss", "Type": "Display/Decorative" },
+      { "Font Name": "Cherish", "Type": "Display/Decorative" },
+      { "Font Name": "Estonia", "Type": "Display/Decorative" },
+      { "Font Name": "Puppies Play", "Type": "Display/Decorative" }
+    ],
+    "Excited": [
+      { "Font Name": "Shadows Into Light", "Type": "Display/Decorative" },
+      { "Font Name": "Permanent Marker", "Type": "Display/Decorative" },
+      { "Font Name": "Spicy Rice", "Type": "Display/Decorative" },
+      { "Font Name": "Acme", "Type": "Sans Serif" },
+      { "Font Name": "Merienda", "Type": "Calligraphy" },
+      { "Font Name": "Bree Serif", "Type": "Serif" },
+      { "Font Name": "Rubik Bubbles", "Type": "Display/Decorative" },
+      { "Font Name": "Luckiest Guy", "Type": "Display/Decorative" },
+      { "Font Name": "Special Elite", "Type": "Display/Decorative" },
+      { "Font Name": "Audiowide", "Type": "Display/Decorative" },
+      { "Font Name": "Reenie Beanie", "Type": "Calligraphy" },
+      { "Font Name": "Carter One", "Type": "Display/Decorative" },
+      { "Font Name": "Sriracha", "Type": "Monospace" },
+      { "Font Name": "Rock Salt", "Type": "Monospace" },
+      { "Font Name": "Damion", "Type": "Calligraphy" },
+      { "Font Name": "Creepster", "Type": "Display/Decorative" },
+      { "Font Name": "Pangolin", "Type": "Display/Decorative" },
+      { "Font Name": "Londrina Solid", "Type": "Display/Decorative" },
+      { "Font Name": "Nothing You Could Do", "Type": "Display/Decorative" },
+      { "Font Name": "Mr Dafoe", "Type": "Calligraphy" },
+      { "Font Name": "Charm", "Type": "Calligraphy" },
+      { "Font Name": "Boogaloo", "Type": "Display/Decorative" },
+      { "Font Name": "Julee", "Type": "Calligraphy" },
+      { "Font Name": "Nanum Brush Script", "Type": "Calligraphy" },
+      { "Font Name": "Just Another Hand", "Type": "Calligraphy" },
+      { "Font Name": "Jua", "Type": "Sans Serif" },
+      { "Font Name": "Eater", "Type": "Display/Decorative" },
+      { "Font Name": "Yuji Mai", "Type": "Serif" },
+      { "Font Name": "Shadows Into Light Two", "Type": "Display/Decorative" },
+      { "Font Name": "Knewave", "Type": "Display/Decorative" },
+      { "Font Name": "Mountains of Christmas", "Type": "Display/Decorative" },
+      { "Font Name": "Love Ya Like A Sister", "Type": "Display/Decorative" },
+      { "Font Name": "Irish Grover", "Type": "Calligraphy" },
+      { "Font Name": "Salsa", "Type": "Display/Decorative" },
+      { "Font Name": "Kristi", "Type": "Calligraphy" },
+      { "Font Name": "Rancho", "Type": "Calligraphy" },
+      { "Font Name": "Rakkas", "Type": "Display/Decorative" },
+      { "Font Name": "Short Stack", "Type": "Display/Decorative" },
+      { "Font Name": "Sigmar One", "Type": "Display/Decorative" },
+      { "Font Name": "Mansalva", "Type": "Calligraphy" },
+      { "Font Name": "Mouse Memoirs", "Type": "Serif" },
+      { "Font Name": "Bubblegum Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Sedgwick Ave", "Type": "Calligraphy" },
+      { "Font Name": "Dawning of a New Day", "Type": "Calligraphy" },
+      { "Font Name": "Ephesis", "Type": "Calligraphy" },
+      { "Font Name": "Lacquer", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Vinyl", "Type": "Display/Decorative" },
+      { "Font Name": "Fuggles", "Type": "Calligraphy" },
+      { "Font Name": "Birthstone Bounce", "Type": "Calligraphy" },
+      { "Font Name": "Loved by the King", "Type": "Calligraphy" },
+      { "Font Name": "Frijole", "Type": "Display/Decorative" },
+      { "Font Name": "Unkempt", "Type": "Display/Decorative" },
+      { "Font Name": "McLaren", "Type": "Display/Decorative" },
+      { "Font Name": "Oregano", "Type": "Display/Decorative" },
+      { "Font Name": "Walter Turncoat", "Type": "Display/Decorative" },
+      { "Font Name": "Modak", "Type": "Display/Decorative" },
+      { "Font Name": "Skranji", "Type": "Display/Decorative" },
+      { "Font Name": "Atma", "Type": "Sans Serif" },
+      { "Font Name": "Trade Winds", "Type": "Display/Decorative" },
+      { "Font Name": "Rampart One", "Type": "Display/Decorative" },
+      { "Font Name": "Vibur", "Type": "Calligraphy" },
+      { "Font Name": "Ma Shan Zheng", "Type": "Calligraphy" },
+      { "Font Name": "Bigshot One", "Type": "Display/Decorative" },
+      { "Font Name": "Just Me Again Down Here", "Type": "Display/Decorative" },
+      { "Font Name": "Dokdo", "Type": "Calligraphy" },
+      { "Font Name": "Codystar", "Type": "Display/Decorative" },
+      { "Font Name": "Life Savers", "Type": "Display/Decorative" },
+      { "Font Name": "Sofadi One", "Type": "Display/Decorative" },
+      { "Font Name": "Slackey", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Moonrocks", "Type": "Display/Decorative" },
+      { "Font Name": "Shantell Sans", "Type": "Sans Serif" },
+      { "Font Name": "Montez", "Type": "Calligraphy" },
+      { "Font Name": "ZCOOL KuaiLe", "Type": "Display/Decorative" },
+      { "Font Name": "Fontdiner Swanky", "Type": "Display/Decorative" },
+      { "Font Name": "Qwitcher Grypen", "Type": "Calligraphy" },
+      { "Font Name": "The Girl Next Door", "Type": "Calligraphy" },
+      { "Font Name": "Henny Penny", "Type": "Display/Decorative" },
+      { "Font Name": "Maiden Orange", "Type": "Calligraphy" },
+      { "Font Name": "Bilbo Swash Caps", "Type": "Sans Serif" },
+      { "Font Name": "Reggae One", "Type": "Calligraphy" },
+      { "Font Name": "Peralta", "Type": "Calligraphy" },
+      { "Font Name": "Sedgwick Ave Display", "Type": "Display/Decorative" },
+      { "Font Name": "Rum Raisin", "Type": "Calligraphy" },
+      { "Font Name": "Sunshiney", "Type": "Calligraphy" },
+      { "Font Name": "Freckle Face", "Type": "Calligraphy" },
+      { "Font Name": "Mogra", "Type": "Calligraphy" },
+      { "Font Name": "East Sea Dokdo", "Type": "Calligraphy" },
+      { "Font Name": "Comforter Brush", "Type": "Calligraphy" },
+      { "Font Name": "Underdog", "Type": "Display/Decorative" },
+      { "Font Name": "Delicious Handrawn", "Type": "Calligraphy" },
+      { "Font Name": "Wellfleet", "Type": "Calligraphy" },
+      { "Font Name": "Miniver", "Type": "Calligraphy" },
+      { "Font Name": "Margarine", "Type": "Calligraphy" },
+      { "Font Name": "Emilys Candy", "Type": "Calligraphy" },
+      { "Font Name": "Flavors", "Type": "Calligraphy" },
+      { "Font Name": "Stick", "Type": "Sans Serif" },
+      { "Font Name": "Yomogi", "Type": "Calligraphy" },
+      { "Font Name": "Vampiro One", "Type": "Display/Decorative" },
+      { "Font Name": "Denk One", "Type": "Sans Serif" },
+      { "Font Name": "Ribeye", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Dirt", "Type": "Display/Decorative" },
+      { "Font Name": "Ruge Boogie", "Type": "Calligraphy" },
+      { "Font Name": "Londrina Outline", "Type": "Display/Decorative" },
+      { "Font Name": "Ranchers", "Type": "Display/Decorative" },
+      { "Font Name": "Kablammo", "Type": "Display/Decorative" },
+      { "Font Name": "Kavivanar", "Type": "Sans Serif" }
+    ],
+    "Futuristic": [
+      { "Font Name": "Ubuntu", "Type": "Sans Serif" },
+      { "Font Name": "Kanit", "Type": "Sans Serif" },
+      { "Font Name": "Cairo", "Type": "Sans Serif" },
+      { "Font Name": "Exo 2", "Type": "Sans Serif" },
+      { "Font Name": "Teko", "Type": "Sans Serif" },
+      { "Font Name": "Rajdhani", "Type": "Sans Serif" },
+      { "Font Name": "Chakra Petch", "Type": "Sans Serif" },
+      { "Font Name": "Orbitron", "Type": "Sans Serif" },
+      { "Font Name": "Exo", "Type": "Sans Serif" },
+      { "Font Name": "Silkscreen", "Type": "Display/Decorative" },
+      { "Font Name": "Changa", "Type": "Sans Serif" },
+      { "Font Name": "Saira", "Type": "Sans Serif" },
+      { "Font Name": "Russo One", "Type": "Sans Serif" },
+      { "Font Name": "Space Mono", "Type": "Monospace" },
+      { "Font Name": "Ubuntu Condensed", "Type": "Sans Serif" },
+      { "Font Name": "Khand", "Type": "Sans Serif" },
+      { "Font Name": "Ubuntu Mono", "Type": "Monospace" },
+      { "Font Name": "Unbounded", "Type": "Sans Serif" },
+      { "Font Name": "Oxanium", "Type": "Sans Serif" },
+      { "Font Name": "Audiowide", "Type": "Display/Decorative" },
+      { "Font Name": "Big Shoulders Display", "Type": "Sans Serif" },
+      { "Font Name": "Jura", "Type": "Sans Serif" },
+      { "Font Name": "Unica One", "Type": "Sans Serif" },
+      { "Font Name": "Electrolize", "Type": "Sans Serif" },
+      { "Font Name": "Share Tech Mono", "Type": "Monospace" },
+      { "Font Name": "Holtwood One SC", "Type": "Display/Decorative" },
+      { "Font Name": "Syncopate", "Type": "Sans Serif" },
+      { "Font Name": "Economica", "Type": "Sans Serif" },
+      { "Font Name": "Do Hyeon", "Type": "Sans Serif" },
+      { "Font Name": "Coda", "Type": "Sans Serif" },
+      { "Font Name": "Armata", "Type": "Sans Serif" },
+      { "Font Name": "Michroma", "Type": "Sans Serif" },
+      { "Font Name": "Aldrich", "Type": "Sans Serif" },
+      { "Font Name": "Tomorrow", "Type": "Sans Serif" },
+      { "Font Name": "Major Mono Display", "Type": "Monospace" },
+      { "Font Name": "Odibee Sans", "Type": "Sans Serif" },
+      { "Font Name": "Sofia Sans Semi Condensed", "Type": "Sans Serif" },
+      { "Font Name": "Big Shoulders Text", "Type": "Sans Serif" },
+      { "Font Name": "Turret Road", "Type": "Sans Serif" },
+      { "Font Name": "Syne Mono", "Type": "Monospace" },
+      { "Font Name": "SUSE", "Type": "Sans Serif" },
+      { "Font Name": "Geo", "Type": "Sans Serif" },
+      { "Font Name": "Sunflower", "Type": "Sans Serif" },
+      { "Font Name": "Nova Square", "Type": "Sans Serif" },
+      { "Font Name": "Kufam", "Type": "Sans Serif" },
+      { "Font Name": "ZCOOL QingKe HuangYou", "Type": "Display/Decorative" },
+      { "Font Name": "Nova Mono", "Type": "Monospace" },
+      { "Font Name": "Sarpanch", "Type": "Sans Serif" },
+      { "Font Name": "Gugi", "Type": "Display/Decorative" },
+      { "Font Name": "Kelly Slab", "Type": "Serif" },
+      { "Font Name": "Tektur", "Type": "Sans Serif" },
+      { "Font Name": "Megrim", "Type": "Display/Decorative" },
+      { "Font Name": "Iceberg", "Type": "Display/Decorative" },
+      { "Font Name": "Bakbak One", "Type": "Sans Serif" },
+      { "Font Name": "Saira Stencil One", "Type": "Display/Decorative" },
+      { "Font Name": "Share Tech", "Type": "Sans Serif" },
+      { "Font Name": "Cairo Play", "Type": "Sans Serif" },
+      { "Font Name": "Zen Dots", "Type": "Display/Decorative" },
+      { "Font Name": "Genos", "Type": "Sans Serif" },
+      { "Font Name": "Baumans", "Type": "Sans Serif" },
+      { "Font Name": "Gemunu Libre", "Type": "Sans Serif" },
+      { "Font Name": "Iceland", "Type": "Sans Serif" },
+      { "Font Name": "Homenaje", "Type": "Sans Serif" },
+      { "Font Name": "Nova Flat", "Type": "Sans Serif" },
+      { "Font Name": "Rationale", "Type": "Sans Serif" },
+      { "Font Name": "Braah One", "Type": "Sans Serif" },
+      { "Font Name": "Mohave", "Type": "Sans Serif" },
+      { "Font Name": "Text Me One", "Type": "Sans Serif" },
+      { "Font Name": "Mina", "Type": "Sans Serif" },
+      { "Font Name": "Handjet", "Type": "Display/Decorative" },
+      { "Font Name": "Unlock", "Type": "Display/Decorative" },
+      { "Font Name": "Keania One", "Type": "Display/Decorative" },
+      { "Font Name": "Bruno Ace SC", "Type": "Display/Decorative" },
+      { "Font Name": "Anta", "Type": "Sans Serif" },
+      { "Font Name": "Bahiana", "Type": "Display/Decorative" },
+      { "Font Name": "Atomic Age", "Type": "Display/Decorative" },
+      { "Font Name": "Offside", "Type": "Sans Serif" },
+      { "Font Name": "Smooch Sans", "Type": "Sans Serif" },
+      { "Font Name": "Big Shoulders Inline Text", "Type": "Display/Decorative" },
+      { "Font Name": "Big Shoulders Stencil Text", "Type": "Display/Decorative" },
+      { "Font Name": "Chathura", "Type": "Sans Serif" },
+      { "Font Name": "Tulpen One", "Type": "Display/Decorative" },
+      { "Font Name": "Climate Crisis", "Type": "Display/Decorative" },
+      { "Font Name": "Tourney", "Type": "Display/Decorative" },
+      { "Font Name": "Big Shoulders Stencil Display", "Type": "Display/Decorative" },
+      { "Font Name": "Bahianita", "Type": "Display/Decorative" },
+      { "Font Name": "Doto", "Type": "Sans Serif" },
+      { "Font Name": "Revalia", "Type": "Display/Decorative" },
+      { "Font Name": "Bruno Ace", "Type": "Display/Decorative" },
+      { "Font Name": "Stalinist One", "Type": "Display/Decorative" },
+      { "Font Name": "Funnel Display", "Type": "Display/Decorative" },
+      { "Font Name": "Passero One", "Type": "Display/Decorative" },
+      { "Font Name": "Orbit", "Type": "Sans Serif" },
+      { "Font Name": "Big Shoulders Inline Display", "Type": "Display/Decorative" },
+      { "Font Name": "Hubot Sans", "Type": "Sans Serif" }
+    ],
+    "Happy": [
+      { "Font Name": "Merienda", "Type": "Display/Decorative" },
+      { "Font Name": "Bangers", "Type": "Display/Decorative" },
+      { "Font Name": "Kalam", "Type": "Sans Serif" },
+      { "Font Name": "Courgette", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Bubbles", "Type": "Display/Decorative" },
+      { "Font Name": "Josefin Slab", "Type": "Serif" },
+      { "Font Name": "Lilita One", "Type": "Display/Decorative" },
+      { "Font Name": "Permanent Marker", "Type": "Display/Decorative" },
+      { "Font Name": "Indie Flower", "Type": "Display/Decorative" },
+      { "Font Name": "Spicy Rice", "Type": "Display/Decorative" },
+      { "Font Name": "Amatic SC", "Type": "Display/Decorative" },
+      { "Font Name": "Lobster Two", "Type": "Display/Decorative" },
+      { "Font Name": "Comic Neue", "Type": "Sans Serif" },
+      { "Font Name": "Handlee", "Type": "Sans Serif" },
+      { "Font Name": "Pangolin", "Type": "Display/Decorative" },
+      { "Font Name": "Londrina Solid", "Type": "Display/Decorative" },
+      { "Font Name": "Balsamiq Sans", "Type": "Sans Serif" },
+      { "Font Name": "Caveat Brush", "Type": "Display/Decorative" },
+      { "Font Name": "Chewy", "Type": "Display/Decorative" },
+      { "Font Name": "Boogaloo", "Type": "Display/Decorative" },
+      { "Font Name": "Gochi Hand", "Type": "Sans Serif" },
+      { "Font Name": "Just Another Hand", "Type": "Sans Serif" },
+      { "Font Name": "Jua", "Type": "Sans Serif" },
+      { "Font Name": "Pattaya", "Type": "Display/Decorative" },
+      { "Font Name": "Grandstander", "Type": "Display/Decorative" },
+      { "Font Name": "Annie Use Your Telescope", "Type": "Display/Decorative" },
+      { "Font Name": "Knewave", "Type": "Display/Decorative" },
+      { "Font Name": "Mali", "Type": "Serif" },
+      { "Font Name": "Mountains of Christmas", "Type": "Display/Decorative" },
+      { "Font Name": "Love Ya Like A Sister", "Type": "Display/Decorative" },
+      { "Font Name": "Irish Grover", "Type": "Display/Decorative" },
+      { "Font Name": "Schoolbell", "Type": "Sans Serif" },
+      { "Font Name": "Fresca", "Type": "Sans Serif" },
+      { "Font Name": "Mochiy Pop One", "Type": "Display/Decorative" },
+      { "Font Name": "Delius", "Type": "Sans Serif" },
+      { "Font Name": "RocknRoll One", "Type": "Display/Decorative" },
+      { "Font Name": "Rancho", "Type": "Sans Serif" },
+      { "Font Name": "Calligraffitti", "Type": "Sans Serif" },
+      { "Font Name": "Short Stack", "Type": "Display/Decorative" },
+      { "Font Name": "Gabriela", "Type": "Serif" },
+      { "Font Name": "Sansita Swashed", "Type": "Display/Decorative" },
+      { "Font Name": "Kurale", "Type": "Serif" },
+      { "Font Name": "Waiting for the Sunrise", "Type": "Display/Decorative" },
+      { "Font Name": "Aladin", "Type": "Display/Decorative" },
+      { "Font Name": "Bubblegum Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Sedgwick Ave", "Type": "Sans Serif" },
+      { "Font Name": "Syne Mono", "Type": "Monospace" },
+      { "Font Name": "Over the Rainbow", "Type": "Display/Decorative" },
+      { "Font Name": "Croissant One", "Type": "Display/Decorative" },
+      { "Font Name": "ZCOOL QingKe HuangYou", "Type": "Display/Decorative" },
+      { "Font Name": "Yusei Magic", "Type": "Sans Serif" },
+      { "Font Name": "Chelsea Market", "Type": "Display/Decorative" },
+      { "Font Name": "Loved by the King", "Type": "Display/Decorative" },
+      { "Font Name": "Unkempt", "Type": "Display/Decorative" },
+      { "Font Name": "McLaren", "Type": "Display/Decorative" },
+      { "Font Name": "Zen Kurenaido", "Type": "Sans Serif" },
+      { "Font Name": "Happy Monkey", "Type": "Sans Serif" },
+      { "Font Name": "Crafty Girls", "Type": "Display/Decorative" },
+      { "Font Name": "Kranky", "Type": "Display/Decorative" },
+      { "Font Name": "Atma", "Type": "Sans Serif" },
+      { "Font Name": "BhuTuka Expanded One", "Type": "Sans Serif" },
+      { "Font Name": "Just Me Again Down Here", "Type": "Display/Decorative" },
+      { "Font Name": "Artifika", "Type": "Serif" },
+      { "Font Name": "Dokdo", "Type": "Display/Decorative" },
+      { "Font Name": "Cherry Cream Soda", "Type": "Display/Decorative" },
+      { "Font Name": "Life Savers", "Type": "Display/Decorative" },
+      { "Font Name": "Wendy One", "Type": "Display/Decorative" },
+      { "Font Name": "Gluten", "Type": "Display/Decorative" },
+      { "Font Name": "Sofadi One", "Type": "Display/Decorative" },
+      { "Font Name": "Pompiere", "Type": "Sans Serif" },
+      { "Font Name": "Slackey", "Type": "Display/Decorative" },
+      { "Font Name": "Shantell Sans", "Type": "Sans Serif" },
+      { "Font Name": "Asar", "Type": "Serif" },
+      { "Font Name": "Lily Script One", "Type": "Display/Decorative" },
+      { "Font Name": "Galada", "Type": "Display/Decorative" },
+      { "Font Name": "Cantora One", "Type": "Sans Serif" },
+      { "Font Name": "Hi Melody", "Type": "Display/Decorative" },
+      { "Font Name": "ZCOOL KuaiLe", "Type": "Display/Decorative" },
+      { "Font Name": "Fontdiner Swanky", "Type": "Display/Decorative" },
+      { "Font Name": "The Girl Next Door", "Type": "Display/Decorative" },
+      { "Font Name": "Nerko One", "Type": "Display/Decorative" },
+      { "Font Name": "Mochiy Pop P One", "Type": "Display/Decorative" },
+      { "Font Name": "Patrick Hand SC", "Type": "Sans Serif" },
+      { "Font Name": "Gaegu", "Type": "Sans Serif" },
+      { "Font Name": "Henny Penny", "Type": "Display/Decorative" },
+      { "Font Name": "Original Surfer", "Type": "Display/Decorative" },
+      { "Font Name": "Peralta", "Type": "Display/Decorative" },
+      { "Font Name": "Sedgwick Ave Display", "Type": "Display/Decorative" },
+      { "Font Name": "Rum Raisin", "Type": "Display/Decorative" },
+      { "Font Name": "Sunshiney", "Type": "Display/Decorative" },
+      { "Font Name": "Freckle Face", "Type": "Display/Decorative" },
+      { "Font Name": "Dekko", "Type": "Sans Serif" }
+    ],
+    "Loud": [
+      { "Font Name": "Anton", "Type": "Sans Serif" },
+      { "Font Name": "Lobster", "Type": "Display/Decorative" },
+      { "Font Name": "Abril Fatface", "Type": "Display/Decorative" },
+      { "Font Name": "Rowdies", "Type": "Display/Decorative" },
+      { "Font Name": "Oleo Script", "Type": "Display/Decorative" },
+      { "Font Name": "Passion One", "Type": "Display/Decorative" },
+      { "Font Name": "Spicy Rice", "Type": "Display/Decorative" },
+      { "Font Name": "Acme", "Type": "Sans Serif" },
+      { "Font Name": "Concert One", "Type": "Display/Decorative" },
+      { "Font Name": "Lobster Two", "Type": "Display/Decorative" },
+      { "Font Name": "Bree Serif", "Type": "Serif" },
+      { "Font Name": "Bangers", "Type": "Display/Decorative" },
+      { "Font Name": "Alfa Slab One", "Type": "Display/Decorative" },
+      { "Font Name": "Bowlby One", "Type": "Display/Decorative" },
+      { "Font Name": "Pirata One", "Type": "Display/Decorative" },
+      { "Font Name": "Kaushan Script", "Type": "Display/Decorative" },
+      { "Font Name": "Luckiest Guy", "Type": "Display/Decorative" },
+      { "Font Name": "Yatra One", "Type": "Display/Decorative" },
+      { "Font Name": "Berkshire Swash", "Type": "Display/Decorative" },
+      { "Font Name": "Sofia", "Type": "Display/Decorative" },
+      { "Font Name": "Tangerine", "Type": "Display/Decorative" },
+      { "Font Name": "Mitr", "Type": "Sans Serif" },
+      { "Font Name": "Antonio", "Type": "Sans Serif" },
+      { "Font Name": "Black Ops One", "Type": "Display/Decorative" },
+      { "Font Name": "Fraunces", "Type": "Serif" },
+      { "Font Name": "Ultra", "Type": "Serif" },
+      { "Font Name": "Vidaloka", "Type": "Serif" },
+      { "Font Name": "Carter One", "Type": "Display/Decorative" },
+      { "Font Name": "Alex Brush", "Type": "Display/Decorative" },
+      { "Font Name": "Rammetto One", "Type": "Display/Decorative" },
+      { "Font Name": "Playball", "Type": "Display/Decorative" },
+      { "Font Name": "Shrikhand", "Type": "Display/Decorative" },
+      { "Font Name": "Pinyon Script", "Type": "Display/Decorative" },
+      { "Font Name": "Bevan", "Type": "Display/Decorative" },
+      { "Font Name": "Titan One", "Type": "Display/Decorative" },
+      { "Font Name": "Amita", "Type": "Sans Serif" },
+      { "Font Name": "Holtwood One SC", "Type": "Display/Decorative" },
+      { "Font Name": "Aclonica", "Type": "Sans Serif" },
+      { "Font Name": "Chewy", "Type": "Display/Decorative" },
+      { "Font Name": "Rochester", "Type": "Display/Decorative" },
+      { "Font Name": "Italiana", "Type": "Serif" },
+      { "Font Name": "Julee", "Type": "Display/Decorative" },
+      { "Font Name": "Racing Sans One", "Type": "Sans Serif" },
+      { "Font Name": "Rozha One", "Type": "Serif" },
+      { "Font Name": "Bellefair", "Type": "Serif" },
+      { "Font Name": "Chango", "Type": "Display/Decorative" },
+      { "Font Name": "Candal", "Type": "Sans Serif" },
+      { "Font Name": "Pattaya", "Type": "Display/Decorative" },
+      { "Font Name": "Norican", "Type": "Display/Decorative" },
+      { "Font Name": "Gravitas One", "Type": "Serif" },
+      { "Font Name": "Chonburi", "Type": "Display/Decorative" },
+      { "Font Name": "Cantata One", "Type": "Serif" },
+      { "Font Name": "Aboreto", "Type": "Display/Decorative" },
+      { "Font Name": "Knewave", "Type": "Display/Decorative" },
+      { "Font Name": "Petit Formal Script", "Type": "Display/Decorative" },
+      { "Font Name": "Young Serif", "Type": "Serif" },
+      { "Font Name": "Jomhuria", "Type": "Display/Decorative" },
+      { "Font Name": "Style Script", "Type": "Display/Decorative" },
+      { "Font Name": "Limelight", "Type": "Display/Decorative" },
+      { "Font Name": "Salsa", "Type": "Display/Decorative" },
+      { "Font Name": "Yesteryear", "Type": "Display/Decorative" },
+      { "Font Name": "Niconne", "Type": "Display/Decorative" },
+      { "Font Name": "Rancho", "Type": "Display/Decorative" },
+      { "Font Name": "Rakkas", "Type": "Display/Decorative" },
+      { "Font Name": "Sigmar One", "Type": "Display/Decorative" },
+      { "Font Name": "Bowlby One SC", "Type": "Display/Decorative" },
+      { "Font Name": "Prosto One", "Type": "Display/Decorative" },
+      { "Font Name": "Caprasimo", "Type": "Display/Decorative" },
+      { "Font Name": "Gloock", "Type": "Serif" },
+      { "Font Name": "Inknut Antiqua", "Type": "Serif" },
+      { "Font Name": "Vina Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Tiro Bangla", "Type": "Serif" },
+      { "Font Name": "Aguafina Script", "Type": "Display/Decorative" },
+      { "Font Name": "Yusei Magic", "Type": "Sans Serif" },
+      { "Font Name": "Notable", "Type": "Display/Decorative" },
+      { "Font Name": "Coiny", "Type": "Display/Decorative" },
+      { "Font Name": "Oleo Script Swash Caps", "Type": "Display/Decorative" },
+      { "Font Name": "Modak", "Type": "Display/Decorative" },
+      { "Font Name": "Goblin One", "Type": "Display/Decorative" },
+      { "Font Name": "Amarante", "Type": "Display/Decorative" },
+      { "Font Name": "Ruslan Display", "Type": "Display/Decorative" },
+      { "Font Name": "Poller One", "Type": "Display/Decorative" },
+      { "Font Name": "Bigshot One", "Type": "Display/Decorative" },
+      { "Font Name": "Viaoda Libre", "Type": "Display/Decorative" },
+      { "Font Name": "Bakbak One", "Type": "Display/Decorative" },
+      { "Font Name": "Dokdo", "Type": "Display/Decorative" },
+      { "Font Name": "Belanosima", "Type": "Sans Serif" },
+      { "Font Name": "Barriecito", "Type": "Display/Decorative" },
+      { "Font Name": "Wendy One", "Type": "Display/Decorative" },
+      { "Font Name": "Lily Script One", "Type": "Display/Decorative" },
+      { "Font Name": "Galada", "Type": "Display/Decorative" },
+      { "Font Name": "Fontdiner Swanky", "Type": "Display/Decorative" },
+      { "Font Name": "Macondo", "Type": "Display/Decorative" },
+      { "Font Name": "Akaya Kanadaka", "Type": "Display/Decorative" },
+      { "Font Name": "Orelega One", "Type": "Display/Decorative" },
+      { "Font Name": "Song Myung", "Type": "Serif" },
+      { "Font Name": "Henny Penny", "Type": "Display/Decorative" },
+      { "Font Name": "Original Surfer", "Type": "Display/Decorative" },
+      { "Font Name": "Peralta", "Type": "Display/Decorative" },
+      { "Font Name": "Uncial Antiqua", "Type": "Display/Decorative" },
+      { "Font Name": "Freckle Face", "Type": "Display/Decorative" },
+      { "Font Name": "Ceviche One", "Type": "Display/Decorative" },
+      { "Font Name": "Crushed", "Type": "Display/Decorative" },
+      { "Font Name": "Sail", "Type": "Serif" },
+      { "Font Name": "Kenia", "Type": "Serif" },
+      { "Font Name": "Tiro Devanagari Hindi", "Type": "Serif" },
+      { "Font Name": "Katibeh", "Type": "Display/Decorative" },
+      { "Font Name": "Asset", "Type": "Display/Decorative" },
+      { "Font Name": "Macondo Swash Caps", "Type": "Display/Decorative" },
+      { "Font Name": "Whisper", "Type": "Serif" },
+      { "Font Name": "Emilys Candy", "Type": "Display/Decorative" },
+      { "Font Name": "Angkor", "Type": "Display/Decorative" },
+      { "Font Name": "Jaro", "Type": "Display/Decorative" }
+    ],
+    "Playful": [
+      { "Font Name": "Modak", "Type": "Display/Decorative" },
+      { "Font Name": "Oi", "Type": "Display/Decorative" },
+      { "Font Name": "Kablammmo", "Type": "Display/Decorative" },
+      { "Font Name": "Kirang Haerang", "Type": "Display/Decorative" },
+      { "Font Name": "Hanalei", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Moonrocks", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Distressed", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Gemstones", "Type": "Display/Decorative" },
+      { "Font Name": "Moo Lah Lah", "Type": "Sans Serif" },
+      { "Font Name": "Rubik Bubbles", "Type": "Sans Serif" },
+      { "Font Name": "Rubik Spray Paint", "Type": "Display/Decorative" },
+      { "Font Name": "Bangers", "Type": "Display/Decorative" },
+      { "Font Name": "Knewave", "Type": "Display/Decorative" },
+      { "Font Name": "Atma", "Type": "Display/Decorative" },
+      { "Font Name": "Hanalei Fill", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Dirt", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Puddles", "Type": "Display/Decorative" },
+      { "Font Name": "Henny Penny", "Type": "Display/Decorative" },
+      { "Font Name": "Jolly Lodger", "Type": "Display/Decorative" },
+      { "Font Name": "Mogra", "Type": "Display/Decorative" },
+      { "Font Name": "Bagel Fat One", "Type": "Display/Decorative" },
+      { "Font Name": "Joti One", "Type": "Display/Decorative" },
+      { "Font Name": "Freckle Face", "Type": "Display/Decorative" },
+      { "Font Name": "Chewy", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Iso", "Type": "Display/Decorative" },
+      { "Font Name": "Flavors", "Type": "Display/Decorative" },
+      { "Font Name": "Mystery Quest", "Type": "Sans Serif" },
+      { "Font Name": "Rubik Glitch", "Type": "Display/Decorative" },
+      { "Font Name": "DynaPuff", "Type": "Display/Decorative" },
+      { "Font Name": "Slackey", "Type": "Display/Decorative" },
+      { "Font Name": "Bahiana", "Type": "Display/Decorative" },
+      { "Font Name": "Bahianita", "Type": "Display/Decorative" },
+      { "Font Name": "Fontdiner Swanky", "Type": "Display/Decorative" },
+      { "Font Name": "Chicle", "Type": "Display/Decorative" },
+      { "Font Name": "Lakki Reddy", "Type": "Display/Decorative" },
+      { "Font Name": "Eater", "Type": "Display/Decorative" },
+      { "Font Name": "Galindo", "Type": "Display/Decorative" },
+      { "Font Name": "Unkempt", "Type": "Display/Decorative" },
+      { "Font Name": "Londrina Shadow", "Type": "Display/Decorative" },
+      { "Font Name": "Londrina Outline", "Type": "Display/Decorative" },
+      { "Font Name": "Londrina Sketch", "Type": "Display/Decorative" },
+      { "Font Name": "Kranky", "Type": "Display/Decorative" },
+      { "Font Name": "Butterfly Kids", "Type": "Sans Serif" },
+      { "Font Name": "Ranchers", "Type": "Display/Decorative" },
+      { "Font Name": "Luckiest Guy", "Type": "Display/Decorative" },
+      { "Font Name": "Mountains of Christmas", "Type": "Display/Decorative" },
+      { "Font Name": "Finger Paint", "Type": "Display/Decorative" },
+      { "Font Name": "Risque", "Type": "Display/Decorative" },
+      { "Font Name": "Peralta", "Type": "Display/Decorative" },
+      { "Font Name": "Road Rage", "Type": "Display/Decorative" },
+      { "Font Name": "Jua", "Type": "Sans Serif" },
+      { "Font Name": "Annie Use Your Telescope", "Type": "Display/Decorative" },
+      { "Font Name": "Lacquer", "Type": "Display/Decorative" },
+      { "Font Name": "Spicy Rice", "Type": "Sans Serif" },
+      { "Font Name": "Aladin", "Type": "Display/Decorative" },
+      { "Font Name": "Original Surfer", "Type": "Display/Decorative" },
+      { "Font Name": "Piedra", "Type": "Display/Decorative" },
+      { "Font Name": "Trade Winds", "Type": "Display/Decorative" },
+      { "Font Name": "Ribeye", "Type": "Display/Decorative" },
+      { "Font Name": "Ribeye Marrow", "Type": "Display/Decorative" },
+      { "Font Name": "Rampart One", "Type": "Display/Decorative" },
+      { "Font Name": "Cabin Sketch", "Type": "Display/Decorative" },
+      { "Font Name": "Englebert", "Type": "Display/Decorative" },
+      { "Font Name": "Mouse Memoirs", "Type": "Display/Decorative" },
+      { "Font Name": "Syne Mono", "Type": "Monospace" },
+      { "Font Name": "Indie Flower", "Type": "Display/Decorative" },
+      { "Font Name": "Boogaloo", "Type": "Display/Decorative" },
+      { "Font Name": "Rum Raisin", "Type": "Display/Decorative" },
+      { "Font Name": "Gorditas", "Type": "Display/Decorative" },
+      { "Font Name": "Revalia", "Type": "Display/Decorative" },
+      { "Font Name": "Chela One", "Type": "Display/Decorative" },
+      { "Font Name": "Pacifico", "Type": "Sans Serif" },
+      { "Font Name": "Bubblegum Sans", "Type": "Monospace" },
+      { "Font Name": "Caveat Brush", "Type": "Display/Decorative" },
+      { "Font Name": "Dekko", "Type": "Display/Decorative" },
+      { "Font Name": "ZCOOL QingKe HuangYou", "Type": "Display/Decorative" },
+      { "Font Name": "Denk One", "Type": "Display/Decorative" },
+      { "Font Name": "Autour One", "Type": "Display/Decorative" },
+      { "Font Name": "Damion", "Type": "Sans Serif" },
+      { "Font Name": "Sankofa Display", "Type": "Display/Decorative" },
+      { "Font Name": "Doto", "Type": "Display/Decorative" },
+      { "Font Name": "Gamja Flower", "Type": "Display/Decorative" },
+      { "Font Name": "East Sea Dokdo", "Type": "Display/Decorative" },
+      { "Font Name": "Give You Glory", "Type": "Sans Serif" },
+      { "Font Name": "Kenia", "Type": "Display/Decorative" },
+      { "Font Name": "Gabriela", "Type": "Display/Decorative" },
+      { "Font Name": "Kurale", "Type": "Sans Serif" },
+      { "Font Name": "Black And White Picture", "Type": "Display/Decorative" },
+      { "Font Name": "Frijole", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Wet Paint", "Type": "Display/Decorative" },
+      { "Font Name": "Potta One", "Type": "Display/Decorative" },
+      { "Font Name": "Astloch", "Type": "Display/Decorative" },
+      { "Font Name": "Love Light", "Type": "Sans Serif" },
+      { "Font Name": "Leckerli One", "Type": "Display/Decorative" },
+      { "Font Name": "Mrs Sheppards", "Type": "Display/Decorative" },
+      { "Font Name": "Grandstander", "Type": "Display/Decorative" },
+      { "Font Name": "Lily Script One", "Type": "Display/Decorative" },
+        { "Font Name": "Wellfleet", "Type": "Display/Decorative" },
+        { "Font Name": "Borel", "Type": "Display/Decorative" },
+        { "Font Name": "Neucha", "Type": "Display/Decorative" },
+        { "Font Name": "Capriola", "Type": "Monospace" },
+        { "Font Name": "Coiny", "Type": "Display/Decorative" },
+        { "Font Name": "Poetsen One", "Type": "Display/Decorative" },
+        { "Font Name": "Klee One", "Type": "Monospace" },
+        { "Font Name": "Galada", "Type": "Display/Decorative" },
+        { "Font Name": "BioRhyme Expanded", "Type": "Monospace" },
+        { "Font Name": "Raleway Dots", "Type": "Monospace" }
+        ],
+    "Rugged": [
+      { "Font Name": "Shadows Into Light", "Type": "Display/Decorative" },
+      { "Font Name": "Permanent Marker", "Type": "Display/Decorative" },
+      { "Font Name": "Spicy Rice", "Type": "Sans Serif" },
+      { "Font Name": "Acme", "Type": "Serif" },
+      { "Font Name": "Merienda", "Type": "Calligraphy" },
+      { "Font Name": "Bree Serif", "Type": "Serif" },
+      { "Font Name": "Rubik Bubbles", "Type": "Calligraphy" },
+      { "Font Name": "Luckiest Guy", "Type": "Calligraphy" },
+      { "Font Name": "Special Elite", "Type": "Calligraphy" },
+      { "Font Name": "Audiowide", "Type": "Calligraphy" },
+      { "Font Name": "Reenie Beanie", "Type": "Calligraphy" },
+      { "Font Name": "Carter One", "Type": "Calligraphy" },
+      { "Font Name": "Sriracha", "Type": "Sans Serif" },
+      { "Font Name": "Rock Salt", "Type": "Sans Serif" },
+      { "Font Name": "Damion", "Type": "Sans Serif" },
+      { "Font Name": "Creepster", "Type": "Calligraphy" },
+      { "Font Name": "Pangolin", "Type": "Calligraphy" },
+      { "Font Name": "Londrina Solid", "Type": "Calligraphy" },
+      { "Font Name": "Nothing You Could Do", "Type": "Calligraphy" },
+      { "Font Name": "Mr Dafoe", "Type": "Calligraphy" },
+      { "Font Name": "Charm", "Type": "Calligraphy" },
+      { "Font Name": "Boogaloo", "Type": "Calligraphy" },
+      { "Font Name": "Julee", "Type": "Calligraphy" },
+      { "Font Name": "Nanum Brush Script", "Type": "Calligraphy" },
+      { "Font Name": "Just Another Hand", "Type": "Calligraphy" },
+      { "Font Name": "Jua", "Type": "Serif" },
+      { "Font Name": "Eater", "Type": "Calligraphy" },
+      { "Font Name": "Yuji Mai", "Type": "Serif" },
+      { "Font Name": "Shadows Into Light Two", "Type": "Calligraphy" },
+      { "Font Name": "Knewave", "Type": "Calligraphy" },
+      { "Font Name": "Mountains of Christmas", "Type": "Calligraphy" },
+      { "Font Name": "Love Ya Like A Sister", "Type": "Calligraphy" },
+      { "Font Name": "Irish Grover", "Type": "Calligraphy" },
+      { "Font Name": "Salsa", "Type": "Calligraphy" },
+      { "Font Name": "Kristi", "Type": "Sans Serif" },
+      { "Font Name": "Rancho", "Type": "Sans Serif" },
+      { "Font Name": "Rakkas", "Type": "Calligraphy" },
+      { "Font Name": "Short Stack", "Type": "Calligraphy" },
+      { "Font Name": "Sigmar One", "Type": "Calligraphy" },
+      { "Font Name": "Mansalva", "Type": "Sans Serif" },
+      { "Font Name": "Mouse Memoirs", "Type": "Serif" },
+      { "Font Name": "Bubblegum Sans", "Type": "Calligraphy" },
+      { "Font Name": "Sedgwick Ave", "Type": "Calligraphy" },
+      { "Font Name": "Dawning of a New Day", "Type": "Calligraphy" },
+      { "Font Name": "Ephesis", "Type": "Calligraphy" },
+      { "Font Name": "Lacquer", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Vinyl", "Type": "Calligraphy" },
+      { "Font Name": "Fuggles", "Type": "Sans Serif" },
+      { "Font Name": "Birthstone Bounce", "Type": "Sans Serif" },
+      { "Font Name": "Loved by the King", "Type": "Sans Serif" },
+      { "Font Name": "Frijole", "Type": "Calligraphy" },
+      { "Font Name": "Unkempt", "Type": "Calligraphy" },
+      { "Font Name": "McLaren", "Type": "Calligraphy" },
+      { "Font Name": "Oregano", "Type": "Calligraphy" },
+      { "Font Name": "Walter Turncoat", "Type": "Calligraphy" },
+      { "Font Name": "Modak", "Type": "Calligraphy" },
+      { "Font Name": "Skranji", "Type": "Calligraphy" },
+      { "Font Name": "Atma", "Type": "Serif" },
+      { "Font Name": "Trade Winds", "Type": "Calligraphy" },
+      { "Font Name": "Rampart One", "Type": "Calligraphy" },
+      { "Font Name": "Vibur", "Type": "Sans Serif" },
+      { "Font Name": "Ma Shan Zheng", "Type": "Sans Serif" },
+      { "Font Name": "Bigshot One", "Type": "Calligraphy" },
+      { "Font Name": "Just Me Again Down Here", "Type": "Calligraphy" },
+      { "Font Name": "Dokdo", "Type": "Calligraphy" },
+      { "Font Name": "Codystar", "Type": "Calligraphy" },
+      { "Font Name": "Life Savers", "Type": "Calligraphy" },
+      { "Font Name": "Sofadi One", "Type": "Calligraphy" },
+      { "Font Name": "Slackey", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Moonrocks", "Type": "Calligraphy" },
+      { "Font Name": "Shantell Sans", "Type": "Serif" },
+      { "Font Name": "Montez", "Type": "Calligraphy" },
+      { "Font Name": "ZCOOL KuaiLe", "Type": "Calligraphy" },
+      { "Font Name": "Fontdiner Swanky", "Type": "Calligraphy" },
+      { "Font Name": "Qwitcher Grypen", "Type": "Sans Serif" },
+      { "Font Name": "The Girl Next Door", "Type": "Sans Serif" },
+      { "Font Name": "Henny Penny", "Type": "Calligraphy" },
+      { "Font Name": "Maiden Orange", "Type": "Calligraphy" },
+      { "Font Name": "Bilbo Swash Caps", "Type": "Calligraphy" },
+      { "Font Name": "Reggae One", "Type": "Calligraphy" },
+      { "Font Name": "Peralta", "Type": "Calligraphy" },
+      { "Font Name": "Sedgwick Ave Display", "Type": "Calligraphy" },
+      { "Font Name": "Rum Raisin", "Type": "Calligraphy" },
+      { "Font Name": "Sunshiney", "Type": "Calligraphy" },
+      { "Font Name": "Freckle Face", "Type": "Calligraphy" },
+      { "Font Name": "Mogra", "Type": "Calligraphy" },
+      { "Font Name": "East Sea Dokdo", "Type": "Calligraphy" },
+      { "Font Name": "Comforter Brush", "Type": "Sans Serif" },
+      { "Font Name": "Underdog", "Type": "Calligraphy" },
+      { "Font Name": "Delicious Handrawn", "Type": "Sans Serif" },
+      { "Font Name": "Wellfleet", "Type": "Calligraphy" },
+      { "Font Name": "Miniver", "Type": "Calligraphy" },
+      { "Font Name": "Margarine", "Type": "Calligraphy" },
+      { "Font Name": "Emilys Candy", "Type": "Calligraphy" },
+      { "Font Name": "Flavors", "Type": "Calligraphy" },
+      { "Font Name": "Stick", "Type": "Serif" },
+      { "Font Name": "Yomogi", "Type": "Sans Serif" },
+      { "Font Name": "Vampiro One", "Type": "Calligraphy" },
+      { "Font Name": "Denk One", "Type": "Serif" },
+      { "Font Name": "Ribeye", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Dirt", "Type": "Calligraphy" },
+      { "Font Name": "Ruge Boogie", "Type": "Sans Serif" },
+      { "Font Name": "Londrina Outline", "Type": "Calligraphy" },
+      { "Font Name": "Ranchers", "Type": "Calligraphy" },
+      { "Font Name": "Kablammo", "Type": "Calligraphy" },
+        { "Font Name": "Kavivanar", "Type": "Sans Serif" },
+        { "Font Name": "Lobster", "Type": "Calligraphy" },
+        { "Font Name": "Rock Salt", "Type": "Sans Serif" },
+        { "Font Name": "Vibes", "Type": "Display/Decorative" },
+        { "Font Name": "Marmellata", "Type": "Serif" },
+        { "Font Name": "Chango", "Type": "Serif" },
+        { "Font Name": "Lexend", "Type": "Sans Serif" },
+        { "Font Name": "Shantell Sans", "Type": "Serif" },
+        { "Font Name": "Underwood", "Type": "Serif" },
+        { "Font Name": "Play", "Type": "Sans Serif" },
+        { "Font Name": "Lobster Two", "Type": "Calligraphy" },
+        { "Font Name": "Palanquin", "Type": "Sans Serif" },
+        { "Font Name": "Pushster", "Type": "Display/Decorative" },
+        { "Font Name": "Revalia", "Type": "Display/Decorative" },
+        { "Font Name": "Vogue", "Type": "Sans Serif" },
+        { "Font Name": "Elbutterfly", "Type": "Display/Decorative" },
+        { "Font Name": "Cargo", "Type": "Serif" }
+      ],
+    "Scary": [
+      { "Font Name": "Shadows Into Light", "Type": "Display/Decorative" },
+      { "Font Name": "Amatic SC", "Type": "Display/Decorative" },
+      { "Font Name": "Bangers", "Type": "Calligraphy" },
+      { "Font Name": "Creepster", "Type": "Calligraphy" },
+      { "Font Name": "Eater", "Type": "Calligraphy" },
+      { "Font Name": "Shadows Into Light Two", "Type": "Calligraphy" },
+      { "Font Name": "Irish Grover", "Type": "Calligraphy" },
+      { "Font Name": "Grenze Gotisch", "Type": "Calligraphy" },
+      { "Font Name": "Meddon", "Type": "Calligraphy" },
+      { "Font Name": "Trade Winds", "Type": "Calligraphy" },
+      { "Font Name": "Ruslan Display", "Type": "Calligraphy" },
+      { "Font Name": "Barriecito", "Type": "Calligraphy" },
+      { "Font Name": "Henny Penny", "Type": "Calligraphy" },
+      { "Font Name": "Freckle Face", "Type": "Calligraphy" },
+      { "Font Name": "Ceviche One", "Type": "Calligraphy" },
+      { "Font Name": "Underdog", "Type": "Calligraphy" },
+      { "Font Name": "Road Rage", "Type": "Calligraphy" },
+      { "Font Name": "WindSong", "Type": "Calligraphy" },
+      { "Font Name": "Asset", "Type": "Calligraphy" },
+      { "Font Name": "Emilys Candy", "Type": "Calligraphy" },
+      { "Font Name": "Flavors", "Type": "Calligraphy" },
+      { "Font Name": "Stick", "Type": "Calligraphy" },
+      { "Font Name": "Sancreek", "Type": "Calligraphy" },
+      { "Font Name": "Nosifer", "Type": "Calligraphy" },
+      { "Font Name": "Barrio", "Type": "Calligraphy" },
+      { "Font Name": "Kablammo", "Type": "Calligraphy" },
+      { "Font Name": "Tillana", "Type": "Calligraphy" },
+      { "Font Name": "Metal Mania", "Type": "Calligraphy" },
+      { "Font Name": "Mystery Quest", "Type": "Calligraphy" },
+      { "Font Name": "New Rocker", "Type": "Calligraphy" },
+      { "Font Name": "Bahiana", "Type": "Calligraphy" },
+      { "Font Name": "Jolly Lodger", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Wet Paint", "Type": "Calligraphy" },
+      { "Font Name": "Single Day", "Type": "Calligraphy" },
+      { "Font Name": "Butcherman", "Type": "Calligraphy" },
+      { "Font Name": "Purple Purse", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Distressed", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Puddles", "Type": "Calligraphy" },
+      { "Font Name": "Are You Serious", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Gemstones", "Type": "Calligraphy" },
+      { "Font Name": "Rubik Burned", "Type": "Calligraphy" }
+    ],
+    "Stiff": [
+      { "Font Name": "Roboto", "Type": "Display/Decorative" },
+      { "Font Name": "Poppins", "Type": "Display/Decorative" },
+      { "Font Name": "Roboto Condensed", "Type": "Display/Decorative" },
+      { "Font Name": "Oswald", "Type": "Display/Decorative" },
+      { "Font Name": "Roboto Mono", "Type": "Monospace" },
+      { "Font Name": "Raleway", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik", "Type": "Display/Decorative" },
+      { "Font Name": "Ubuntu", "Type": "Display/Decorative" },
+      { "Font Name": "Merriweather", "Type": "Serif" },
+      { "Font Name": "Kanit", "Type": "Display/Decorative" },
+      { "Font Name": "Roboto Slab", "Type": "Serif" },
+      { "Font Name": "PT Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Lora", "Type": "Serif" },
+      { "Font Name": "Work Sans", "Type": "Display/Decorative" },
+      { "Font Name": "DM Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Manrope", "Type": "Display/Decorative" },
+      { "Font Name": "PT Serif", "Type": "Serif" },
+      { "Font Name": "Karla", "Type": "Display/Decorative" },
+      { "Font Name": "Titillium Web", "Type": "Display/Decorative" },
+      { "Font Name": "Libre Franklin", "Type": "Display/Decorative" },
+      { "Font Name": "Schibsted Grotesk", "Type": "Display/Decorative" },
+      { "Font Name": "Space Grotesk", "Type": "Display/Decorative" },
+      { "Font Name": "Libre Baskerville", "Type": "Serif" },
+      { "Font Name": "Exo 2", "Type": "Display/Decorative" },
+      { "Font Name": "Bitter", "Type": "Serif" },
+      { "Font Name": "PT Sans Narrow", "Type": "Display/Decorative" },
+      { "Font Name": "Source Sans 3", "Type": "Display/Decorative" },
+      { "Font Name": "Assistant", "Type": "Display/Decorative" },
+      { "Font Name": "Teko", "Type": "Display/Decorative" },
+      { "Font Name": "Source Code Pro", "Type": "Monospace" },
+      { "Font Name": "Plus Jakarta Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Signika Negative", "Type": "Display/Decorative" },
+      { "Font Name": "Prompt", "Type": "Display/Decorative" },
+      { "Font Name": "Oxygen", "Type": "Display/Decorative" },
+      { "Font Name": "Lilita One", "Type": "Calligraphy" },
+      { "Font Name": "Public Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Roboto Flex", "Type": "Display/Decorative" },
+      { "Font Name": "Tajawal", "Type": "Display/Decorative" },
+      { "Font Name": "Slabo 27px", "Type": "Serif" },
+      { "Font Name": "Varela Round", "Type": "Display/Decorative" },
+      { "Font Name": "Arvo", "Type": "Serif" },
+      { "Font Name": "Archivo Black", "Type": "Display/Decorative" },
+      { "Font Name": "Rowdies", "Type": "Calligraphy" },
+      { "Font Name": "Maven Pro", "Type": "Display/Decorative" },
+      { "Font Name": "Rajdhani", "Type": "Display/Decorative" },
+      { "Font Name": "Sora", "Type": "Display/Decorative" },
+      { "Font Name": "Zilla Slab", "Type": "Serif" },
+      { "Font Name": "Chakra Petch", "Type": "Display/Decorative" },
+      { "Font Name": "Play", "Type": "Display/Decorative" },
+      { "Font Name": "Almarai", "Type": "Display/Decorative" },
+      { "Font Name": "DM Serif Display", "Type": "Serif" },
+      { "Font Name": "Urbanist", "Type": "Display/Decorative" },
+      { "Font Name": "Signika", "Type": "Display/Decorative" },
+      { "Font Name": "Saira Condensed", "Type": "Display/Decorative" },
+      { "Font Name": "Passion One", "Type": "Monospace" },
+      { "Font Name": "Cinzel", "Type": "Serif" },
+      { "Font Name": "Be Vietnam Pro", "Type": "Display/Decorative" },
+      { "Font Name": "Yanone Kaffeesatz", "Type": "Display/Decorative" },
+      { "Font Name": "Domine", "Type": "Serif" },
+      { "Font Name": "Vollkorn", "Type": "Serif" },
+      { "Font Name": "Orbitron", "Type": "Calligraphy" },
+      { "Font Name": "Marcellus", "Type": "Serif" },
+      { "Font Name": "Spicy Rice", "Type": "Monospace" },
+      { "Font Name": "Catamaran", "Type": "Display/Decorative" },
+      { "Font Name": "Exo", "Type": "Display/Decorative" },
+      { "Font Name": "Sofia Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Righteous", "Type": "Monospace" },
+      { "Font Name": "Rubik Mono One", "Type": "Monospace" },
+      { "Font Name": "Silkscreen", "Type": "Monospace" },
+      { "Font Name": "Sarabun", "Type": "Display/Decorative" },
+      { "Font Name": "Spectral", "Type": "Serif" },
+      { "Font Name": "Zen Kaku Gothic New", "Type": "Display/Decorative" },
+      { "Font Name": "Bree Serif", "Type": "Serif" },
+      { "Font Name": "Changa", "Type": "Display/Decorative" },
+      { "Font Name": "Saira", "Type": "Display/Decorative" },
+      { "Font Name": "Tinos", "Type": "Serif" },
+      { "Font Name": "Roboto Serif", "Type": "Serif" },
+      { "Font Name": "Chivo", "Type": "Display/Decorative" },
+      { "Font Name": "Bowlby One", "Type": "Calligraphy" },
+      { "Font Name": "Gothic A1", "Type": "Display/Decorative" },
+      { "Font Name": "Yantramanav", "Type": "Display/Decorative" },
+      { "Font Name": "Russo One", "Type": "Monospace" },
+      { "Font Name": "JetBrains Mono", "Type": "Monospace" },
+      { "Font Name": "Crete Round", "Type": "Serif" },
+      { "Font Name": "Pirata One", "Type": "Calligraphy" },
+      { "Font Name": "Squada One", "Type": "Calligraphy" },
+      { "Font Name": "Sen", "Type": "Display/Decorative" },
+      { "Font Name": "Rokkitt", "Type": "Serif" },
+      { "Font Name": "VT323", "Type": "Monospace" },
+      { "Font Name": "Libre Caslon Text", "Type": "Serif" },
+      { "Font Name": "PT Sans Caption", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Bubbles", "Type": "Monospace" },
+      { "Font Name": "Vazirmatn", "Type": "Display/Decorative" },
+      { "Font Name": "Unna", "Type": "Serif" },
+      { "Font Name": "Space Mono", "Type": "Monospace" },
+      { "Font Name": "Encode Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Ubuntu Condensed", "Type": "Display/Decorative" },
+      { "Font Name": "Francois One", "Type": "Display/Decorative" },
+      { "Font Name": "Encode Sans Condensed", "Type": "Display/Decorative" },
+      { "Font Name": "Gruppo", "Type": "Calligraphy" }
+    ],
+    "Vintage": [
+      { "Font Name": "Playfair Display", "Type": "Serif" },
+      { "Font Name": "Roboto Slab", "Type": "Serif" },
+      { "Font Name": "Lora", "Type": "Serif" },
+      { "Font Name": "Work Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Karla", "Type": "Display/Decorative" },
+      { "Font Name": "Libre Franklin", "Type": "Display/Decorative" },
+      { "Font Name": "Josefin Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Jost", "Type": "Display/Decorative" },
+      { "Font Name": "Schibsted Grotesk", "Type": "Display/Decorative" },
+      { "Font Name": "Anton", "Type": "Serif" },
+      { "Font Name": "EB Garamond", "Type": "Serif" },
+      { "Font Name": "Crimson Text", "Type": "Serif" },
+      { "Font Name": "Source Code Pro", "Type": "Monospace" },
+      { "Font Name": "Signika Negative", "Type": "Display/Decorative" },
+      { "Font Name": "Pacifico", "Type": "Display/Decorative" },
+      { "Font Name": "Lobster", "Type": "Display/Decorative" },
+      { "Font Name": "Public Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Slabo 27px", "Type": "Serif" },
+      { "Font Name": "Varela Round", "Type": "Display/Decorative" },
+      { "Font Name": "Comfortaa", "Type": "Display/Decorative" },
+      { "Font Name": "Arvo", "Type": "Serif" },
+      { "Font Name": "Cormorant Garamond", "Type": "Serif" },
+      { "Font Name": "Abril Fatface", "Type": "Serif" },
+      { "Font Name": "Zilla Slab", "Type": "Serif" },
+      { "Font Name": "Source Serif 4", "Type": "Serif" },
+      { "Font Name": "Almarai", "Type": "Display/Decorative" },
+      { "Font Name": "Permanent Marker", "Type": "Display/Decorative" },
+      { "Font Name": "DM Serif Display", "Type": "Serif" },
+      { "Font Name": "Frank Ruhl Libre", "Type": "Serif" },
+      { "Font Name": "Signika", "Type": "Display/Decorative" },
+      { "Font Name": "Satisfy", "Type": "Display/Decorative" },
+      { "Font Name": "Cinzel", "Type": "Serif" },
+      { "Font Name": "Be Vietnam Pro", "Type": "Display/Decorative" },
+      { "Font Name": "Alegreya", "Type": "Serif" },
+      { "Font Name": "Domine", "Type": "Serif" },
+      { "Font Name": "Vollkorn", "Type": "Serif" },
+      { "Font Name": "Cormorant", "Type": "Calligraphy" },
+      { "Font Name": "Orbitron", "Type": "Calligraphy" },
+      { "Font Name": "Spicy Rice", "Type": "Monospace" },
+      { "Font Name": "Great Vibes", "Type": "Monospace" },
+      { "Font Name": "Acme", "Type": "Display/Decorative" },
+      { "Font Name": "Amatic SC", "Type": "Calligraphy" },
+      { "Font Name": "Lobster Two", "Type": "Calligraphy" },
+      { "Font Name": "Spectral", "Type": "Serif" },
+      { "Font Name": "Prata", "Type": "Serif" },
+      { "Font Name": "Bodoni Moda", "Type": "Serif" },
+      { "Font Name": "Patua One", "Type": "Serif" },
+      { "Font Name": "Alegreya Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Tinos", "Type": "Serif" },
+      { "Font Name": "Yellowtail", "Type": "Monospace" },
+      { "Font Name": "Kalam", "Type": "Monospace" },
+      { "Font Name": "Alfa Slab One", "Type": "Serif" },
+      { "Font Name": "Press Start 2P", "Type": "Monospace" },
+      { "Font Name": "Cardo", "Type": "Serif" },
+      { "Font Name": "Crimson Pro", "Type": "Serif" },
+      { "Font Name": "Bowlby One", "Type": "Calligraphy" },
+      { "Font Name": "Sawarabi Mincho", "Type": "Serif" },
+      { "Font Name": "JetBrains Mono", "Type": "Monospace" },
+      { "Font Name": "Pirata One", "Type": "Calligraphy" },
+      { "Font Name": "Squada One", "Type": "Calligraphy" },
+      { "Font Name": "Sen", "Type": "Display/Decorative" },
+      { "Font Name": "Rokkitt", "Type": "Serif" },
+      { "Font Name": "VT323", "Type": "Monospace" },
+      { "Font Name": "Libre Caslon Text", "Type": "Serif" },
+      { "Font Name": "PT Sans Caption", "Type": "Display/Decorative" },
+      { "Font Name": "Rubik Bubbles", "Type": "Monospace" },
+      { "Font Name": "Vazirmatn", "Type": "Display/Decorative" },
+      { "Font Name": "Unna", "Type": "Serif" },
+      { "Font Name": "Space Mono", "Type": "Monospace" },
+      { "Font Name": "Encode Sans", "Type": "Display/Decorative" },
+      { "Font Name": "Ubuntu Condensed", "Type": "Display/Decorative" },
+      { "Font Name": "Francois One", "Type": "Display/Decorative" },
+      { "Font Name": "Encode Sans Condensed", "Type": "Display/Decorative" },
+      { "Font Name": "Gruppo", "Type": "Calligraphy" },
+      { "Font Name": "Yatra One", "Type": "Display/Decorative" },
+      { "Font Name": "Berkshire Swash", "Type": "Calligraphy" },
+      { "Font Name": "Baskervville", "Type": "Serif" },
+      { "Font Name": "Sofia", "Type": "Calligraphy" },
+      { "Font Name": "Special Elite", "Type": "Calligraphy" },
+      { "Font Name": "Neuton", "Type": "Serif" },
+      { "Font Name": "Gelasio", "Type": "Serif" },
+      { "Font Name": "Sanchez", "Type": "Serif" },
+      { "Font Name": "Yeseva One", "Type": "Calligraphy" },
+      { "Font Name": "Dela Gothic One", "Type": "Calligraphy" },
+      { "Font Name": "Literata", "Type": "Serif" },
+      { "Font Name": "Paytone One", "Type": "Display/Decorative" },
+      { "Font Name": "Pathway Gothic One", "Type": "Display/Decorative" },
+      { "Font Name": "Parisienne", "Type": "Calligraphy" },
+      { "Font Name": "Bungee", "Type": "Calligraphy" },
+      { "Font Name": "Staatliches", "Type": "Calligraphy" },
+      { "Font Name": "League Gothic", "Type": "Display/Decorative" },
+      { "Font Name": "Padauk", "Type": "Display/Decorative" },
+      { "Font Name": "Antonio", "Type": "Display/Decorative" },
+      { "Font Name": "Cookie", "Type": "Calligraphy" }
+    ],
+    "Sophisticated": [
+      { "Font Name": "Dancing Script", "Type": "Display/Decorative" },
+      { "Font Name": "Great Vibes", "Type": "Display/Decorative" },
+      { "Font Name": "Sacramento", "Type": "Display/Decorative" },
+      { "Font Name": "Allura", "Type": "Display/Decorative" },
+      { "Font Name": "Parisienne", "Type": "Display/Decorative" },
+      { "Font Name": "Cookie", "Type": "Display/Decorative" },
+      { "Font Name": "Alex Brush", "Type": "Display/Decorative" },
+      { "Font Name": "Playball", "Type": "Display/Decorative" },
+      { "Font Name": "Pinyon Script", "Type": "Display/Decorative" },
+      { "Font Name": "Marck Script", "Type": "Display/Decorative" },
+      { "Font Name": "Italianno", "Type": "Display/Decorative" },
+      { "Font Name": "Amita", "Type": "Display/Decorative" },
+      { "Font Name": "Mr Dafoe", "Type": "Display/Decorative" },
+      { "Font Name": "Charm", "Type": "Display/Decorative" },
+      { "Font Name": "Quintessential", "Type": "Display/Decorative" },
+      { "Font Name": "Allison", "Type": "Display/Decorative" },
+      { "Font Name": "Mrs Saint Delafield", "Type": "Display/Decorative" },
+      { "Font Name": "Herr Von Muellerhoff", "Type": "Display/Decorative" },
+      { "Font Name": "Norican", "Type": "Display/Decorative" },
+      { "Font Name": "Arizonia", "Type": "Display/Decorative" },
+      { "Font Name": "Petit Formal Script", "Type": "Display/Decorative" },
+      { "Font Name": "Style Script", "Type": "Display/Decorative" },
+      { "Font Name": "Yesteryear", "Type": "Display/Decorative" },
+      { "Font Name": "Niconne", "Type": "Display/Decorative" },
+      { "Font Name": "Monsieur La Doulaise", "Type": "Display/Decorative" },
+      { "Font Name": "Aref Ruqaa", "Type": "Display/Decorative" },
+      { "Font Name": "Aguafina Script", "Type": "Display/Decorative" },
+      { "Font Name": "Hurricane", "Type": "Display/Decorative" },
+      { "Font Name": "Qwigley", "Type": "Display/Decorative" },
+      { "Font Name": "Mr De Haviland", "Type": "Display/Decorative" },
+      { "Font Name": "Birthstone", "Type": "Display/Decorative" },
+      { "Font Name": "Corinthia", "Type": "Display/Decorative" },
+      { "Font Name": "Charmonman", "Type": "Display/Decorative" },
+      { "Font Name": "Bilbo Swash Caps", "Type": "Display/Decorative" },
+      { "Font Name": "Lovers Quarrel", "Type": "Display/Decorative" },
+      { "Font Name": "MonteCarlo", "Type": "Display/Decorative" },
+      { "Font Name": "Moon Dance", "Type": "Display/Decorative" },
+      { "Font Name": "Carattere", "Type": "Display/Decorative" },
+      { "Font Name": "Luxurious Script", "Type": "Display/Decorative" },
+      { "Font Name": "Meie Script", "Type": "Display/Decorative" },
+      { "Font Name": "Waterfall", "Type": "Display/Decorative" },
+      { "Font Name": "Mea Culpa", "Type": "Display/Decorative" },
+      { "Font Name": "Caramel", "Type": "Display/Decorative" },
+      { "Font Name": "Imperial Script", "Type": "Display/Decorative" },
+      { "Font Name": "Beau Rivage", "Type": "Display/Decorative" },
+      { "Font Name": "Gwendolyn", "Type": "Display/Decorative" },
+      { "Font Name": "Bilbo", "Type": "Display/Decorative" },
+      { "Font Name": "Felipa", "Type": "Display/Decorative" },
+      { "Font Name": "Bonheur Royale", "Type": "Display/Decorative" },
+      { "Font Name": "Ballet", "Type": "Display/Decorative" },
+      { "Font Name": "Romanesco", "Type": "Display/Decorative" },
+      { "Font Name": "Aref Ruqaa Ink", "Type": "Display/Decorative" },
+      { "Font Name": "Jim Nightshade", "Type": "Display/Decorative" },
+      { "Font Name": "Luxurious Roman", "Type": "Display/Decorative" },
+      { "Font Name": "Love Light", "Type": "Display/Decorative" },
+      { "Font Name": "Mr Bedfort", "Type": "Display/Decorative" },
+      { "Font Name": "Fleur De Leah", "Type": "Display/Decorative" },
+      { "Font Name": "Miss Fajardose", "Type": "Display/Decorative" },
+      { "Font Name": "Kings", "Type": "Display/Decorative" },
+      { "Font Name": "Explora", "Type": "Display/Decorative" },
+      { "Font Name": "Updock", "Type": "Display/Decorative" },
+      { "Font Name": "Island Moments", "Type": "Display/Decorative" },
+      { "Font Name": "My Soul", "Type": "Display/Decorative" },
+      { "Font Name": "Cherish", "Type": "Display/Decorative" }
+    ]
+  }

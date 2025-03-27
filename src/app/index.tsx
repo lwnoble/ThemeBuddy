@@ -4,6 +4,8 @@ import App from './App';
 import { NavigationProvider } from '../context/NavigationContext';
 import '../styles.css';
 
+
+
 try {
   const rootElement = document.getElementById('root');
   if (!rootElement) throw new Error('Failed to find the root element');
@@ -12,10 +14,10 @@ try {
 
   root.render(
     <React.StrictMode>
-      <NavigationProvider>
-        <App />
-      </NavigationProvider>
-    </React.StrictMode>
+    <NavigationProvider>
+      <App />
+    </NavigationProvider>
+  </React.StrictMode>
   );
 } catch (err) {
   console.error('Failed to render the plugin:', err);

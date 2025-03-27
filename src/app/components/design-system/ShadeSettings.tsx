@@ -155,22 +155,6 @@ const ShadeSettings: React.FC<ShadeSettingsProps> = ({
 
   return (
     <div className="settings bg-white p-6 rounded-lg shadow-md">
-      <div className="mb-8">
-        <label className="block text-sm font-small mb-2">Number of Shades per Color</label>
-        <input
-          type="range"
-          min="4"
-          max="10"
-          value={numberOfShades}
-          onChange={(e) => onSettingsChange({ numberOfShades: parseInt(e.target.value) })}
-          className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer"
-        />
-        <div className="flex justify-between text-sm text-gray-600 mt-1">
-          <span>4</span>
-          <span>{numberOfShades}</span>
-          <span>10</span>
-        </div>
-      </div>
 
       {renderSetting(
         "Max Lightness",

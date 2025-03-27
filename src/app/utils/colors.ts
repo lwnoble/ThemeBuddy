@@ -9,13 +9,13 @@ declare const require: any;
 const quantize: (pixels: number[][], colorCount: number) => QuantizeResult = require('@lokesh.dhakar/quantize').default;
 
 // Color Space Type Definitions
-interface RGB {
+export interface RGB {
   r: number;
   g: number;
   b: number;
 }
 
-interface HSL {
+export interface HSL {
   h: number;
   s: number;
   l: number;
@@ -32,6 +32,7 @@ export interface ColorResult {
 export interface ColorSettings {
   numberOfShades: number;
   numberOfColors: number;
+  deltaE: number;
   lightMode: {
     lightestShade: number;
     darkestShade: number;
@@ -247,157 +248,510 @@ export const calculateContrastRatio = (color1: string, color2: string): number =
   return (lighter + 0.05) / (darker + 0.05);
 };
 
-// WCAG Color Mode Types
-export type WCAGMode = 'AA-light' | 'AA-dark' | 'AAA-light' | 'AAA-dark';
+// Add this after the color conversion utilities
+const calculateEffectiveTextColor = (backgroundColor: string, textColor: string, opacity: number): string => {
+  return chroma.mix(backgroundColor, textColor, opacity, 'rgb').hex();
+};
 
-// Shade Generation
-export const generateShades = (
+// Result Interface
+export interface ShadeResult {
+  color: string;
+  textColor: string;
+  contrastRatio: number;
+}
+
+const adjustColorToMeetContrast = (
+  color: string,
+  textColor: string,
+  textOpacity: number,
+  minContrastRatio: number,
+  isDarkText: boolean
+): string => {
+  let n = 0;
+  let currentColor = color;
+  let effectiveTextColor = calculateEffectiveTextColor(currentColor, textColor, textOpacity);
+  let currentContrast = calculateContrastRatio(currentColor, effectiveTextColor);
+  
+  while (currentContrast < minContrastRatio && n <= 5) {
+    n += 0.01;
+    // If using dark text, make the background lighter
+    // If using light text, make the background darker
+    currentColor = isDarkText 
+      ? chroma(color).tint(n).hex()
+      : chroma(color).darken(n).hex();
+
+    effectiveTextColor = calculateEffectiveTextColor(currentColor, textColor, textOpacity);
+    currentContrast = calculateContrastRatio(currentColor, effectiveTextColor);
+  }
+
+  return currentColor;
+};
+
+export function generateShades(
   baseColor: string,
   settings: ColorSettings,
   mode: 'light' | 'dark',
   minContrastRatio: number
-): ColorResult[] => {
-  const rgb = hexToRgb(baseColor);
-  if (!rgb) return [];
-
-  const modeSettings = mode === 'light' ? settings.lightMode : settings.darkMode;
-  const shades: ColorResult[] = [];
-
-  const adjustLightnessForContrast = (hsl: HSL): HSL => {
-    let adjustedHsl = { ...hsl };
-    let step = mode === 'light' ? -1 : 1;
-    let maxTries = 100;
-    let tries = 0;
-
-    while (tries < maxTries) {
-      const currentColor = rgbToHex(hslToRgb(adjustedHsl));
-      const lightContrast = calculateContrastRatio(currentColor, modeSettings.textColor.light);
-      const darkContrast = calculateContrastRatio(currentColor, modeSettings.textColor.dark);
-      const bestContrast = Math.max(lightContrast, darkContrast);
-
-      if (bestContrast >= minContrastRatio) {
-        break;
-      }
-
-      adjustedHsl.l = Math.max(0, Math.min(100, adjustedHsl.l + step));
-      tries++;
-    }
-
-    return adjustedHsl;
-  };
-
-  for (let i = 0; i < settings.numberOfShades; i++) {
-    const t = i / (settings.numberOfShades - 1);
-    // Always go from light to dark, regardless of mode
-    let lightness = modeSettings.lightestShade - (t * (modeSettings.lightestShade - modeSettings.darkestShade));
-
-    let hsl = rgbToHsl(rgb);
-    hsl.l = lightness;
-
-    if (hsl.s > modeSettings.maxChroma) {
-      hsl.s = modeSettings.maxChroma;
-    }
-
-    hsl = adjustLightnessForContrast(hsl);
-    const color = rgbToHex(hslToRgb(hsl));
-    
-    const lightContrast = calculateContrastRatio(color, modeSettings.textColor.light);
-    const darkContrast = calculateContrastRatio(color, modeSettings.textColor.dark);
-
-    let textColor, contrastRatio;
-    if (mode === 'light') {
-      if (darkContrast >= minContrastRatio) {
-        textColor = modeSettings.textColor.dark;
-        contrastRatio = darkContrast;
-      } else {
-        textColor = modeSettings.textColor.light;
-        contrastRatio = lightContrast;
-      }
-    } else {
-      if (lightContrast >= minContrastRatio) {
-        textColor = modeSettings.textColor.light;
-        contrastRatio = lightContrast;
-      } else {
-        textColor = modeSettings.textColor.dark;
-        contrastRatio = darkContrast;
-      }
-    }
-
-    shades.push({ color, textColor, contrastRatio });
+): ShadeResult[] {
+  if (!settings || !settings.numberOfShades) {
+    console.warn('Invalid settings provided to generateShades');
+    return [];
   }
 
+  const modeSettings = mode === 'light' ? settings.lightMode : settings.darkMode;
+  
+  if (!modeSettings || !modeSettings.textColor) {
+    console.warn('Invalid mode settings or text color settings');
+    return [];
+  }
+
+  const shades: ShadeResult[] = [];
+  const { light: lightTextColor, dark: darkTextColor, lightOpacity, darkOpacity } =
+    modeSettings.textColor;
+
+  let lastValidColor: string | null = null;
+  let lastValidTextColor: string | null = null;
+  let lastValidContrast: number | null = null;
+
+  for (let i = 0; i < settings.numberOfShades; i++) {
+    try {
+      // Calculate lightness for the shade
+      const t = i / (settings.numberOfShades - 1);
+      const lightness = modeSettings.lightestShade - 
+        (t * (modeSettings.lightestShade - modeSettings.darkestShade));
+
+      // Convert base color to the initial shade
+      const baseParsedColor = hexToRgb(baseColor);
+      if (!baseParsedColor) {
+        console.warn(`Invalid base color: ${baseColor}`);
+        continue;
+      }
+
+      const hsl = rgbToHsl(baseParsedColor);
+      const newHsl = { ...hsl, l: lightness };
+      const initialColor = rgbToHex(hslToRgb(newHsl));
+
+      // Calculate effective text colors
+      const effectiveLightText = calculateEffectiveTextColor(
+        initialColor,
+        lightTextColor,
+        lightOpacity
+      );
+      const effectiveDarkText = calculateEffectiveTextColor(
+        initialColor,
+        darkTextColor,
+        darkOpacity
+      );
+
+      // Get contrast ratios
+      const lightContrast = calculateContrastRatio(initialColor, effectiveLightText);
+      const darkContrast = calculateContrastRatio(initialColor, effectiveDarkText);
+
+      // Choose initial text color based on better contrast
+      const useDarkText = darkContrast > lightContrast;
+      
+      let finalColor = initialColor;
+      let finalTextColor = useDarkText ? effectiveDarkText : effectiveLightText;
+      let finalContrast = useDarkText ? darkContrast : lightContrast;
+
+      // For light shades (using dark text)
+      if (useDarkText) {
+        // If we don't meet contrast and have a previous valid shade, use it
+        if (finalContrast < minContrastRatio && lastValidColor && lastValidTextColor && lastValidContrast) {
+          finalColor = lastValidColor;
+          finalTextColor = lastValidTextColor;
+          finalContrast = lastValidContrast;
+        }
+      }
+      // For dark shades (using light text)
+      else {
+        // Try to darken until we meet contrast
+        let n = 0;
+        let foundValidColor = false;
+
+        while (n <= 5000 && !foundValidColor) {
+          const currentColor = chroma(initialColor).darken(n).hex();
+          const effectiveText = calculateEffectiveTextColor(
+            currentColor,
+            lightTextColor,
+            lightOpacity
+          );
+          const currentContrast = calculateContrastRatio(currentColor, effectiveText);
+
+          if (currentContrast >= minContrastRatio) {
+            finalColor = currentColor;
+            finalTextColor = effectiveText;
+            finalContrast = currentContrast;
+            foundValidColor = true;
+          }
+
+          n += 0.01;
+        }
+
+        // If we couldn't find a valid color and have a previous valid one, use it
+        if (!foundValidColor && lastValidColor && lastValidTextColor && lastValidContrast) {
+          finalColor = lastValidColor;
+          finalTextColor = lastValidTextColor;
+          finalContrast = lastValidContrast;
+        }
+      }
+
+      // Store this color if it meets contrast requirements
+      if (finalContrast >= minContrastRatio) {
+        lastValidColor = finalColor;
+        lastValidTextColor = finalTextColor;
+        lastValidContrast = finalContrast;
+      }
+
+      shades.push({
+        color: finalColor,
+        textColor: finalTextColor,
+        contrastRatio: Number(finalContrast.toFixed(2))
+      });
+
+    } catch (error) {
+      console.error('Error generating shade:', error);
+    }
+  }
   return shades;
+}
+
+export type WCAGMode = 'AA-light' | 'AA-dark' | 'AAA-light' | 'AAA-dark';
+
+// Add this helper function
+const getOptimizedDarkTextColor = (
+  color: string,
+  darkText: string,
+  minContrastRatio: number
+): string => {
+  let n = 0;
+  let currentColor = color;
+  let lastValidColor = color;
+  let currentContrast = calculateContrastRatio(currentColor, darkText);
+
+  while (currentContrast >= minContrastRatio) {
+    lastValidColor = currentColor;
+    n += 0.01;
+    currentColor = chroma(color).darken(n).hex();
+    currentContrast = calculateContrastRatio(currentColor, darkText);
+  }
+
+  // Go back one step to get the darkest color that still meets contrast
+  return lastValidColor;
 };
 
-// Generate All Color Modes
+const rescaleShades = (
+  shades: ShadeResult[],
+  settings: ColorSettings,
+  mode: 'AA-light' | 'AA-dark' | 'AAA-light' | 'AAA-dark',
+  minContrastRatio: number
+): ShadeResult[] => {
+  console.log('Starting rescale with:', { mode, minContrastRatio });
+  console.log('Initial shades:', shades);
+
+  const modeSettings = mode.startsWith('AA-light') ? settings.lightMode : settings.darkMode;
+  const { textColor } = modeSettings;
+
+  const shadesCopy = [...shades];
+  // Create a reversed copy for finding transition points
+  const reversedShades = [...shades].reverse();
+
+  const color1 = shades[0]; // Lightest shade
+  // Extract shades for conditional checks
+  const shade4 = shades[4].color;
+  const shade5 = shades[5].color;
+  const shade6 = shades[6].color;
+
+  // Find color2 index and get color3 as next color
+  const color2Index = reversedShades.findIndex(shade => shade.textColor === textColor.dark);
+  if (color2Index === -1 || color2Index === reversedShades.length - 1) {
+    console.log('Could not find valid transition points');
+    return shades;
+  }
+
+  const color2 = reversedShades[color2Index];
+  const color3 = reversedShades[color2Index - 1];
+  const color4 = shades[shades.length - 1]; // Darkest shade
+
+  console.log('Found transition colors:', {
+    color1: color1?.color,
+    color2: color2?.color,
+    color3: color3?.color,
+    color4: color4?.color
+  });
+
+  if (!color2 || !color3) {
+    console.log('Could not find transition points, returning original shades');
+    return shades;
+  }
+
+  // Optimize color2
+  const optimizedColor2 = getOptimizedDarkTextColor(
+    color2.color,
+    calculateEffectiveTextColor(
+      color2.color,
+      textColor.dark,
+      textColor.darkOpacity
+    ),
+    minContrastRatio
+  );
+  console.log('Optimized color2:', optimizedColor2);
+
+  // Calculate number of shades
+  const darkTextShades = 5;
+  const lightTextShades = 5;
+  console.log('Shade counts:', { darkTextShades, lightTextShades });
+
+
+
+  let rescaledDarkShades: ShadeResult[];
+  let rescaledLightShades: ShadeResult[];
+
+  if (!mode.startsWith('AA-light') || (mode.startsWith('AA-light') && color2Index >= 5)) {
+    // Not AA light mode, or AA light mode with color2 in the first 5 shades
+    rescaledDarkShades = chroma.scale([
+      color1.color,
+      optimizedColor2
+    ])
+    .colors(darkTextShades)
+    .map((color: string) => ({
+      color,
+      textColor: calculateEffectiveTextColor(
+        color,
+        textColor.dark,
+        textColor.darkOpacity
+      ),
+      contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+        color,
+        textColor.dark,
+        textColor.darkOpacity
+      ))
+    }));
+  } else if(mode.startsWith('AA-light') && color2Index == 4){
+    // AA light mode with color2 after the first 5 shades
+    if (
+      Math.abs(chroma.deltaE(shade4, shade5)) > 8
+    ) {
+      // Shades 4, 5, and 6 are very similar
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(4)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+      rescaledDarkShades.push({
+        color: shade5,
+        textColor: calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade5, calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });
+    } else {
+      // Shade 4 is different, but 5 and 6 are very close
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(5)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+    } 
+  } else {
+    if (
+      Math.abs(chroma.deltaE(shade4, shade5)) > 8 &&
+      Math.abs(chroma.deltaE(shade5, shade6)) > 8
+    ) {
+      // All shades are very different
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(3)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+      rescaledDarkShades.push({
+        color: shade5,
+        textColor: calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade5, calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });
+      rescaledDarkShades.push({
+        color: shade6,
+        textColor: calculateEffectiveTextColor(
+          shade6,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade6, calculateEffectiveTextColor(
+          shade6,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });
+    } else if (
+        Math.abs(chroma.deltaE(shade4, shade5)) > 8 &&
+        Math.abs(chroma.deltaE(shade5, shade6)) < 8
+      ) {
+      // Shades 4, 5, and 6 are very similar
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(4)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+      rescaledDarkShades.push({
+        color: shade5,
+        textColor: calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(shade5, calculateEffectiveTextColor(
+          shade5,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      });  
+    }  else {
+      // Shade 4 is different, but 5 and 6 are very close
+      rescaledDarkShades = chroma.scale([
+        color1.color,
+        shade4
+      ])
+      .colors(5)
+      .map((color: string) => ({
+        color,
+        textColor: calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ),
+        contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+          color,
+          textColor.dark,
+          textColor.darkOpacity
+        ))
+      }));
+    }
+  }
+
+
+  // Rescale light shades
+  rescaledLightShades = chroma.scale([
+    color3.color,
+    color4.color
+  ])
+  .colors(lightTextShades)
+  .map((color: string) => ({
+    color,
+    textColor: calculateEffectiveTextColor(
+      color,
+      textColor.light,
+      textColor.lightOpacity
+    ),
+    contrastRatio: calculateContrastRatio(color, calculateEffectiveTextColor(
+      color,
+      textColor.light,
+      textColor.lightOpacity
+    ))
+  }));
+
+  const result = [...rescaledDarkShades, ...rescaledLightShades];
+  console.log('Final rescaled results:', result);
+
+  return result;
+};
+
+// Cache for storing pre-generated shades
+const shadesCache: Record<string, Record<WCAGMode, ShadeResult[]>> = {};
+
 export const generateAllColorModes = (
   baseColor: string,
   settings: ColorSettings
-): Record<WCAGMode, ColorResult[]> => {
-  // Generate shades for all WCAG modes
+): Record<WCAGMode, ShadeResult[]> => {
+  if (shadesCache[baseColor]) {
+    return shadesCache[baseColor];
+  }
   const aaLight = generateShades(baseColor, settings, 'light', 4.5);
   const aaDark = generateShades(baseColor, settings, 'dark', 4.5);
   const aaaLight = generateShades(baseColor, settings, 'light', 7.1);
   const aaaDark = generateShades(baseColor, settings, 'dark', 7.1);
 
-  // Rescale shades for AAA modes
-  const aaaLightRescaled = rescaleShades(aaaLight, settings, 'light');
-  const aaaDarkRescaled = rescaleShades(aaaDark, settings, 'dark');
+  const aaLightRescaled = rescaleShades(aaLight, settings, 'AA-light', 4.5);
+  const aaDarkRescaled = rescaleShades(aaDark, settings, 'AA-dark', 4.5);
+  const aaaLightRescaled = rescaleShades(aaaLight, settings, 'AAA-light', 7.1);
+  const aaaDarkRescaled = rescaleShades(aaaDark, settings, 'AAA-dark', 7.1);
 
-  return {
-    'AA-light': aaLight,
-    'AA-dark': aaDark,
-    'AAA-light': aaaLightRescaled,
-    'AAA-dark': aaaDarkRescaled
-  };
+ // Create the result object
+ const result = {
+  'AA-light': aaLightRescaled,
+  'AA-dark': aaDarkRescaled,
+  'AAA-light': aaaLightRescaled,
+  'AAA-dark': aaaDarkRescaled
 };
 
-const rescaleShades = (
-  shades: ColorResult[],
-  settings: ColorSettings,
-  mode: 'light' | 'dark'
-): ColorResult[] => {
-  // Find the necessary shades
-  const modeSettings = mode === 'light' ? settings.lightMode : settings.darkMode;
-  const { textColor } = modeSettings;
+// Cache the result
+shadesCache[baseColor] = result;
 
-  const color1 = shades[0];
-  const color2 = shades.reverse().find(shade => shade.textColor === textColor.dark);
-  const color3 = shades.reverse().find(shade => shade.textColor === textColor.light);
-  const color4 = shades[shades.length - 1];
-
-  if (!color2 || !color3) {
-    return shades;
-  }
-
-  // Count the number of shades with appropriate text color
-  const shadesDarkText = shades.filter(shade => shade.textColor === textColor.dark).length;
-  const shadesLightText = shades.filter(shade => shade.textColor === textColor.light).length;
-
-  // Rescale the shades using chroma.js
-  const rescaledDarkShades = chroma.scale([
-    color1.color,
-    color2.color,
-  ])
-  .mode('rgb')
-  .colors(shadesDarkText)
-  .map((color: string, index: number) => ({
-    color,
-    textColor: textColor.dark,
-    contrastRatio: calculateContrastRatio(color, textColor.dark)
-  }));
-
-  const rescaledLightShades = chroma.scale([
-    color3.color,
-    color4.color
-  ])
-  .mode('rgb')
-  .colors(shadesLightText)
-  .map((color: string, index: number) => ({
-    color,
-    textColor: textColor.light,
-    contrastRatio: calculateContrastRatio(color, textColor.light)
-  }));
-
-  return [...rescaledDarkShades, ...rescaledLightShades];
+return result;
 };
+

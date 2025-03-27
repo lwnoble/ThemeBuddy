@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = (env, argv) => ({
@@ -8,7 +9,7 @@ module.exports = (env, argv) => ({
 
   entry: {
     ui: './src/app/index.tsx',
-    code: './src/plugin/controller.ts',
+    code: './src/plugin/code.ts',
   },
 
   module: {
@@ -24,10 +25,21 @@ module.exports = (env, argv) => ({
       },
       {
         test: /\.(png|jpg|gif|webp|svg)$/,
-        loader: 'url-loader',
+        type: 'asset/resource', // ✅ Use Webpack's built-in asset handling
+        generator: {
+          filename: 'assets/images/[name][ext]', // ✅ Keep original filename, no hash
+        },
+      },
+      {
+        test: /\.(png|jpg|gif|webp|svg)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "assets/images/[name][ext]", // ✅ Ensures original filename, no hash
+        },
       },
     ],
   },
+  
 
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
@@ -36,6 +48,7 @@ module.exports = (env, argv) => ({
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: './', // ✅ Ensures proper asset paths in Figma plugin
   },
 
   plugins: [
@@ -47,5 +60,15 @@ module.exports = (env, argv) => ({
       inject: 'body',
     }),
     new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/ui/]),
+
+    // ✅ Ensure public images are copied correctly
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'public/assets/images'),
+          to: 'assets/images', // ✅ Ensures they are accessible under ./assets/images/
+        },
+      ],
+    }),    
   ],
 });
