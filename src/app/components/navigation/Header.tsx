@@ -17,10 +17,10 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-2">
           <img 
             src="/your-icon.png" 
-            alt="Theme Buddy" 
+            alt="Dynamically" 
             className="w-6 h-6"
           />
-          <span className="font-medium">Theme Buddy</span>
+          <span className="font-medium">Dynamically</span>
         </div>
       </div>
       <button className="bg-black text-white px-4 py-2 rounded-md flex items-center space-x-2">

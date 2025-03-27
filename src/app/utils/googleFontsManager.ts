@@ -195,6 +195,29 @@ export async function getFontPairingsForMood(
       bodyPreferences
     });
 
+<<<<<<< HEAD
+    const moodFonts = moods[mood as keyof typeof moods] || [];
+    
+    // Split fonts by category using Type field
+    const headerFontCandidates = moodFonts.filter(font => 
+      ['Display', 'Display/Decorative', 'Calligraphy', 'Script', 'Handwritten'].includes(font.Type)
+    );
+    
+    const bodyFontCandidates = moodFonts.filter(font => 
+      ['Sans-Serif', 'Sans Serif', 'Serif', 'Monospace'].includes(font.Type)
+    );
+
+    const fallbackHeaderFonts = [
+      { "Font Name": "Indie Flower", "Type": "Display/Decorative" },
+      { "Font Name": "Caveat", "Type": "Calligraphy" },
+      { "Font Name": "Dancing Script", "Type": "Handwritten" }
+    ];
+
+    const fallbackBodyFonts = [
+      { "Font Name": "Roboto", "Type": "Sans-Serif" },
+      { "Font Name": "Open Sans", "Type": "Sans-Serif" },
+      { "Font Name": "Lato", "Type": "Sans-Serif" }
+=======
     // First, get fonts for the specific mood
     const moodFonts = moods[mood as keyof typeof moods] || [];
     
@@ -218,6 +241,7 @@ export async function getFontPairingsForMood(
       { "Font Name": "Roboto", "Type": "Sans Serif" },
       { "Font Name": "Open Sans", "Type": "Sans Serif" },
       { "Font Name": "Lato", "Type": "Sans Serif" }
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     ];
 
     const combinedHeaderFonts = [
@@ -230,31 +254,76 @@ export async function getFontPairingsForMood(
       ...bodyFontCandidates.length < 3 ? fallbackBodyFonts : []
     ];
 
+<<<<<<< HEAD
+    // Generate pairs with type compatibility check
+=======
     // Generate pairs
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     const pairs: FontPair[] = [];
     const usedPairs = new Set<string>();
     const maxPairs = 10;
 
+<<<<<<< HEAD
+    function isCompatiblePair(header: any, body: any): boolean {
+      // Normalize type strings
+      const headerType = header.Type.toLowerCase().replace(/-/g, ' ');
+      const bodyType = body.Type.toLowerCase().replace(/-/g, ' ');
+      
+      // Don't pair same font or incompatible types
+      if (header["Font Name"] === body["Font Name"]) return false;
+      if (headerType === bodyType) return false;
+      
+      // Decorative/Display/Handwritten fonts should only be headers
+      if (['display', 'decorative', 'handwritten', 'script', 'calligraphy'].some(t => bodyType.includes(t))) {
+        return false;
+      }
+
+      return true;
+    }
+
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     while (pairs.length < maxPairs && combinedHeaderFonts.length > 0 && combinedBodyFonts.length > 0) {
       const headerFont = combinedHeaderFonts[Math.floor(Math.random() * combinedHeaderFonts.length)];
       const bodyFont = combinedBodyFonts[Math.floor(Math.random() * combinedBodyFonts.length)];
       
       const pairKey = `${headerFont["Font Name"]}-${bodyFont["Font Name"]}`;
       
+<<<<<<< HEAD
+      if (!usedPairs.has(pairKey) && isCompatiblePair(headerFont, bodyFont)) {
+        pairs.push({
+          headerFont: {
+            "Font Name": headerFont["Font Name"],
+            "Type": headerFont.Type
+          },
+          bodyFont: {
+            "Font Name": bodyFont["Font Name"],
+            "Type": bodyFont.Type
+          }
+=======
       if (headerFont["Font Name"] !== bodyFont["Font Name"] && !usedPairs.has(pairKey)) {
         pairs.push({
           headerFont: headerFont,
           bodyFont: bodyFont
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
         });
         usedPairs.add(pairKey);
       }
     }
 
+<<<<<<< HEAD
+    // Fallback pair if no valid pairs were generated
+    if (pairs.length === 0) {
+      pairs.push({
+        headerFont: { "Font Name": "Caveat", "Type": "Calligraphy" },
+        bodyFont: { "Font Name": "Roboto", "Type": "Sans-Serif" }
+=======
     // If no pairs generated, use a default pair
     if (pairs.length === 0) {
       pairs.push({
         headerFont: { "Font Name": "Caveat", "Type": "Calligraphy" },
         bodyFont: { "Font Name": "Roboto", "Type": "Sans Serif" }
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       });
     }
 
@@ -264,7 +333,11 @@ export async function getFontPairingsForMood(
     console.error('Error getting font pairings:', error);
     return [{
       headerFont: { "Font Name": "Caveat", "Type": "Calligraphy" },
+<<<<<<< HEAD
+      bodyFont: { "Font Name": "Roboto", "Type": "Sans-Serif" }
+=======
       bodyFont: { "Font Name": "Roboto", "Type": "Sans Serif" }
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     }];
   }
 }

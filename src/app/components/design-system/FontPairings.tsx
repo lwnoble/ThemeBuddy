@@ -1,16 +1,30 @@
 const chroma = require('chroma-js');
+<<<<<<< HEAD
+// Section 1: Imports and Type Definitions
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronDown, ChevronRight, ArrowLeft, Download, X } from 'lucide-react';
+=======
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronRight, ArrowLeft } from 'lucide-react';
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 import { MoodType } from '../../types/fonts';
 import { loadGoogleFonts, getFontPairingsForMood, GoogleFont } from '../../utils/googleFontsManager';
 import colorToMoods from '../../data/colorToMoods.json';
 import moods from '../../data/moods.json';
 
+<<<<<<< HEAD
+// Interfaces
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 interface MoodMapping {
   colors: string[];
   fontStyles: string[];
   fontWeight: string;
+<<<<<<< HEAD
+  customFonts?: Array<{ "Font Name": string; Type: string; }> | string[];
+=======
   customFonts?: string[];
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 }
 
 interface ColorMoodMapping {
@@ -19,6 +33,14 @@ interface ColorMoodMapping {
   };
 }
 
+<<<<<<< HEAD
+interface CustomFonts {
+  decorative?: string;
+  standard?: string;
+}
+
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 interface FontStyle {
   "Font Name": string;
   Type: string;
@@ -49,8 +71,17 @@ interface FontPairingProps {
   cachedPairs?: FontPair[];
   detectedMood?: MoodType;
   isHiddenProcessing?: boolean;
+<<<<<<< HEAD
+  customFonts?: {
+    decorative?: string;
+    standard?: string;
+  };
+}
+// Section 2: Utility Functions and Constants
+=======
 }
 
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 const STYLE_CLASSIFICATIONS = {
   header: {
     serif: [
@@ -75,10 +106,37 @@ const STYLE_CLASSIFICATIONS = {
   }
 };
 
+<<<<<<< HEAD
+// Utility function to check if a font is common and likely to be installed
+const isCommonFont = (fontName: string): boolean => {
+  const commonFonts = [
+    "roboto", "open sans", "lato", "montserrat", "noto sans", 
+    "source sans pro", "arial", "helvetica", "times new roman", "georgia",
+    "verdana", "tahoma", "trebuchet ms", "impact", "comic sans ms"
+  ];
+  return commonFonts.includes(fontName.toLowerCase());
+};
+
+// Utility function to sanitize font names
+const sanitizeFontName = (fontName: string) => {
+  return fontName
+    .replace(/\s*(Display|Medium|Bold|Light|Black|Thin|Regular|Italic|ExtraBold|SemiBold|ExtraLight|Condensed|Extended|Narrow)\s*/g, '')
+    .trim();
+};
+
+// Determine color mood based on input color
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 const determineColorMood = (baseColor: string): MoodType => {
   if (!baseColor) return 'Sophisticated';
 
   try {
+<<<<<<< HEAD
+    const inputColor = chroma(baseColor);
+    let closestMood: MoodType = 'Sophisticated';
+    let shortestDistance = Number.MAX_VALUE;
+    const moodMappings = colorToMoods.moodMappings;
+=======
     console.log('Determining mood for color:', baseColor);
     const inputColor = chroma(baseColor);
     
@@ -86,6 +144,7 @@ const determineColorMood = (baseColor: string): MoodType => {
     let shortestDistance = Number.MAX_VALUE;
 
     const { moodMappings } = colorToMoods as ColorMoodMapping;
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
     Object.entries(moodMappings).forEach(([mood, mapping]) => {
       mapping.colors.forEach(colorHex => {
@@ -97,7 +156,10 @@ const determineColorMood = (baseColor: string): MoodType => {
           if (distance < shortestDistance) {
             shortestDistance = distance;
             closestMood = mood.split('-')[0] as MoodType;
+<<<<<<< HEAD
+=======
             console.log('New closest mood:', mood, 'with distance:', distance);
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
           }
         } catch (colorErr) {
           console.warn(`Invalid color in mood ${mood}:`, colorHex);
@@ -105,15 +167,56 @@ const determineColorMood = (baseColor: string): MoodType => {
       });
     });
 
+<<<<<<< HEAD
+    return closestMood;
+=======
     const baseMood = closestMood.split('-')[0] as MoodType;
     console.log('Final selected mood:', baseMood);
     return baseMood;
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   } catch (err) {
     console.error('Error in determineColorMood:', err);
     return 'Sophisticated';
   }
 };
 
+<<<<<<< HEAD
+interface CustomFonts {
+  customFonts?: Array<FontStyle> | string[];
+}
+
+const getFontStylesForMood = (mood: MoodType): { fontFamilies: FontStyle[], fontStyles: string[] } => {
+  if (!mood) return { fontFamilies: [], fontStyles: [] };
+
+  const baseMood = mood.split('-')[0] as MoodType;
+  const moodMapping = colorToMoods.moodMappings[baseMood as keyof typeof colorToMoods.moodMappings] as MoodMapping & CustomFonts;
+
+  if (!moodMapping) return { fontFamilies: [], fontStyles: [] };
+
+  const fontStyles = moodMapping.fontStyles || [];
+  let fontFamilies: FontStyle[] = [];
+
+  // Safely handle customFonts
+  const customFonts = moodMapping.customFonts || [];
+
+  if (fontStyles.length === 1 && fontStyles[0] === 'Custom') {
+    if (customFonts.length > 0) {
+      if (typeof customFonts[0] === 'string') {
+        fontFamilies = (customFonts as string[]).map(font => ({
+          "Font Name": font,
+          "Type": "Display/Decorative"
+        }));
+      } else {
+        fontFamilies = customFonts as FontStyle[];
+      }
+    }
+  } else {
+    fontStyles.forEach((style: string) => {
+      if (style !== 'Custom') {
+        const moodFonts = moods[style as keyof typeof moods];
+        if (moodFonts) {
+          fontFamilies.push(...moodFonts);
+=======
 const getFontStylesForMood = (mood: MoodType): { fontFamilies: string[], fontStyles: string[] } => {
   if (!mood) return { fontFamilies: [], fontStyles: [] };
 
@@ -131,16 +234,33 @@ const getFontStylesForMood = (mood: MoodType): { fontFamilies: string[], fontSty
         if (moodFonts) {
           const fonts = moodFonts.map(font => font["Font Name"]);
           fontFamilies.push(...fonts);
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
         }
       }
     });
 
+<<<<<<< HEAD
+    if (fontStyles.includes('Custom') && customFonts.length > 0) {
+      if (typeof customFonts[0] === 'string') {
+        fontFamilies.unshift(...(customFonts as string[]).map(font => ({
+          "Font Name": font,
+          "Type": "Display/Decorative"
+        })));
+      } else {
+        fontFamilies.unshift(...(customFonts as FontStyle[]));
+      }
+    }
+  }
+
+  fontFamilies = [...new Set(fontFamilies.map(f => JSON.stringify(f)))].map(f => JSON.parse(f));
+=======
     if (fontStyles.includes('Custom') && moodMapping.customFonts) {
       fontFamilies.unshift(...moodMapping.customFonts);
     }
   }
 
   fontFamilies = [...new Set(fontFamilies)].slice(0, 25);
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
   return {
     fontFamilies,
@@ -148,7 +268,12 @@ const getFontStylesForMood = (mood: MoodType): { fontFamilies: string[], fontSty
   };
 };
 
+<<<<<<< HEAD
+// Generate custom font pairs
+const generateCustomFontPairs = (customFonts: Array<{ "Font Name": string, "Type": string }>): FontPair[] => {
+=======
 const generateCustomFontPairs = (customFonts: string[]): FontPair[] => {
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   const pairs: FontPair[] = [];
   const usedPairs = new Set<string>();
   const bodyFonts = ["Roboto", "Open Sans", "Lato", "Noto Sans"];
@@ -156,7 +281,11 @@ const generateCustomFontPairs = (customFonts: string[]): FontPair[] => {
   for (const headerFont of customFonts) {
     const bodyFont = bodyFonts[Math.floor(Math.random() * bodyFonts.length)];
     const pair = {
+<<<<<<< HEAD
+      headerFont: { "Font Name": headerFont["Font Name"], "Type": headerFont["Type"] },
+=======
       headerFont: { "Font Name": headerFont, "Type": "Custom" },
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       bodyFont: { "Font Name": bodyFont, "Type": "Sans-Serif" }
     };
 
@@ -169,7 +298,11 @@ const generateCustomFontPairs = (customFonts: string[]): FontPair[] => {
 
   return pairs;
 };
+<<<<<<< HEAD
+// Section 3: FontPairings Component
+=======
 
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 const FontPairings: React.FC<FontPairingProps> = ({ 
   baseColor,
   imageFile, 
@@ -179,17 +312,133 @@ const FontPairings: React.FC<FontPairingProps> = ({
   preferences,
   cachedPairs,
   detectedMood: initialMood,
+<<<<<<< HEAD
+  isHiddenProcessing = false,
+  customFonts = {} // Provide a default empty object
+}) => {
+  // Original State Management
+  const [customDecorativeFont, setCustomDecorativeFont] = useState(customFonts?.decorative || '');
+  const [customStandardFont, setCustomStandardFont] = useState(customFonts?.standard || '');
+
+=======
   isHiddenProcessing = false
 }) => {
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   const [selectedPair, setSelectedPair] = useState<FontPair | null>(null);
   const [fontPairs, setFontPairs] = useState<FontPair[]>([]);
   const [detectedMood, setDetectedMood] = useState<MoodType>(initialMood || 'Sophisticated');
   const [error, setError] = useState<string | null>(null);
+<<<<<<< HEAD
+  const [isLoading, setIsLoading] = useState(false);
+  const [processingComplete, setProcessingComplete] = useState(false);
+  const [isCheckingFonts, setIsCheckingFonts] = useState(false);
+  const [missingFonts, setMissingFonts] = useState<{
+    headerFont: boolean;
+    bodyFont: boolean;
+  }>({ headerFont: false, bodyFont: false });
+  const fontsLoadedRef = useRef(false);
+  
+  // New state for custom pairs functionality
+  const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
+  const [customDecorativeInput, setCustomDecorativeInput] = useState('');
+  const [customStandardInput, setCustomStandardInput] = useState('');
+  const [customPairs, setCustomPairs] = useState<FontPair[]>([]);
+  // Font Availability Check Method - Improved
+  const checkFontAvailability = async (fontName: string): Promise<boolean> => {
+    return new Promise<boolean>((resolve) => {
+      console.log(`Checking availability for font: ${fontName}`);
+      
+      // For common fonts, consider them available by default
+      if (isCommonFont(fontName.toLowerCase())) {
+        console.log(`${fontName} is a common font, assuming it's available`);
+        resolve(true);
+        return;
+      }
+      
+      const sanitizedFontName = sanitizeFontName(fontName);
+      let hasResponse = false;
+      
+      // Set up message handler to receive font list from Figma plugin
+      const messageHandler = (event: MessageEvent) => {
+        if (
+          event.data.pluginMessage && 
+          event.data.pluginMessage.type === 'font-availability-result'
+        ) {
+          window.removeEventListener('message', messageHandler);
+          hasResponse = true;
+          
+          // Check if the font is in the list (case-insensitive)
+          const available = event.data.pluginMessage.available;
+          console.log(`Font availability check result for ${fontName}: ${available}`);
+          resolve(available);
+        }
+        
+        // Check if font is successfully applied to Figma
+        if (
+          event.data.pluginMessage && 
+          event.data.pluginMessage.type === 'design-token-updated' &&
+          (
+            (event.data.pluginMessage.variable === 'Decorative' && 
+             event.data.pluginMessage.success === true) ||
+            (event.data.pluginMessage.variable === 'Standard' && 
+             event.data.pluginMessage.success === true)
+          )
+        ) {
+          // If Figma confirms the font was successfully applied, consider it available
+          if (!hasResponse) {
+            window.removeEventListener('message', messageHandler);
+            hasResponse = true;
+            console.log(`Font ${fontName} was successfully applied to Figma, marking as available`);
+            resolve(true);
+          }
+        }
+      };
+      
+      window.addEventListener('message', messageHandler);
+      
+      // Send message to Figma plugin to check font availability using Figma's API
+      window.parent.postMessage({
+        pluginMessage: {
+          type: 'check-font-availability-api',
+          fontName: sanitizedFontName
+        }
+      }, '*');
+      
+      // Timeout if no response
+      setTimeout(() => {
+        if (!hasResponse) {
+          window.removeEventListener('message', messageHandler);
+          console.warn(`Font availability check timed out for: ${fontName}`);
+          resolve(true); // Assume font is available if no response - this prevents false "missing" messages
+        }
+      }, 5000);
+    });
+  };
+
+  // Font Download Method
+  const openFontDownloadLink = (fontName: string) => {
+    console.log(`Opening download link for font: ${fontName}`);
+    
+    // Format the font name for use in Google Fonts URL
+    // Replace spaces with plus signs and remove any special characters
+    const formattedFontName = fontName
+      .replace(/\s+/g, '+')
+      .replace(/[^\w\s+\-]/g, ''); // Remove special characters except spaces, plus signs, and hyphens
+    
+    const googleFontsBaseUrl = 'https://fonts.google.com/specimen/';
+    const fontUrl = `${googleFontsBaseUrl}${formattedFontName}`;
+    
+    console.log(`Opening font URL: ${fontUrl}`);
+    window.open(fontUrl, '_blank');
+  };
+  // Load Fonts for Pairs
+=======
   const [isPreferencesExpanded, setIsPreferencesExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [processingComplete, setProcessingComplete] = useState(false);
   const fontsLoadedRef = useRef(false);
 
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   const loadFontsForPairs = async (pairs: FontPair[]) => {
     try {
       console.log('Loading fonts for pairs:', pairs);
@@ -219,6 +468,92 @@ const FontPairings: React.FC<FontPairingProps> = ({
     }
   };
 
+<<<<<<< HEAD
+  // Update Figma Typography with Better Font Availability Checking
+  const updateFigmaTypography = async (pair: FontPair) => {
+    console.log('Updating Figma typography with pair:', pair);
+    
+    try {
+      // Check font availability before updating
+      const [headerFontAvailable, bodyFontAvailable] = await Promise.all([
+        checkFontAvailability(pair.headerFont["Font Name"]),
+        checkFontAvailability(pair.bodyFont["Font Name"])
+      ]);
+
+      console.log(`Font availability results: Header (${pair.headerFont["Font Name"]}): ${headerFontAvailable}, Body (${pair.bodyFont["Font Name"]}): ${bodyFontAvailable}`);
+
+// In FontPairings.tsx, update the figmaFontApplicationPromise function
+
+const figmaFontApplicationPromise = (fontName: string, tokenType: 'Decorative' | 'Standard'): Promise<boolean> => {
+  return new Promise((resolve) => {
+    let resolved = false;
+    
+    // Handle special case for Poiret One
+    const processedFontName = sanitizeFontName(fontName);
+    console.log(`Processing font for Figma: "${fontName}" -> "${processedFontName}"`);
+    
+    const messageHandler = (event: MessageEvent) => {
+      if (
+        event.data.pluginMessage && 
+        event.data.pluginMessage.type === 'design-token-updated' &&
+        event.data.pluginMessage.variable === tokenType
+      ) {
+        window.removeEventListener('message', messageHandler);
+        resolved = true;
+        resolve(event.data.pluginMessage.success === true);
+      }
+    };
+    
+    window.addEventListener('message', messageHandler);
+    
+    // Send message to update design token - with special case handling
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'update-design-token',
+        collection: 'Cognitive',
+        group: 'Font-Families',
+        mode: 'None',
+        variable: tokenType,
+        value: processedFontName
+      }
+    }, '*');
+    
+    // Timeout if no response
+    setTimeout(() => {
+      if (!resolved) {
+        window.removeEventListener('message', messageHandler);
+        console.warn(`Figma font application check timed out for: ${fontName}`);
+        resolve(false);
+      }
+    }, 5000);
+  });
+};
+
+      // Try to apply fonts to Figma and detect success
+      const [headerFontApplied, bodyFontApplied] = await Promise.all([
+        figmaFontApplicationPromise(pair.headerFont["Font Name"], 'Decorative'),
+        figmaFontApplicationPromise(pair.bodyFont["Font Name"], 'Standard')
+      ]);
+      
+      console.log(`Font application results: Header (${pair.headerFont["Font Name"]}): ${headerFontApplied}, Body (${pair.bodyFont["Font Name"]}): ${bodyFontApplied}`);
+      
+      // Update missing fonts state based on both availability check AND successful application
+      setMissingFonts({
+        headerFont: !headerFontAvailable && !isCommonFont(pair.headerFont["Font Name"]),
+        bodyFont: !bodyFontAvailable && !isCommonFont(pair.bodyFont["Font Name"])
+      });
+      
+    } catch (error) {
+      console.error('Error in updateFigmaTypography:', error);
+      // If error occurs, assume fonts are missing for non-common fonts
+      setMissingFonts({
+        headerFont: !isCommonFont(pair.headerFont["Font Name"]),
+        bodyFont: !isCommonFont(pair.bodyFont["Font Name"])
+      });
+    }
+  };
+  // Handle Default Fonts
+=======
   const updateFigmaTypography = (pair: FontPair) => {
     console.log('Updating Figma typography:', pair);
     window.parent.postMessage({
@@ -244,6 +579,7 @@ const FontPairings: React.FC<FontPairingProps> = ({
     }, '*');
   };
 
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   const handleDefaultFonts = async () => {
     const defaultPairs = [{
       headerFont: { "Font Name": "Inter", "Type": "Sans-Serif" },
@@ -259,6 +595,41 @@ const FontPairings: React.FC<FontPairingProps> = ({
     onFontPairingComplete?.();
   };
 
+<<<<<<< HEAD
+  // Handle Pair Selection
+  const handlePairSelect = async (pair: FontPair) => {
+    try {
+      console.log('Font pair selected:', pair);
+      setSelectedPair(pair);
+      
+      // Show loading screen while checking fonts
+      setIsCheckingFonts(true);
+      
+      // First reset missing fonts state to avoid flashing incorrect UI
+      setMissingFonts({ headerFont: false, bodyFont: false });
+      
+      // Update typography and wait for it to complete
+      await updateFigmaTypography(pair);
+      
+      // Notify parent component about the selection
+      onFontPairingSelect?.(pair.headerFont, pair.bodyFont, fontPairs, detectedMood);
+      
+      // Scroll to top after selection
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Error in handlePairSelect:', error);
+      // In case of error, set a reasonable default for non-common fonts
+      setMissingFonts({
+        headerFont: !isCommonFont(pair.headerFont["Font Name"]),
+        bodyFont: !isCommonFont(pair.bodyFont["Font Name"])
+      });
+    } finally {
+      setIsCheckingFonts(false);
+    }
+  };
+  
+  // Reset Font Pairs
+=======
   const handlePairSelect = (pair: FontPair) => {
     console.log('Font pair selected:', pair);
     setSelectedPair(pair);
@@ -266,6 +637,7 @@ const FontPairings: React.FC<FontPairingProps> = ({
     onFontPairingSelect?.(pair.headerFont, pair.bodyFont, fontPairs, detectedMood);
   };
 
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   const resetFontPairs = () => {
     console.log('Resetting font pairs');
     setSelectedPair(null);
@@ -273,7 +645,78 @@ const FontPairings: React.FC<FontPairingProps> = ({
     setProcessingComplete(false);
     initializeFonts();
   };
+<<<<<<< HEAD
+  // Add this function to handle creating a custom font pair
+  const handleAddCustomPair = async () => {
+    if (!customDecorativeInput || !customStandardInput) {
+      return; // Don't add if either field is empty
+    }
 
+    const newPair: FontPair = {
+      headerFont: { "Font Name": customDecorativeInput, "Type": "Decorative" },
+      bodyFont: { "Font Name": customStandardInput, "Type": "Sans-Serif" }
+    };
+
+    // Add to custom pairs
+    const updatedCustomPairs = [...customPairs, newPair];
+    setCustomPairs(updatedCustomPairs);
+
+    // Add to all font pairs (at the beginning)
+    const updatedFontPairs = [newPair, ...fontPairs];
+    setFontPairs(updatedFontPairs);
+
+    // Close modal
+    setIsCustomModalOpen(false);
+    setCustomDecorativeInput('');
+    setCustomStandardInput('');
+
+    // Select the new pair
+    await handlePairSelect(newPair);
+
+    // Save custom pairs to localStorage
+    try {
+      window.parent.postMessage({
+        pluginMessage: {
+          type: 'save-custom-pairs',
+          pairs: updatedCustomPairs
+        }
+      }, '*');
+    } catch (error) {
+      console.error('Error saving custom pairs:', error);
+    }
+  };
+
+  // Add this function to load custom pairs from storage
+  const loadCustomPairs = () => {
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'load-custom-pairs'
+      }
+    }, '*');
+
+    // Set up a listener for the response
+    const messageHandler = (event: MessageEvent) => {
+      if (
+        event.data.pluginMessage && 
+        event.data.pluginMessage.type === 'custom-pairs-loaded'
+      ) {
+        const loadedPairs = event.data.pluginMessage.pairs;
+        if (loadedPairs && loadedPairs.length > 0) {
+          setCustomPairs(loadedPairs);
+          
+          // Add to all font pairs (at the beginning)
+          setFontPairs(prevPairs => [...loadedPairs, ...prevPairs]);
+        }
+        window.removeEventListener('message', messageHandler);
+      }
+    };
+    
+    window.addEventListener('message', messageHandler);
+  };
+  // Initialize Fonts
+=======
+
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   const initializeFonts = async () => {
     if (cachedPairs?.length) {
       console.log('Using cached font pairs');
@@ -306,7 +749,10 @@ const FontPairings: React.FC<FontPairingProps> = ({
               sansSerif: fontStyles.filter(style => STYLE_CLASSIFICATIONS.header.sansSerif.includes(style)),
               calligraphy: fontStyles.filter(style => STYLE_CLASSIFICATIONS.header.display.includes(style))
             };
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
             pairs = await getFontPairingsForMood(mood, headerPrefs, {
               serif: ['All'],
               sansSerif: ['All']
@@ -334,6 +780,10 @@ const FontPairings: React.FC<FontPairingProps> = ({
     }
   };
 
+<<<<<<< HEAD
+  // Use Effects
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   useEffect(() => {
     console.log('FontPairings initialization with props:', {
       baseColor,
@@ -345,10 +795,87 @@ const FontPairings: React.FC<FontPairingProps> = ({
     initializeFonts();
   }, [baseColor, cachedPairs, isHiddenProcessing]);
 
+<<<<<<< HEAD
+  // Add this useEffect to load custom pairs when component mounts
+  useEffect(() => {
+    loadCustomPairs();
+  }, []);
+  // Render Conditions
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   if (!fontPairs.length && !isHiddenProcessing) {
     return null;
   }
 
+<<<<<<< HEAD
+  // Custom font modal component
+  const customFontModal = (
+    <>
+      {isCustomModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Custom Font Families</h3>
+              <button 
+                onClick={() => setIsCustomModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-5 h-5" />
+                </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Decorative Font (Headers)
+                </label>
+                <input
+                  type="text"
+                  value={customDecorativeInput}
+                  onChange={(e) => setCustomDecorativeInput(e.target.value)}
+                  placeholder="e.g., Playfair Display"
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Standard Font (Body Text)
+                </label>
+                <input
+                  type="text"
+                  value={customStandardInput}
+                  onChange={(e) => setCustomStandardInput(e.target.value)}
+                  placeholder="e.g., Roboto"
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              
+              <div className="flex justify-end pt-4">
+                <button
+                  onClick={() => setIsCustomModalOpen(false)}
+                  className="px-4 py-2 border border-gray-300 rounded mr-2 text-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddCustomPair}
+                  className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                  disabled={!customDecorativeInput || !customStandardInput}
+                >
+                  Add Pair
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
+  // Render Method
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {onBack && (
@@ -358,13 +885,79 @@ const FontPairings: React.FC<FontPairingProps> = ({
         </button>
       )}
 
+<<<<<<< HEAD
+      {/* Loading overlay when checking fonts */}
+      {isCheckingFonts && (
+        <div className="fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-500 mx-auto"></div>
+            <p className="mt-3 text-gray-600">Checking font availability...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Font Installation Prompt - Updated for better UI */}
+      {selectedPair && (missingFonts.headerFont || missingFonts.bodyFont) && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <h3 className="text-yellow-800 font-semibold mb-2">Missing Fonts Detected</h3>
+          <p className="text-yellow-700 text-sm mb-3">
+            Please download and install the missing fonts below, then relaunch Figma to see the selected font in your designs.
+          </p>
+          
+          <div className="space-y-3">
+            {missingFonts.headerFont && (
+              <div className="flex items-center justify-between p-2 bg-white rounded border border-yellow-200">
+                <div>
+                  <span className="font-medium">Decorative Font:</span>
+                  <span className="ml-2">{selectedPair.headerFont["Font Name"]}</span>
+                </div>
+                <button 
+                  onClick={() => openFontDownloadLink(selectedPair.headerFont["Font Name"])}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black px-3 py-1 rounded flex items-center"
+                >
+                  <Download className="w-4 h-4 mr-1" /> Download Font
+                </button>
+              </div>
+            )}
+            
+            {missingFonts.bodyFont && (
+              <div className="flex items-center justify-between p-2 bg-white rounded border border-yellow-200">
+                <div>
+                  <span className="font-medium">Standard Font:</span>
+                  <span className="ml-2">{selectedPair.bodyFont["Font Name"]}</span>
+                </div>
+                <button 
+                  onClick={() => openFontDownloadLink(selectedPair.bodyFont["Font Name"])}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black px-3 py-1 rounded flex items-center"
+                >
+                  <Download className="w-4 h-4 mr-1" /> Download Font
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {/* Typography section with buttons */}
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       <div className="bg-white rounded-lg p-6 shadow-sm border">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h2 className="text-2xl font-bold">Typography</h2>
+<<<<<<< HEAD
+          </div>
+          <div className="flex space-x-2">
+            <button
+              className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-medium py-2 px-4 rounded"
+              onClick={() => setIsCustomModalOpen(true)}
+            >
+              Customize Pairs
+            </button>
+=======
             <p className="text-gray-600">Detected Mood: {detectedMood}</p>
           </div>
           <div className="text-right">
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
             <button
               className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-medium py-2 px-4 rounded"
               onClick={resetFontPairs}
@@ -381,6 +974,8 @@ const FontPairings: React.FC<FontPairingProps> = ({
         )}
       </div>
 
+<<<<<<< HEAD
+=======
       <div className="bg-gray-50 rounded-lg">
         <button
           onClick={() => setIsPreferencesExpanded(!isPreferencesExpanded)}
@@ -400,6 +995,7 @@ const FontPairings: React.FC<FontPairingProps> = ({
           </div>
         )}
       </div>
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       {isLoading && (
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto"></div>
@@ -411,6 +1007,10 @@ const FontPairings: React.FC<FontPairingProps> = ({
         <div className="space-y-4">
           <div className="p-6 border rounded-lg">
             <div className="mb-4">
+<<<<<<< HEAD
+              <p className="text-gray-500 text-sm font-medium mb-1">Decorative Font:</p>
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
               <h3 style={{
                 fontFamily: `"${selectedPair.headerFont["Font Name"]}", sans-serif`,
                 fontSize: '2.5rem',
@@ -435,6 +1035,51 @@ const FontPairings: React.FC<FontPairingProps> = ({
           </div>
 
           <div className="grid gap-4">
+<<<<<<< HEAD
+            {fontPairs.map((pair, index) => {
+              // Check if this is a custom pair
+              const isCustomPair = customPairs.some(
+                customPair => 
+                  customPair.headerFont["Font Name"] === pair.headerFont["Font Name"] && 
+                  customPair.bodyFont["Font Name"] === pair.bodyFont["Font Name"]
+              );
+              
+              return (
+                <button
+                  key={`${pair.headerFont["Font Name"]}-${pair.bodyFont["Font Name"]}`}
+                  onClick={() => handlePairSelect(pair)}
+                  className={`p-4 border rounded-lg text-left hover:bg-gray-50 relative ${
+                    selectedPair === pair ? 'border-purple-500' : 'border-gray-200'
+                  }`}
+                >
+                  {isCustomPair && (
+                    <span className="absolute top-2 right-2 text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                      Custom
+                    </span>
+                  )}
+                  <h4 style={{
+                    fontFamily: `"${pair.headerFont["Font Name"]}", sans-serif`,
+                    fontSize: '1.5rem',
+                    fontWeight: 600
+                  }}>
+                    Option {index + 1}
+                  </h4>
+                  <p style={{
+                    fontFamily: `"${pair.bodyFont["Font Name"]}", sans-serif`,
+                    fontSize: '0.875rem'
+                  }}>
+                    {pair.headerFont["Font Name"]} + {pair.bodyFont["Font Name"]}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Custom Font Modal */}
+      {customFontModal}
+=======
             {fontPairs.map((pair, index) => (
               <button
                 key={`${pair.headerFont["Font Name"]}-${pair.bodyFont["Font Name"]}`}
@@ -461,6 +1106,7 @@ const FontPairings: React.FC<FontPairingProps> = ({
           </div>
         </div>
       )}
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     </div>
   );
 };

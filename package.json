@@ -1,5 +1,5 @@
 {
-  "name": "theme-buddy-plugin",
+  "name": "dynamically-plugin",
   "version": "1.0.0",
   "description": "Build beautiful, dynamic, and accessible design systems in minutes",
   "main": "code.js",
@@ -14,6 +14,10 @@
   "license": "MIT",
   "devDependencies": {
     "@figma/plugin-typings": "^1.82.0",
+<<<<<<< HEAD
+    "@types/lodash": "^4.17.15",
+=======
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     "@types/node": "^20.17.10",
     "@types/papaparse": "^5.3.15",
     "@types/react": "^18.2.0",
@@ -44,6 +48,7 @@
     "chroma-js": "^3.1.2",
     "colorthief": "^2.6.0",
     "culori": "^4.0.1",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.263.1",
     "papaparse": "^5.4.1",
     "puppeteer": "^23.11.1",

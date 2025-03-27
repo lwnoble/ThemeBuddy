@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
+  "name": "Dynamically - March 24 new",
+  "id": "dynamically-plugin",
+=======
   "name": "Theme Buddy - Fonts & Colors",
   "id": "theme-buddy-plugin",
+>>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html",
