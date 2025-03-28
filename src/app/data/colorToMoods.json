@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "moodMappings": {
       "Calm": {
           "colors": ["#76CEE3"],
@@ -115,83 +114,10 @@
           "fontWeight": "Regular",
           "buttonStyle": "Boldly Rounded"
             },
-=======
-    "moodMappings": {
-      "Calm": {
-        "colors": ["#76CEE3"],
-        "fontStyles": ["Calm"],
-        "fontWeight": "Regular"
-      },
-      "Calm-2": {
-        "colors": ["#ABA8A4"],
-        "fontStyles": ["Calm"],
-        "fontWeight": "Regular"
-      },
-      "Calm-3": {
-        "colors": ["#ABA8A4"],
-        "fontStyles": ["Calm"],
-        "fontWeight": "Regular"
-      },
-      "Healthy": {
-        "colors": ["#79C7A4"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium"
-      },
-      "Healthy-2": {
-        "colors": ["#159B48"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium"
-      },
-      "Balanced": {
-        "colors": ["#82C26E"],
-        "fontStyles": ["Calm"],
-        "fontWeight": "Regular"
-      },
-      "Friendly": {
-        "colors": ["#BDD96D"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Poppins", "Fraunces", "Montserrat", "Outfit", "Open Sans", "Radley", "Josefin Sans", "Merriweather", "Lato", "Tangerine", "Lobster", "Pacifico", "Raleway", "Dancing Script", "Unbounded", "Baloo", "Quicksand", "Hind", "Sacramento", "Tinos", "Besley", "Oxygen", "Cambay"
-        ],
-        "fontWeight": "Regular"
-      },
-      "Goofy": {
-        "colors": ["#DBE278"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Shrikhand", "Fredoka One", "Oi", "Rakkas", "Ultra", "Yatra One", "Erica One", "Corben", "Happy Monkey"
-        ],
-        "fontWeight": "Bold"
-      },
-      "Sickly": {
-        "colors": ["#FCF083"],
-        "fontStyles": ["Stiff", "Loud"],
-        "fontWeight": "Heavy"
-      },
-      "Naive": {
-        "colors": ["#F8F483"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Fuzzy Bubbles", "Varela", "Swanky and Moo Moo", "Give You Glory"
-        ],
-        "fontWeight": "Light"
-      },
-      "Bright": {
-        "colors": ["#FFF786"],
-        "fontStyles": ["Calm", "Business"],
-        "fontWeight": "Regular"
-      },
-      "Bright-2": {
-        "colors": ["#FAE47F"],
-        "fontStyles": ["Calm", "Business"],
-        "fontWeight": "Regular"
-      },
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       "Wealth": {
         "colors": ["#FDD881"],
         "fontStyles": ["Custom"],
         "customFonts": [
-<<<<<<< HEAD
           { "Font Name": "Crimson Pro", "Type": "Serif" },
           { "Font Name": "Tirong", "Type": "Serif" },
           { "Font Name": "Libre Baskerville", "Type": "Serif" },
@@ -205,150 +131,89 @@
         ],
         "fontWeight": "Elegant",
         "buttonStyle": "Gently Rounded"
-=======
-          "Crimson Pro", "Tirong", "Libre Baskerville", "Cormorant", "Dancing Script", "Great Vibes", "Parisienne", "Tangerine", "Allura", "Alex Brush"
-        ],
-        "fontWeight": "Elegant"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Immature": {
         "colors": ["#F7BC83"],
         "fontStyles": ["Childlike"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Immature-2": {
         "colors": ["#DEECC5"],
         "fontStyles": ["Childlike"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Flamboyant": {
         "colors": ["#F7AD7E"],
         "fontStyles": ["Custom"],
-<<<<<<< HEAD
         "customFonts": ["Fascinate", "Oxanium", "Yesteryear", "Sedgwick Ave"],
         "fontWeight": "Bold",
         "buttonStyle": "Boldly Rounded"
-=======
-        "customFonts": [
-          "Fascinate", "Oxanium", "Yesteryear", "Sedgwick Ave"
-        ],
-        "fontWeight": "Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Perseverance": {
         "colors": ["#FA9386"],
         "fontStyles": ["Business", "Calm"],
-<<<<<<< HEAD
         "fontWeight": "Regular",
         "buttonStyle": "Gently Rounded"
-=======
-        "fontWeight": "Regular"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Selfish": {
         "colors": ["#F47E83"],
         "fontStyles": ["Happy", "Childlike"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Selfish-2": {
         "colors": ["#F7AE15"],
         "fontStyles": ["Happy", "Childlike"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Giddy": {
         "colors": ["#D978AE"],
         "fontStyles": ["Happy"],
-<<<<<<< HEAD
         "fontWeight": "Medium to Heavy",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Medium to Heavy"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Passive": {
         "colors": ["#F07A9F"],
         "fontStyles": ["Calm"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Passive-2": {
         "colors": ["#91C0EA"],
         "fontStyles": ["Calm"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Attractive": {
         "colors": ["#B06EAF"],
         "fontStyles": ["Calm", "Elegant", "Business"],
-<<<<<<< HEAD
         "fontWeight": "Regular",
         "buttonStyle": "Gently Rounded"
-=======
-        "fontWeight": "Regular"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Grace": {
         "colors": ["#9A6CAE"],
         "fontStyles": ["Calm", "Elegant", "Business"],
-<<<<<<< HEAD
         "fontWeight": "Regular",
         "buttonStyle": "Gently Rounded"
-=======
-        "fontWeight": "Regular"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Loyalty": {
         "colors": ["#7768A5"],
         "fontStyles": ["Calm", "Business"],
-<<<<<<< HEAD
         "fontWeight": "Medium",
         "buttonStyle": "Gently Rounded"
-=======
-        "fontWeight": "Medium"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Reflective": {
         "colors": ["#6873B3"],
         "fontStyles": ["Calm"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Tired": {
         "colors": ["#728BCC"],
         "fontStyles": ["Calm"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Square"
       },
@@ -357,40 +222,23 @@
         "fontStyles": ["Calm"],
         "fontWeight": "Light",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Light"
-      },
-      "Tired-2": {
-        "colors": [ "#FBD8A5"],
-        "fontStyles": ["Calm"],
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Hopeful": {
         "colors": ["#69A7D8", "#C0D437"],
         "fontStyles": ["Active"],
-<<<<<<< HEAD
         "fontWeight": "Medium",
         "buttonStyle": "Amply Rounded"
-=======
-        "fontWeight": "Medium"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Hopeful-2": {
         "colors": ["#C0D437"],
         "fontStyles": ["Active"],
-<<<<<<< HEAD
         "fontWeight": "Medium",
         "buttonStyle": "Amply Rounded"
-=======
-        "fontWeight": "Medium"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Cold": {
         "colors": ["#6DB9DD"],
         "fontStyles": ["Active", "Custom"],
         "customFonts": [
-<<<<<<< HEAD
           { "Font Name": "Dosis", "Type": "Sans-Serif" },
           { "Font Name": "Oxygen", "Type": "Sans-Serif" },
           { "Font Name": "Space Grotesk", "Type": "Sans-Serif" },
@@ -409,16 +257,10 @@
         ],
         "fontWeight": "Regular",
         "buttonStyle": "Square"
-=======
-          "Dosis", "Oxygen", "Space Grotesk", "Ropa Sans", "Abel", "Squada On", "Tauri", "Josefin Sans", "Quicksand", "Arvo", "Poiret One", "Cabin", "Kanit", "Comfortaa", "Jura"
-        ],
-        "fontWeight": "Regular"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Fresh": {
         "colors": ["#D2DD54"],
         "fontStyles": ["Active", "Loud"],
-<<<<<<< HEAD
         "fontWeight": "Bold",
         "buttonStyle": "Amply Rounded"
       },
@@ -428,190 +270,113 @@
         "fontStyles": ["Active", "Loud"],
         "fontWeight": "Bold",
         "buttonStyle": "Amply Rounded"
-=======
-        "fontWeight": "Bold"
-      },
-      "Fresh-2": {
-        "colors": ["#D0DF55"],
-        "fontStyles": ["Active", "Loud"],
-        "fontWeight": "Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Purity": {
         "colors": ["#FFFFFF"],
         "fontStyles": ["Calm", "Stiff"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Innocence": {
         "colors": ["#FFFFFF"],
         "fontStyles": ["Calm", "Stiff"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Indecisive": {
         "colors": ["#DDDDDD"],
         "fontStyles": ["Artistic"],
-<<<<<<< HEAD
         "fontWeight": "Medium",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Medium"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Blase": {
         "colors": ["#DDDDDD"],
         "fontStyles": ["Calm"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Dense": {
         "colors": ["#000000"],
         "fontStyles": ["Loud"],
-<<<<<<< HEAD
         "fontWeight": "Heavy",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Heavy"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Unknown": {
         "colors": ["#000000"],
         "fontStyles": ["Loud"],
-<<<<<<< HEAD
         "fontWeight": "Heavy",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Heavy"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Mystery": {
         "colors": ["#000000"],
         "fontStyles": ["Distressed"],
-<<<<<<< HEAD
         "fontWeight": "Bold",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Mystery-2": {
         "colors": ["#4B0082"],
         "fontStyles": ["Distressed"],
-<<<<<<< HEAD
         "fontWeight": "Bold",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Mystery-3": {
         "colors": ["#8A2BE2"],
         "fontStyles": ["Distressed"],
-<<<<<<< HEAD
         "fontWeight": "Bold",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Mystery-4": {
         "colors": ["#9400D3"],
         "fontStyles": ["Distressed"],
-<<<<<<< HEAD
         "fontWeight": "Bold",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Childish": {
         "colors": ["#DAE7A3"],
         "fontStyles": ["Childlike"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Bitter": {
         "colors": ["#E4EAA0"],
         "fontStyles": ["Permanent Marker"],
-<<<<<<< HEAD
         "fontWeight": "Heavy",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Heavy"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Permissive": {
         "colors": ["#F8F5A7"],
         "fontStyles": ["Happy"],
-<<<<<<< HEAD
         "fontWeight": "Medium",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Medium"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Fun": {
         "colors": ["#FEF8AD"],
         "fontStyles": ["Playful", "Happy"],
-<<<<<<< HEAD
         "fontWeight": "Bold",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Envy": {
         "colors": ["#FAEEA2"],
         "fontStyles": ["Calm"],
-<<<<<<< HEAD
         "fontWeight": "Medium to Bold",
         "buttonStyle": "Square"
-=======
-        "fontWeight": "Medium to Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Entitled": {
         "colors": ["#FAE1A6"],
         "fontStyles": ["Business"],
-<<<<<<< HEAD
         "fontWeight": "Medium to Bold",
         "buttonStyle": "Gently Rounded"
-=======
-        "fontWeight": "Medium to Bold"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Juvenile": {
         "colors": ["#FCD1A5"],
         "fontStyles": ["Childlike"],
-<<<<<<< HEAD
         "fontWeight": "Light",
         "buttonStyle": "Boldly Rounded"
-=======
-        "fontWeight": "Light"
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       },
       "Feminine": {
         "colors": ["#FDCCAA"],
         "fontStyles": ["Custom"],
         "customFonts": [
-<<<<<<< HEAD
           { "Font Name": "Pinyon Script", "Type": "Handwritten" },
           { "Font Name": "Elisie", "Type": "Serif" },
           { "Font Name": "Parisienne", "Type": "Handwritten" },
@@ -1045,301 +810,5 @@
             "fontWeight": "Light",
             "buttonStyle": "Square"
           }
-=======
-          "Pinyon Script", "Elisie", "Parisienne", "Petit Formal Script", "Mr De Haviland", "Kurale", "Mrs Saint Delafield", "Cormorant Upright", "Satisfy", "Great Vibes", "Cookie", "Alex Brush", "Allura", "Sacramento"
-        ],
-        "fontWeight": "Elegant"
-    },  
-    "Perky": {
-      "colors": ["#F7B5A7"],
-      "fontStyles": ["Happy"],
-      "fontWeight": "Bold"
-    },
-    "Weak": {
-      "colors": ["#F7A4AA"],
-      "fontStyles": ["Calm"],
-      "fontWeight": "Light"
-    },
-    "Cute": {
-      "colors": ["#F9A3C8"],
-      "fontStyles": ["Playful", "Happy"],
-      "fontWeight": "Light"
-    },
-    "Romantic": {
-      "colors": ["#F9A5A5"],
-      "fontStyles": ["Elegant"],
-      "fontWeight": "Regular"
-    },
-    "Mellow": {
-      "colors": ["#FACD97"],
-      "fontStyles": ["Calm"],
-      "fontWeight": "Light"
-    },
-    "Delicate": {
-      "colors": ["#F7D2D9"],
-      "fontStyles": ["Elegant"],
-      "fontWeight": "Light"
-    },
-    "Energetic": {
-      "colors": ["#F28E1C"],
-      "fontStyles": ["Active"],
-      "fontWeight": "Bold"
-    },
-    "Sassy": {
-      "colors": ["#F28F88"],
-      "fontStyles": ["Loud", "Happy"],
-      "fontWeight": "Bold"
-    },
-    "Mysterious": {
-      "colors": ["#4B0082", "#6A0DAD", "#8A2BE2"],
-      "fontStyles": ["Distressed", "Active"],
-      "fontWeight": "Bold"
-    },
-    "Rebellious": {
-      "colors": ["#B22222"],
-      "fontStyles": ["Loud", "Custom"],
-      "customFonts": [
-        "Bangers", "Rock Salt", "Righteous", "Ruge Boogie", "Impact"
-      ],
-      "fontWeight": "Heavy"
-    },
-    "Rebellious-2": {
-        "colors": ["#8B0000"],
-        "fontStyles": ["Loud", "Custom"],
-        "customFonts": [
-          "Bangers", "Rock Salt", "Righteous", "Ruge Boogie", "Impact"
-        ],
-        "fontWeight": "Heavy"
-      },
-    "Victorious": {
-      "colors": ["#FFD700"],
-      "fontStyles": ["Business", "Custom"],
-      "fontWeight": "Bold"
-    },
-    "Ambitious": {
-      "colors": ["#1E90FF", "#4682B4"],
-      "fontStyles": ["Active", "Business"],
-      "fontWeight": "Medium"
-    },
-    "Intense": {
-      "colors": ["#DC143C"],
-      "fontStyles": ["Loud", "Custom"],
-      "fontWeight": "Bold"
-    },
-    "Proud": {
-      "colors": ["#8B008B"],
-      "fontStyles": ["Elegant", "Business"],
-      "fontWeight": "Medium"
-    },
-    "Mystic": {
-      "colors": ["#6A5ACD"],
-      "fontStyles": ["Distressed", "Calm"],
-      "fontWeight": "Bold"
-    },
-    "Mystic-2": {
-        "colors": ["#8A2BE2"],
-        "fontStyles": ["Distressed", "Calm"],
-        "fontWeight": "Bold"
-      },
-    "Passionate": {
-      "colors": ["#FF6347"],
-      "fontStyles": ["Custom"],
-      "customFonts": [
-        "Bungee", "Bebas Neue", "Impact", "Anton", "Russo One"
-      ],
-      "fontWeight": "Bold"
-    },
-    "Passionate-2": {
-        "colors": ["#FF4500"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Bungee", "Bebas Neue", "Impact", "Anton", "Russo One"
-        ],
-        "fontWeight": "Bold"
-      },
-    "Fearful": {
-      "colors": ["#A9A9A9"],
-      "fontStyles": ["Stiff", "Distressed"],
-      "fontWeight": "Light"
-    },
-    "Fearful-2": {
-        "colors": ["#808080"],
-        "fontStyles": ["Stiff", "Distressed"],
-        "fontWeight": "Light"
-      },
-    "Indifferent": {
-      "colors": [
-        "#FDC27D"],
-      "fontStyles": ["Calm", "Business"],
-      "fontWeight": "Regular"
-    },
-    "Indifferent-2": {
-        "colors": ["#FDC27D"],
-        "fontStyles": ["Calm", "Business"],
-        "fontWeight": "Regular"
-      },
-    "Charming": {
-      "colors": ["#F5A9A9", "#F5B5B5"],
-      "fontStyles": ["Elegant", "Custom"],
-      "customFonts": [
-        "Alex Brush", "Dancing Script", "Satisfy", "Great Vibes"
-      ],
-      "fontWeight": "Regular"
-    },
-    "Spirited": {
-      "colors": ["#FF8C00"],
-      "fontStyles": ["Happy", "Playful"],
-      "fontWeight": "Bold"
-    },
-    "Determined": {
-      "colors": ["#2E8B57"],
-      "fontStyles": ["Active", "Business"],
-      "fontWeight": "Medium"
-    },
-    "Pensive": {
-      "colors": ["#708090"],
-      "fontStyles": ["Calm", "Business"],
-      "fontWeight": "Light"
-    },
-    "Pensive-2": {
-        "colors": ["#2F4F4F"],
-        "fontStyles": ["Calm", "Business"],
-        "fontWeight": "Light"
-      },
-    "Nostalgic": {
-      "colors": ["#B0E0E6"],
-      "fontStyles": ["Stiff", "Custom"],
-      "fontWeight": "Regular"
-    },
-    "Sad": {
-        "colors": ["#DCDCDB"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Light"
-      },
-      "Sad-2": {
-        "colors": ["#B0B2B4"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Light"
-      },
-      "Security": {
-        "colors": ["#545556"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium to Heavy"
-      },
-      "Security-2": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium to Heavy"
-      },
-      "Neutrality": {
-        "colors": ["#C7C9CA"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Regular"
-      },
-      "Warmth": {
-        "colors": ["#AF9C89"],
-        "fontStyles": ["Calm"],
-        "fontWeight": "Medium"
-      },
-      "Comforting": {
-        "colors": ["#D3C9C0"],
-        "fontStyles": ["Calm"],
-        "fontWeight": "Medium"
-      },
-      "Resilience": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium to Heavy"
-      },
-      "Dependable": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium to Heavy"
-      },
-      "Wholesome": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Regular"
-      },
-      "Sustainable": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Regular"
-      },
-      "Timeless": {
-        "colors": ["#808080"],
-        "fontStyles": ["Business", "Calm"],
-        "fontWeight": "Medium"
-      },
-      "Sophisticated": {
-        "colors": ["#D0CFCE"],
-        "fontStyles": ["Calm", "Sophisticated"],
-        "fontWeight": "Regular"
-      },
-      "Unemotional": {
-        "colors": ["#B1B0AF"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Light"
-      },
-      "Detached": {
-        "colors": ["#858584"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Light"
-      },
-      "Formal": {
-        "colors": ["#DCDCDB"],
-        "fontStyles": ["Business", "Calm", "Sophisticated"],
-        "fontWeight": "Medium"
-      },
-      "Genuine": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium"
-      },
-      "Practical": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Business"],
-        "fontWeight": "Medium"
-      },
-      "Loneliness": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Light"
-      },
-      "Isolation": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Light"
-      },
-      "Depression": {
-        "colors": ["#3C3127"],
-        "fontStyles": ["Custom"],
-        "customFonts": [
-          "Goudy Bookletter 1911", "Raleway", "Smooch Sans", "Lexend Giga", "Lexend Zetta", "Lexend Peta", "Poiret One", "Quicksand"
-        ],
-        "fontWeight": "Light"
-      }
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   }
 }

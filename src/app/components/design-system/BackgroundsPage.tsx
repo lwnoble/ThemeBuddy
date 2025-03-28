@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Import necessary dependencies
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Box, Home } from 'lucide-react';
@@ -1182,19 +1181,3 @@ return (
 };
 
 export default BackgroundsPage;
-=======
-// BackgroundsPage.tsx
-import React from 'react';
-import PageLayout from './PageLayout';
-
-export const BackgroundsPage = () => {
-  return (
-    <PageLayout title="Backgrounds">
-      <section className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Background Patterns</h2>
-        {/* Background customization content will go here */}
-      </section>
-    </PageLayout>
-  );
-};
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe

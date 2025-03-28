@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronLeft, Home } from 'lucide-react';
 import { useNavigation } from '../../../context/NavigationContext';
@@ -1276,19 +1275,3 @@ const findDiverseColors = (
 };
 
 export default ChartingPage;
-=======
-// ChartingPage.tsx
-import React from 'react';
-import PageLayout from './PageLayout';
-
-export const ChartingPage = () => {
-  return (
-    <PageLayout title="Charting Colors">
-      <section className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Chart Color Palettes</h2>
-        {/* Chart color configuration will go here */}
-      </section>
-    </PageLayout>
-  );
-};
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe

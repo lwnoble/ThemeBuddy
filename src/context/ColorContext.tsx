@@ -1,9 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-<<<<<<< HEAD
 import { ColorData } from '../app/types/colors';
-=======
-import { ColorData } from '../../src/app/utils/color-harmonies';
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 import { generateUniqueColorNames } from '../../src/app/utils/color-namer';
 
 const isColorData = (color: any): color is ColorData => {
@@ -33,7 +29,6 @@ interface ColorContextType {
   setColorNames: (names: string[]) => void;
   allShades: Record<string, ColorData[]>;
   setAllShades: (shades: Record<string, ColorData[]>) => void;
-<<<<<<< HEAD
   neutralColors: {
     white: ColorData | null;
     grey: ColorData | null;
@@ -44,8 +39,6 @@ interface ColorContextType {
     grey: ColorData | null;
     black: ColorData | null;
   }) => void;
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 }
 
 const DEFAULT_COLORS = [
@@ -63,7 +56,6 @@ const ColorContext = createContext<ColorContextType>({
   colorNames: [],
   setColorNames: () => {},
   allShades: {},
-<<<<<<< HEAD
   setAllShades: () => {},
   neutralColors: {
     white: null,
@@ -71,16 +63,12 @@ const ColorContext = createContext<ColorContextType>({
     black: null
   },
   setNeutralColors: () => {}
-=======
-  setAllShades: () => {}
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 });
 
 export function ColorProvider({ children }: { children: React.ReactNode }) {
   const [colors, setColors] = useState<(string | ColorData)[]>(DEFAULT_COLORS);
   const [colorNames, setColorNames] = useState<string[]>([]);
   const [allShades, setAllShades] = useState<Record<string, ColorData[]>>({});
-<<<<<<< HEAD
   const [neutralColors, setNeutralColors] = useState<{
     white: ColorData | null;
     grey: ColorData | null;
@@ -101,12 +89,6 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
       )
     });
     
-=======
-
-  const handleSetColors = useCallback((input: (string | ColorData)[]) => {
-    console.log('🎨 ColorContext: Setting colors - Input:', JSON.stringify(input, null, 2));
-
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     if (input.length === 0) {
       setColors([]);
       setColorNames([]);
@@ -135,14 +117,7 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
       };
     
     return normalizedColor;
-<<<<<<< HEAD
    });
-=======
-      
-      console.log(`🎨 ColorContext: Normalized string color ${index}:`, JSON.stringify(normalizedColor, null, 2));
-      return normalizedColor;
-    });
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
     const hexColors = normalizedColors.map(cd => 
       isColorData(cd) ? cd.baseHex : cd
@@ -160,7 +135,6 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
 
     setColors(normalizedColors);
     setColorNames(names);
-<<<<<<< HEAD
     console.log('Final Colors:', {
       count: normalizedColors.length,
       hexColors: normalizedColors.map(c => 
@@ -170,8 +144,6 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
     console.groupEnd();
   
     return normalizedColors;
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   }, []);
 
   const handleSetColorNames = useCallback((input: string[]) => {
@@ -184,7 +156,6 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
     setAllShades(shades);
   }, []);
 
-<<<<<<< HEAD
   const handleSetNeutralColors = useCallback((colors: {
     white: ColorData | null;
     grey: ColorData | null;
@@ -194,8 +165,6 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
     setNeutralColors(colors);
   }, []);
 
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   return (
     <ColorContext.Provider 
       value={{ 
@@ -204,13 +173,9 @@ export function ColorProvider({ children }: { children: React.ReactNode }) {
         colorNames, 
         setColorNames: handleSetColorNames,
         allShades,
-<<<<<<< HEAD
         setAllShades: handleSetAllShades,
         neutralColors,
         setNeutralColors: handleSetNeutralColors
-=======
-        setAllShades: handleSetAllShades
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       }}
     >
       {children}
@@ -257,12 +222,8 @@ export function useColors() {
     colors: getHexColors(),
     fullColorData: getFullColorData(),
     allShades: context.allShades,
-<<<<<<< HEAD
     setAllShades: context.setAllShades,
     neutralColors: context.neutralColors,
     setNeutralColors: context.setNeutralColors
-=======
-    setAllShades: context.setAllShades
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   };
 }

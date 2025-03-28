@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ChevronLeft, Home } from 'lucide-react';
 import { useNavigation } from '../../../context/NavigationContext';
@@ -437,19 +436,3 @@ export const SizingPage: React.FC = () => {
 };
 
 export default SizingPage;
-=======
-// SizingPage.tsx
-import React from 'react';
-import PageLayout from './PageLayout';
-
-export const SizingPage = () => {
-  return (
-    <PageLayout title="Size and Spacing">
-      <section className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Spacing Scale</h2>
-        {/* Size and spacing configuration will go here */}
-      </section>
-    </PageLayout>
-  );
-};
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe

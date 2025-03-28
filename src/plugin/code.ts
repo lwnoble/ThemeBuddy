@@ -12,7 +12,6 @@ try {
 
   console.log('🔍 Figma Plugin UI Shown');
 
-<<<<<<< HEAD
 // In code.ts
 function updateAllPageBackgroundsToSurfaceDim(hexColor: string) {
   console.log(`Updating all page backgrounds to Surface-Dim color: ${hexColor}`);
@@ -208,8 +207,6 @@ function updateAllPageBackgrounds(hexColor: string) {
   }
 }
 
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   // Function to create or get a collection
   function getOrCreateCollection(collectionName: string) {
     let collection = figma.variables.getLocalVariableCollections().find(c => c.name === collectionName);
@@ -236,7 +233,6 @@ function updateAllPageBackgrounds(hexColor: string) {
     return variable;
   }
 
-<<<<<<< HEAD
   /**
    * Updates navigation bar links to point to the background variables
    */
@@ -1062,44 +1058,6 @@ if (group === 'Font-Families' && typeof value === 'string') {
         let finalValue = value;
         
         // Convert color strings to RGBA if needed
-=======
-  // Message handler
-figma.ui.onmessage = (msg) => {
-  console.log('🔍 Message received in plugin:', msg);
-
-  switch (msg.type) {
-    case 'update-design-token':
-      try {
-        const { collection: collectionName, group, mode, variable: variableName, value } = msg;
-        console.log(`Updating ${collectionName}/${group}/${variableName} in mode ${mode} with value:`, value);
-
-        // Get or create the collection
-        const collection = getOrCreateCollection(collectionName);
-
-        // Get or create the mode
-        let modeId = collection.modes.find(m => m.name === mode)?.modeId;
-        if (!modeId) {
-          modeId = collection.addMode(mode);
-          console.log(`Created mode "${mode}"`);
-        }
-
-        // Determine variable type based on value
-        let varType: VariableResolvedDataType = 'STRING';
-        if (typeof value === 'string' && value.startsWith('#')) {
-          varType = 'COLOR';
-        } else if (typeof value === 'number') {
-          varType = 'FLOAT';
-        }
-
-        // Create full variable name including group
-        const fullVariableName = group ? `${group}/${variableName}` : variableName;
-
-        // Get or create the variable
-        const variable = getOrCreateVariable(fullVariableName, collection.id, varType);
-
-        // Convert color strings to RGBA if needed
-        let finalValue = value;
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
         if (varType === 'COLOR' && typeof value === 'string') {
           if (value.length === 9) { // 8-digit hex (#RRGGBBAA)
             const r = parseInt(value.substr(1,2), 16) / 255;
@@ -1122,7 +1080,6 @@ figma.ui.onmessage = (msg) => {
         // Notify UI of success
         figma.ui.postMessage({
           type: 'design-token-updated',
-<<<<<<< HEAD
           variable: variableName,
           value: finalValue,
           success: true
@@ -1252,27 +1209,11 @@ case 'check-font-availability-api':
         figma.notify(`${operation}: ${result ? '✅' : '❌'} ${details?.slice(0, 30) || ''}`);
         break;
       }
-=======
-          variable: fullVariableName,
-          success: true
-        });
-      } catch (err) {
-        console.error('Error updating design token:', err);
-        const errorMessage = err instanceof Error ? err.toString() : 'An unknown error occurred';
-        figma.ui.postMessage({
-          type: 'design-token-updated',
-          success: false,
-          error: errorMessage
-        });
-      }
-      break;
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
     case 'PLUGIN_UI_READY':
       console.log('🔍 Plugin UI is ready');
       break;
 
-<<<<<<< HEAD
     case 'copy-token-value':
       try {
         const { collection: collectionName, group, fromMode, toMode, variable: variableName } = msg;
@@ -1369,68 +1310,6 @@ figma.ui.postMessage({
   type: 'ui-ready',
   fontDatabase: {}
 });
-=======
-      case 'copy-token-value':
-        try {
-            const { collection: collectionName, group, fromMode, toMode, variable: variableName } = msg;
-            const collection = getOrCreateCollection(collectionName);
-            
-            const fromModeId = collection.modes.find(m => m.name === fromMode)?.modeId;
-            const toModeId = collection.modes.find(m => m.name === toMode)?.modeId;
-            
-            if (!fromModeId || !toModeId) {
-                console.error(`Mode not found: From ${fromMode}, To ${toMode}`);
-                return;
-            }
-    
-            const fullVariableName = group ? `${group}/${variableName}` : variableName;
-            
-            const variable = figma.variables.getLocalVariables().find(
-                v => v.name === fullVariableName && v.variableCollectionId === collection.id
-            );
-    
-            if (!variable) {
-                console.error(`Variable ${fullVariableName} not found`);
-                return;
-            }
-    
-            const sourceValue = variable.valuesByMode[fromModeId];
-            variable.setValueForMode(toModeId, sourceValue);
-    
-        } catch (err) {
-            console.error('Error copying token value:', err);
-        }
-        break;
-  }
-  if (msg.type === 'insert-image') {
-    const targetFrame = figma.currentPage.findOne(node => 
-      node.type === 'FRAME' && node.name === msg.frameName
-    ) as FrameNode;
-    
-    if (targetFrame) {
-      const image = figma.createImage(msg.imageBytes);
-      const imageNode = figma.createRectangle();
-      
-      imageNode.resize(targetFrame.width, targetFrame.height);
-      imageNode.fills = [{ 
-        type: 'IMAGE', 
-        imageHash: image.hash, 
-        scaleMode: 'FILL' 
-      }];
-      
-      targetFrame.appendChild(imageNode);
-    }
-  }
-
-};
-
-  console.log('🔍 Plugin successfully connected to Figma');
-
-  figma.ui.postMessage({ 
-    type: 'ui-ready',
-    fontDatabase: {}
-  });
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
 } catch (err) {
   const errorMessage = err instanceof Error ? err.toString() : 'An unknown error occurred';

@@ -1,20 +1,12 @@
-<<<<<<< HEAD
 import React, { useEffect, useState, useRef } from 'react';
-=======
-import React, { useEffect, useState } from 'react';
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 import { ChevronLeft, Settings2 } from 'lucide-react';
 import { ColorSwatch } from './ColorSwatch';
 import ShadeSettings from './ShadeSettings';
 import { useColors } from '../../../context/ColorContext';
 import { generateUniqueColorNames } from '../../utils/color-namer';
 import { generateAllColorModes, ColorSettings, rgbToHex } from '../../utils/colors';
-<<<<<<< HEAD
 import { ColorData } from '../../types/colors';
 import { createNeutralColorData } from '../../utils/neutralColors';
-=======
-import { ColorData } from '../../utils/color-harmonies';
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
 const ColorThief = require('colorthief');
 const chroma = require('chroma-js');
@@ -33,10 +25,7 @@ export interface ColorPaletteProps {
   imageUrl?: string;
   onBack?: () => void;
   onColorExtractionComplete?: () => void;
-<<<<<<< HEAD
   onColorStylesGenerated?: (styles: any) => void;
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 }
 
 const findClosestAccessibleShade = (baseColor: string, shades: Array<{color: string, contrastRatio: number}>): string => {
@@ -54,7 +43,6 @@ const findClosestAccessibleShade = (baseColor: string, shades: Array<{color: str
   return closestShade;
 };
 
-<<<<<<< HEAD
 /**
  * Reorders the extracted colors to move high luminance colors to the end
  * @param extractedColors Array of extracted color data
@@ -98,13 +86,10 @@ function reorderColorsByLuminance(extractedColors: ColorData[]): ColorData[] {
   return reorderedColors;
 }
 
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 const ColorPalette: React.FC<ColorPaletteProps> = ({ 
   imageFile, 
   imageUrl, 
   onBack,
-<<<<<<< HEAD
   onColorExtractionComplete,
   onColorStylesGenerated
 }) => {
@@ -112,14 +97,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
   const { setColors, setColorNames, setNeutralColors } = useColors();
   const [colors, setLocalColors] = useState<string[]>([]);
   const [colorNames, setLocalColorNames] = useState<string[]>([]);
-=======
-  onColorExtractionComplete 
-}) => {
-  const [shadesRendered, setShadesRendered] = useState(false);
-  const { setColors: setContextColors, setColorNames: setContextColorNames } = useColors();
-  const [colors, setColors] = useState<string[]>([]);
-  const [colorNames, setColorNames] = useState<string[]>([]);
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showShadeSettings, setShowShadeSettings] = useState(false);
@@ -157,7 +134,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
 
   useEffect(() => {
     const extractColors = async () => {
-<<<<<<< HEAD
       if (!imageFile && !imageUrl) {
         console.log('No image source provided to ColorPalette');
         return;
@@ -534,220 +510,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     }
   }, [isLoading, colors.length, shadesRendered, onColorExtractionComplete]);
 
-=======
-      console.log('Starting color extraction');
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        let imgUrl: string;
-        if (imageFile) {
-          imgUrl = URL.createObjectURL(imageFile);
-        } else if (imageUrl) {
-          imgUrl = imageUrl;
-        } else {
-          throw new Error('No image source provided');
-        }
-
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        
-        await new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = reject;
-          img.src = imgUrl;
-        });
-
-        const colorThief = ColorThief.default ? new ColorThief.default() : new ColorThief();
-        const dominantColor = colorThief.getColor(img);
-        const palette = colorThief.getPalette(img, 9);
-        
-        const hexColors = [
-          rgbToHex({ r: dominantColor[0], g: dominantColor[1], b: dominantColor[2] }),
-          ...palette.map(([r, g, b]: number[]) => {
-            return rgbToHex({ r, g, b });
-          })
-        ];
-
-        // Generate all color modes for each color
-        const colorModesWithAccessibleShades = hexColors.map(color => {
-          const modes = generateAllColorModes(color, colorSettings);
-          const aaLightShades = modes['AA-light'];
-          
-          // Find the closest accessible shade in AA-light mode
-          const accessibleShade = findClosestAccessibleShade(color, aaLightShades);
-          
-          return {
-            originalColor: color,
-            modes: modes,
-            accessibleShade: accessibleShade
-          };
-        });
-
-      
-          // Create color data for extracted colors
-        const extractedColorData: ColorData[] = colorModesWithAccessibleShades.map((colorInfo, index) => {
-          return {
-            id: `extracted-color-${index + 1}`,
-            baseHex: colorInfo.accessibleShade,
-            name: generateUniqueColorNames([colorInfo.accessibleShade])[0],
-            shadeIndex: colorInfo.modes['AA-light'].findIndex(
-              shade => shade.color === colorInfo.accessibleShade
-            ),
-            allModes: {
-              'AA-light': {
-                allShades: colorInfo.modes['AA-light'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              },
-              'AA-dark': {
-                allShades: colorInfo.modes['AA-dark'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              },
-              'AAA-light': {
-                allShades: colorInfo.modes['AAA-light'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              },
-              'AAA-dark': {
-                allShades: colorInfo.modes['AAA-dark'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              }
-            }
-          };
-        });
-
-        // Generate and add neutral grey shades
-        const neutralModes = generateAllColorModes('#808080', colorSettings);
-        const neutralShades = neutralModes['AA-light'];
-
-        // Neutral color generation
-        const neutralColorData: ColorData = {
-          id: 'default-grey',
-          baseHex: '#808080',
-          name: 'Default Grey',
-          shadeIndex: neutralModes['AA-light'].findIndex(
-            shade => shade.color === '#808080'
-          ),
-          allModes: {
-            'AA-light': {
-              allShades: neutralModes['AA-light'].map(shade => ({
-                hex: shade.color,
-                contrastRatio: shade.contrastRatio,
-                textColor: shade.textColor
-              }))
-            },
-            'AA-dark': {
-              allShades: neutralModes['AA-dark']?.map(shade => ({
-                hex: shade.color,
-                contrastRatio: shade.contrastRatio,
-                textColor: shade.textColor
-              })) || []
-            },
-            'AAA-light': {
-              allShades: neutralModes['AAA-light']?.map(shade => ({
-                hex: shade.color,
-                contrastRatio: shade.contrastRatio,
-                textColor: shade.textColor
-              })) || []
-            },
-            'AAA-dark': {
-              allShades: neutralModes['AAA-dark']?.map(shade => ({
-                hex: shade.color,
-                contrastRatio: shade.contrastRatio,
-                textColor: shade.textColor
-              })) || []
-            }
-          }
-        };
-
-        // State color generation
-        const stateColorData: ColorData[] = Object.entries(stateColors).map(([name, color]) => {
-          const modes = generateAllColorModes(color, colorSettings);
-          
-          return {
-            id: `state-color-${name.toLowerCase()}`,
-            baseHex: color,
-            name: name,
-            shadeIndex: Math.floor(modes['AA-light'].length / 2),
-            allModes: {
-              'AA-light': {
-                allShades: modes['AA-light'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              },
-              'AA-dark': {
-                allShades: modes['AA-dark'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              },
-              'AAA-light': {
-                allShades: modes['AAA-light'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              },
-              'AAA-dark': {
-                allShades: modes['AAA-dark'].map(shade => ({
-                  hex: shade.color,
-                  contrastRatio: shade.contrastRatio,
-                  textColor: shade.textColor
-                }))
-              }
-            }
-          };
-        });
-
-        // Combine all color data
-        const allColorData = [...extractedColorData, neutralColorData, ...stateColorData];
-
-        // Filter colors for display (excluding default-grey and state colors)
-        const displayColors = extractedColorData.map(cd => cd.baseHex);
-        const displayColorNames = extractedColorData.map(cd => cd.name);
-
-       // After all color processing is complete
-       console.log('Color extraction successful');
-       setColors(displayColors);
-       setColorNames(displayColorNames);
-       setContextColors(allColorData);
-       setContextColorNames(allColorData.map(cd => cd.name));
-     } catch (err) {
-       console.error('Error extracting colors:', err);
-       setError('Failed to extract colors from image');
-     } finally {
-       console.log('Setting loading to false in ColorPalette');
-       setIsLoading(false);
-     }
-   };
-
-   if (imageFile || imageUrl) {
-     extractColors();
-   }
- }, [imageFile, imageUrl, setContextColors, setContextColorNames]);
-
-   // Add effect to check when both colors and shades are ready
-   useEffect(() => {
-    if (!isLoading && colors.length > 0 && shadesRendered && onColorExtractionComplete) {
-      onColorExtractionComplete();
-    }
-  }, [isLoading, colors.length, shadesRendered, onColorExtractionComplete]);
-
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
           
   const WCAGModeSelector = () => (
     <div className="flex space-x-4 border-b border-gray-200 mb-6">
@@ -792,17 +554,10 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
       }
 
       return renderedShades;
-<<<<<<< HEAD
     } catch (err) {
       console.error('Error generating shades:', err);
       return null;
     }
-=======
-      } catch (err) {
-      console.error('Error generating shades:', err);
-      return null;
-}
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
   };
 
   return (

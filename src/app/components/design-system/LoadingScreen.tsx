@@ -1,10 +1,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 
-<<<<<<< HEAD
 // You may need to adjust the relative path based on where your LoadingScreen.tsx file is located
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
 export interface LoadingScreenProps {
   steps: Array<{
@@ -19,20 +16,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ steps }) => {
       <div className="flex flex-col items-center max-w-md w-full">
         {/* Animated Dog */}
         <div>
-<<<<<<< HEAD
         <img
           src="./assets/images/Puppyrun.gif"
           alt="Puppy running to fetch your design system"
           className="w-full h-auto"
         />
 
-=======
-        <img 
-          src="/assets/images/Puppyrun.gif" 
-          alt="Puppy running to fetch your design system" 
-          className="w-full h-auto"
-        />
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
         </div>
         
         {/* Steps */}
@@ -67,11 +56,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ steps }) => {
         
         {/* Message */}
         <p className="text-lg text-gray-800 text-center">
-<<<<<<< HEAD
           Dynamically is building your Design System
-=======
-          We are creating your Design System
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
           <span className="block text-sm text-gray-500 mt-2">
             This might take a few moments
           </span>

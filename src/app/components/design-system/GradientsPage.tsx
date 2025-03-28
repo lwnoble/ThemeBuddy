@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { ChevronLeft, Home, ChevronDown } from 'lucide-react';
 import { useNavigation } from '../../../context/NavigationContext';
@@ -335,19 +334,3 @@ const GradientsPage: React.FC<GradientsPageProps> = ({ onGradientsComplete }) =>
 };
 
 export default GradientsPage;
-=======
-// GradientsPage.tsx
-import React from 'react';
-import PageLayout from './PageLayout';
-
-export const GradientsPage = () => {
-  return (
-    <PageLayout title="Gradients">
-      <section className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Gradient Presets</h2>
-        {/* Gradient customization content will go here */}
-      </section>
-    </PageLayout>
-  );
-};
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe

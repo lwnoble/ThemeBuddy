@@ -14,10 +14,7 @@
   "license": "MIT",
   "devDependencies": {
     "@figma/plugin-typings": "^1.82.0",
-<<<<<<< HEAD
     "@types/lodash": "^4.17.15",
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     "@types/node": "^20.17.10",
     "@types/papaparse": "^5.3.15",
     "@types/react": "^18.2.0",

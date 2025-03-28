@@ -41,11 +41,7 @@ const App: React.FC = () => {
       alignItems: 'center',
       gap: '10px'
     }}>
-<<<<<<< HEAD
       <h2>Dynamically</h2>
-=======
-      <h2>Theme Buddy</h2>
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
       
       {/* Design System Name Input */}
       <input

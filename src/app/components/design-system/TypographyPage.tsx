@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronDown, ArrowLeft } from 'lucide-react';
 
@@ -516,19 +515,3 @@ export const TypographyPage: React.FC<TypographyPageProps> = ({
 };
 
 export default TypographyPage;
-=======
-// TypographyPage.tsx
-import React from 'react';
-import PageLayout from './PageLayout';
-
-export const TypographyPage = () => {
-  return (
-    <PageLayout title="Typography">
-      <section className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Typography Scale</h2>
-        {/* Typography scale and settings content will go here */}
-      </section>
-    </PageLayout>
-  );
-};
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe

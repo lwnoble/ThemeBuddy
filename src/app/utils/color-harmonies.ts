@@ -1,6 +1,5 @@
 import { RGB, HSL } from './colors';
 import { ColorResult } from './colors';
-<<<<<<< HEAD
 import { ColorData } from '../types/colors';
 export { ColorData };
 const chroma = require('chroma-js');
@@ -8,48 +7,11 @@ const chroma = require('chroma-js');
 // Remove the local ColorData interface definition
 // No other changes needed
   
-=======
-const chroma = require('chroma-js');
-
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 interface Shade {
     hex: string;
     textColor: string;
     contrastRatio: number;
   }
-<<<<<<< HEAD
-=======
-  
-  
-  export interface ColorData {
-    id: string;
-    name: string;
-    baseHex: string;
-    shadeIndex: number;
-    allModes: {
-      'AA-light': { allShades: Array<{
-        hex: string;
-        contrastRatio: number;
-        textColor: string;
-      }> };
-      'AA-dark': { allShades: Array<{
-        hex: string;
-        contrastRatio: number;
-        textColor: string;
-      }> };
-      'AAA-light': { allShades: Array<{
-        hex: string;
-        contrastRatio: number;
-        textColor: string;
-      }> };
-      'AAA-dark': { allShades: Array<{
-        hex: string;
-        contrastRatio: number;
-        textColor: string;
-      }> };
-    };
-  }
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 
 export interface ColorHarmony {
   primary: ColorData;
@@ -278,7 +240,6 @@ function generateAnalogous(
             true
         );
 
-<<<<<<< HEAD
         const secondary: ColorData = {
             ...secondaryColor
             // No shadeIndex assignment to preserve original shadeIndex
@@ -287,17 +248,6 @@ function generateAnalogous(
         const tertiary: ColorData = {
             ...tertiaryColor
             // No shadeIndex assignment to preserve original shadeIndex
-=======
-        // Create new ColorData objects with the same shade index
-        const secondary: ColorData = {
-            ...secondaryColor,
-            shadeIndex: color.shadeIndex
-        };
-
-        const tertiary: ColorData = {
-            ...tertiaryColor,
-            shadeIndex: color.shadeIndex
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
         };
 
         // Check color distinctiveness using baseHex values
@@ -363,7 +313,6 @@ function generateTriadic(
 
         // Create new ColorData objects with the same shade index
         const secondary: ColorData = {
-<<<<<<< HEAD
             ...secondaryColor
             // No shadeIndex assignment to preserve original shadeIndex
         };
@@ -371,15 +320,6 @@ function generateTriadic(
         const tertiary: ColorData = {
             ...tertiaryColor
             // No shadeIndex assignment to preserve original shadeIndex
-=======
-            ...secondaryColor,
-            shadeIndex: color.shadeIndex
-        };
-
-        const tertiary: ColorData = {
-            ...tertiaryColor,
-            shadeIndex: color.shadeIndex
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
         };
 
         // Check color distinctiveness using baseHex values
@@ -479,7 +419,6 @@ function generateTetradic(
         true
     );
 
-<<<<<<< HEAD
     // Create new ColorData objects while preserving their original shade indices
     const secondary: ColorData = {
         ...secondaryColor
@@ -500,29 +439,13 @@ function generateTetradic(
     console.log('Tertiary color shadeIndex after:', tertiary.shadeIndex);
     console.groupEnd();
 
-=======
-    // Create new ColorData objects with the same shade index
-    const secondary: ColorData = {
-        ...secondaryColor,
-        shadeIndex: color.shadeIndex
-    };
-
-    const tertiary: ColorData = {
-        ...tertiaryColor,
-        shadeIndex: color.shadeIndex
-    };
-
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     return {
         primary: color,
         secondary: secondary,
         tertiary: tertiary
     };
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 }
 
 
@@ -558,7 +481,6 @@ function generateSquare(
 
     // Create new ColorData objects with the same shade index
     const secondary: ColorData = {
-<<<<<<< HEAD
         ...secondaryColor
         // No shadeIndex assignment to preserve original shadeIndex
     };
@@ -566,15 +488,6 @@ function generateSquare(
     const tertiary: ColorData = {
         ...tertiaryColor
         // No shadeIndex assignment to preserve original shadeIndex
-=======
-        ...secondaryColor,
-        shadeIndex: color.shadeIndex
-    };
-
-    const tertiary: ColorData = {
-        ...tertiaryColor,
-        shadeIndex: color.shadeIndex
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     };
 
     return {
@@ -616,7 +529,6 @@ function generateDiadic(
 
     // Create new ColorData objects with the same shade index
     const secondary: ColorData = {
-<<<<<<< HEAD
         ...secondaryColor
         // No shadeIndex assignment to preserve original shadeIndex
     };
@@ -624,15 +536,6 @@ function generateDiadic(
     const tertiary: ColorData = {
         ...tertiaryColor
         // No shadeIndex assignment to preserve original shadeIndex
-=======
-        ...secondaryColor,
-        shadeIndex: color.shadeIndex
-    };
-
-    const tertiary: ColorData = {
-        ...tertiaryColor,
-        shadeIndex: color.shadeIndex
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     };
 
     return {
@@ -684,11 +587,7 @@ export function generateColorHarmonies(
     palette: ColorData[],
     hexToRgb: (hex: string) => RGB | null,
     rgbToHsl: (rgb: RGB) => HSL,
-<<<<<<< HEAD
     hslToRgb: (rgb: RGB) => RGB
-=======
-    hslToRgb: (hsl: HSL) => RGB
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
 ): HarmonyResult[] {
     console.log('Generating harmonies for:', color);
     console.log('Palette:', palette);
@@ -705,7 +604,6 @@ export function generateColorHarmonies(
 
     const allHarmonies: HarmonyResult[] = [];
 
-<<<<<<< HEAD
 
     try {
         allHarmonies.push({
@@ -716,8 +614,6 @@ export function generateColorHarmonies(
         console.error('Error generating triadic harmony:', error);
     }
 
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     try {
         allHarmonies.push({
             type: 'monochromatic',
@@ -738,18 +634,6 @@ export function generateColorHarmonies(
 
     try {
         allHarmonies.push({
-<<<<<<< HEAD
-=======
-            type: 'triadic',
-            colors: generateTriadic(color, palette, hexToRgb, rgbToHsl)
-        });
-    } catch (error) {
-        console.error('Error generating triadic harmony:', error);
-    }
-
-    try {
-        allHarmonies.push({
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
             type: 'tetradic',
             colors: generateTetradic(color, palette, hexToRgb, rgbToHsl)
         });
@@ -793,7 +677,6 @@ export function generateColorHarmonies(
         console.error('Error generating split complementary harmony:', error);
     }
 
-<<<<<<< HEAD
     // Add this after all harmonies are created but before the return
     console.group('Generated Harmony Shade Indices');
     allHarmonies.forEach(harmony => {
@@ -805,8 +688,6 @@ export function generateColorHarmonies(
     });
     console.groupEnd();
 
-=======
->>>>>>> 1c2c6148da612151452e1206e1b5acdf550ffafe
     return allHarmonies.filter(harmony => 
         harmony.colors.primary && 
         (harmony.colors.secondary || harmony.colors.tertiary)  // Keep harmonies that have at least primary and one other color
